@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Threading;
-using MahApps.Metro.Controls;
+using Videre.Annotations;
 using Videre.EventArgs;
 
 namespace Videre
@@ -10,11 +13,13 @@ namespace Videre
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : INotifyPropertyChanged
     {
         private ViderePlayer player;
         private DispatcherTimer SliderTimer;
         private bool ChangedExternally;
+
+        public bool IsPlaying { private set; get; }
 
         public MainWindow( )
         {
@@ -26,11 +31,26 @@ namespace Videre
             SliderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 250 ) };
             SliderTimer.Tick += ( sender, args ) => PerformTimeSlide( );
 
-            player = new ViderePlayer( mediaElement );
+            player = new ViderePlayer( this, mediaElement );
             player.LoadMedia( @"D:\Folders\Videos\Movies\Minions (2015)\Minions 2015 1080p BluRay x264 AC3-JYK.mkv" );
+            player.LoadSubtitles( @"D:\Folders\Videos\Movies\Minions (2015)\Subs\English.srt" );
             player.OnPositionChanged += PlayerOnOnPositionChanged;
+            player.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
+            player.OnStateChanged += ( Sender, Args ) =>
+            {
+                IsPlaying = Args.State == ViderePlayer.PlayerState.Playing;
+                this.OnPropertyChanged( nameof( IsPlaying ) );
+            };
 
             base.OnInitialized( e );
+        }
+
+        private void PlayerOnOnSubtitlesChanged( object Sender, OnSubtitlesChangedEventArgs SubtitlesChangedEventArgs )
+        {
+            subtitleLabel.Inlines.Clear( );
+
+            foreach ( string S in SubtitlesChangedEventArgs.Subtitles.Lines )
+                subtitleLabel.Inlines.Add( S );
         }
 
         private void PlayerOnOnPositionChanged( object Sender, OnPositionChangedEventArgs OnPositionChangedEventArgs )
@@ -51,36 +71,15 @@ namespace Videre
         private void OnPlayPauseButtonClick( object Sender, RoutedEventArgs E )
         {
             player.ResumeOrPause( );
-            switch ( player.CurrentState )
-            {
-                case ViderePlayer.PlayerState.Paused:
-                    PlayPauseButton.Content = "Play";
-                    break;
-
-                case ViderePlayer.PlayerState.Playing:
-                    PlayPauseButton.Content = "Pause";
-                    break;
-            }
         }
 
         private void OnForwardButtonClick( object Sender, RoutedEventArgs E )
         {
         }
 
-        private void GetLength_Click( object Sender, RoutedEventArgs E )
-        {
-        }
-
-        private void GetCurrentTime_Click( object Sender, RoutedEventArgs E )
-        {
-        }
-
-        private void SetCurrentTime_Click( object Sender, RoutedEventArgs E )
-        {
-        }
-
         private void OnBackButtonClick( object Sender, RoutedEventArgs E )
         {
+            TimeSlider.Value = 0;
         }
 
         private void OnTimeSliderValueChanged( object Sender, RoutedPropertyChangedEventArgs<double> E )
@@ -105,6 +104,20 @@ namespace Videre
             SliderTimer.Stop( );
 
             PerformTimeSlide( );
+        }
+
+        private void OnVideoMouseDown( object Sender, MouseButtonEventArgs E )
+        {
+            if ( E.ClickCount == 2 && E.ChangedButton == MouseButton.Left )
+                player.ToggleFullScreen( );
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged( [CallerMemberName] string PropertyName = null )
+        {
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( PropertyName ) );
         }
     }
 }
