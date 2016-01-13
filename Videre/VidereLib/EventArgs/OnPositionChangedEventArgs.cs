@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Videre.EventArgs
+namespace VidereLib.EventArgs
 {
-    class OnPositionChangedEventArgs : System.EventArgs
+    public class OnPositionChangedEventArgs : System.EventArgs
     {
         public TimeSpan Position { private set; get; }
 

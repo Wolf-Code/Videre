@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
-namespace Videre
+namespace VidereLib
 {
-    class Subtitles
+    public class Subtitles
     {
         private readonly Dictionary<TimeSpan, SubtitleData> SubtitleDatas = new Dictionary<TimeSpan, SubtitleData>( );
         private readonly List<TimeSpan> Keys;

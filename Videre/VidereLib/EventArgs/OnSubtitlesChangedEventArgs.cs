@@ -1,7 +1,7 @@
 ﻿
-namespace Videre.EventArgs
+namespace VidereLib.EventArgs
 {
-    class OnSubtitlesChangedEventArgs : System.EventArgs
+    public class OnSubtitlesChangedEventArgs : System.EventArgs
     {
         public SubtitleData Subtitles { private set; get; }
 

@@ -5,8 +5,10 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Videre.Annotations;
-using Videre.EventArgs;
+using Videre.Properties;
+using VidereLib;
+using VidereLib.Components;
+using VidereLib.EventArgs;
 
 namespace Videre
 {
@@ -31,14 +33,14 @@ namespace Videre
             SliderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 250 ) };
             SliderTimer.Tick += ( sender, args ) => PerformTimeSlide( );
 
-            player = new ViderePlayer( this, mediaElement );
+            player = new ViderePlayer( new WindowData { Window = this, ControlsGrid = controlsGrid, MediaPlayer = mediaElement } );
             player.LoadMedia( @"D:\Folders\Videos\Movies\Minions (2015)\Minions 2015 1080p BluRay x264 AC3-JYK.mkv" );
             player.LoadSubtitles( @"D:\Folders\Videos\Movies\Minions (2015)\Subs\English.srt" );
             player.OnPositionChanged += PlayerOnOnPositionChanged;
             player.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
             player.OnStateChanged += ( Sender, Args ) =>
             {
-                IsPlaying = Args.State == ViderePlayer.PlayerState.Playing;
+                IsPlaying = Args.State == StateComponent.PlayerState.Playing;
                 this.OnPropertyChanged( nameof( IsPlaying ) );
             };
 

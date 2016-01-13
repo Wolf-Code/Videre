@@ -1,106 +1,32 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Threading;
 using MahApps.Metro.Controls;
-using Videre.EventArgs;
+using VidereLib.Components;
+using VidereLib.EventArgs;
 
-namespace Videre
+namespace VidereLib
 {
-    public class WinApi
+    public class ViderePlayer
     {
-        [DllImport("user32.dll", EntryPoint = "GetSystemMetrics")]
-        public static extern int GetSystemMetrics( int which );
-
-        [DllImport("user32.dll")]
-        public static extern void
-            SetWindowPos( IntPtr hwnd, IntPtr hwndInsertAfter,
-                         int X, int Y, int width, int height, uint flags );
-
-        private const int SM_CXSCREEN = 0;
-        private const int SM_CYSCREEN = 1;
-        private static IntPtr HWND_TOP = IntPtr.Zero;
-        private const int SWP_SHOWWINDOW = 64; // 0×0040
-
-        public static int ScreenX
-        {
-            get { return GetSystemMetrics( SM_CXSCREEN ); }
-        }
-
-        public static int ScreenY
-        {
-            get { return GetSystemMetrics( SM_CYSCREEN ); }
-        }
-
-        public static void SetWinFullScreen( IntPtr hwnd )
-        {
-            SetWindowPos( hwnd, HWND_TOP, 0, 0, ScreenX, ScreenY, SWP_SHOWWINDOW );
-        }
-    }
-    internal class ViderePlayer
-    {
-        /// <summary>
-        /// The different states the player can have.
-        /// </summary>
-        public enum PlayerState
-        {
-            /// <summary>
-            /// The state when the player has been paused.
-            /// </summary>
-            Paused,
-
-            /// <summary>
-            /// The state when the player is currently playing.
-            /// </summary>
-            Playing,
-
-            /// <summary>
-            /// The state when the player has been stopped.
-            /// </summary>
-            Stopped,
-
-            /// <summary>
-            /// The state when the position in the media is currently being changed.
-            /// </summary>
-            ChangingPosition
-        }
-        private readonly MediaElement mediaPlayer;
-
-        /// <summary>
-        /// The current <see cref="PlayerState"/> of the <see cref="ViderePlayer"/>.
-        /// </summary>
-        public PlayerState CurrentState
-        {
-            protected set
-            {
-                if ( m_CurrentState == value )
-                    return;
-
-                m_CurrentState = value;
-                this.OnStateChanged?.Invoke( this, new OnStateChangedEventArgs( value ) );
-            }
-            get { return m_CurrentState; }
-        }
+        internal readonly MediaElement mediaPlayer;
 
         /// <summary>
         /// Whether or not the media is currently fullscreen.
         /// </summary>
-        public bool IsFullScreen { private set; get; }
+        public bool IsFullScreen { internal set; get; }
 
         /// <summary>
         /// True if media has been loaded, false otherwise.
         /// </summary>
-        public bool HasMediaBeenLoaded { protected set; get; }
+        public bool HasMediaBeenLoaded { internal set; get; }
 
         private bool pausedWhenChangingPosition;
 
         private DispatcherTimer timeTimer;
-        private readonly DispatcherTimer subtitlesTimer;
+        internal readonly DispatcherTimer subtitlesTimer;
 
         public event EventHandler<OnPositionChangedEventArgs> OnPositionChanged;
         public event EventHandler<OnSubtitlesChangedEventArgs> OnSubtitlesChanged;
@@ -108,19 +34,26 @@ namespace Videre
         private TimeSpan previousTimeSpan;
 
         private TimeSpan subtitlesOffset;
-        private Subtitles subtitles;
+        internal Subtitles subtitles;
 
-        private readonly MainWindow window;
+        private readonly MetroWindow window;
         private Rectangle oldBounds;
-        private PlayerState m_CurrentState = PlayerState.Stopped;
+
+        internal readonly WindowData windowData;
+
+        internal readonly InputComponent inputComponent;
+        internal readonly StateComponent stateComponent;
 
         /// <summary>
         /// Constructor.
         /// </summary>
+        /// <param name="window">The <see cref="MetroWindow"/> the controls are in.</param>
         /// <param name="element">The <see cref="MediaElement"/> to use with this <see cref="ViderePlayer"/>.</param>
-        public ViderePlayer( MainWindow window, MediaElement element )
+        public ViderePlayer( WindowData data )
         {
-            this.mediaPlayer = element;
+            this.windowData = data;
+
+            this.mediaPlayer = data.MediaPlayer;
             this.timeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 100 ) };
             this.timeTimer.Tick += TimeTimerOnTick;
             this.timeTimer.Start( );
@@ -128,7 +61,10 @@ namespace Videre
             this.subtitlesTimer = new DispatcherTimer( );
             this.subtitlesTimer.Tick += SubtitlesTimerOnTick;
 
-            this.window = window;
+            this.window = data.Window;
+
+            this.inputComponent = new InputComponent( this, window );
+            this.stateComponent = new StateComponent( this, data.MediaPlayer );
         }
 
         #region FullScreen
@@ -152,13 +88,13 @@ namespace Videre
                 if ( !IsFullScreen )
                     oldBounds = new Rectangle( ( int ) this.window.Left, ( int ) this.window.Top, ( int ) this.window.Width, ( int ) this.window.Height );
 
-                this.window.Height = Screen.PrimaryScreen.Bounds.Height;
-                this.window.Width = Screen.PrimaryScreen.Bounds.Width;
+                this.window.Height = SystemParameters.PrimaryScreenHeight;
+                this.window.Width = SystemParameters.PrimaryScreenWidth;
                 this.window.Topmost = true;
                 this.window.Left = 0;
                 this.window.Top = 0;
                 this.window.ResizeMode = ResizeMode.NoResize;
-                this.window.controlsGrid.Visibility = Visibility.Collapsed;
+                this.windowData.ControlsGrid.Visibility = Visibility.Collapsed;
                 this.window.ShowTitleBar = false;
                 this.window.ShowCloseButton = false;
             }
@@ -170,7 +106,7 @@ namespace Videre
                 this.window.Top = oldBounds.Y;
                 this.window.Width = oldBounds.Width;
                 this.window.Height = oldBounds.Height;
-                this.window.controlsGrid.Visibility = Visibility.Visible;
+                this.windowData.ControlsGrid.Visibility = Visibility.Visible;
                 this.window.ShowTitleBar = true;
                 this.window.ShowCloseButton = true;
             }
@@ -182,7 +118,7 @@ namespace Videre
 
         #region Subtitles
 
-        private void SubtitlesTimerOnTick( object Sender, System.EventArgs Args )
+        internal void SubtitlesTimerOnTick( object Sender, System.EventArgs Args )
         {
             CheckForSubtitles( );
         }
@@ -204,7 +140,7 @@ namespace Videre
             this.subtitles = new Subtitles( filePath );
         }
 
-        private void CheckForSubtitles( )
+        internal void CheckForSubtitles( )
         {
             TimeSpan currentPosition = mediaPlayer.Position + subtitlesOffset;
             SubtitleData nextSubs = subtitles.GetData( currentPosition );
@@ -241,7 +177,7 @@ namespace Videre
         /// <param name="Path">The path of the media.</param>
         public void LoadMedia( string Path )
         {
-            if ( this.CurrentState != PlayerState.Stopped )
+            if ( this.stateComponent.CurrentState != StateComponent.PlayerState.Stopped )
                 throw new Exception( "Attempting to load media while playing." );
 
             mediaPlayer.Source = new Uri( Path );
@@ -303,9 +239,9 @@ namespace Videre
         /// </summary>
         public void StartChangingPosition( )
         {
-            pausedWhenChangingPosition = this.CurrentState == PlayerState.Paused;
+            pausedWhenChangingPosition = this.stateComponent.CurrentState == StateComponent.PlayerState.Paused;
             this.Pause( );
-            this.CurrentState = PlayerState.ChangingPosition;
+            this.stateComponent.CurrentState = StateComponent.PlayerState.ChangingPosition;
         }
 
         /// <summary>
@@ -313,18 +249,23 @@ namespace Videre
         /// </summary>
         public void StopChangingPosition( )
         {
-            if ( this.CurrentState != PlayerState.ChangingPosition )
+            if ( this.stateComponent.CurrentState != StateComponent.PlayerState.ChangingPosition )
                 throw new Exception( "Can't stop changing the position if not currently changing the position." );
 
             if ( !pausedWhenChangingPosition )
                 this.Play( );
             else
-                this.CurrentState = PlayerState.Paused;
+                this.stateComponent.CurrentState = StateComponent.PlayerState.Paused;
         }
 
         #endregion
 
         #region States
+
+        internal void StateChanged( StateComponent.PlayerState newState )
+        {
+            this.OnStateChanged?.Invoke( this, new OnStateChangedEventArgs( newState ) );
+        }
 
         /// <summary>
         /// Returns whether the player can be paused or not.
@@ -332,7 +273,7 @@ namespace Videre
         /// <returns>True if the player can be paused, false otherwise.</returns>
         public bool CanPause( )
         {
-            return mediaPlayer.CanPause;
+            return stateComponent.CanPause( );
         }
 
         /// <summary>
@@ -340,12 +281,7 @@ namespace Videre
         /// </summary>
         public void Stop( )
         {
-            if ( this.CurrentState == PlayerState.Stopped )
-                return;
-
-            this.Pause( );
-            this.HasMediaBeenLoaded = false;
-            mediaPlayer.Source = null;
+            this.stateComponent.Stop( );
         }
 
         /// <summary>
@@ -353,17 +289,7 @@ namespace Videre
         /// </summary>
         public void Play( )
         {
-            if ( this.CurrentState == PlayerState.Playing )
-                return;
-
-            if ( !this.HasMediaBeenLoaded )
-                throw new Exception( "No media loaded." );
-
-            mediaPlayer.Play( );
-            this.CurrentState = PlayerState.Playing;
-
-            if ( subtitles.AnySubtitlesLeft( mediaPlayer.Position ) )
-                CheckForSubtitles( );
+            this.stateComponent.Play( );
         }
 
         /// <summary>
@@ -371,27 +297,7 @@ namespace Videre
         /// </summary>
         public void Pause( )
         {
-            if ( this.CurrentState == PlayerState.Paused )
-                return;
-
-            if ( !this.HasMediaBeenLoaded )
-                throw new Exception( "No media loaded." );
-
-            if ( !this.CanPause( ) )
-                throw new Exception( "Player can't be paused at this time." );
-
-            switch ( this.CurrentState )
-            {
-                case PlayerState.Playing:
-                    mediaPlayer.Pause( );
-                    break;
-
-                default:
-                    throw new Exception( $"Undefined actions for player state {this.CurrentState})" );
-            }
-
-            this.CurrentState = PlayerState.Paused;
-            subtitlesTimer.Stop( );
+            this.stateComponent.Pause( );
         }
 
         /// <summary>
@@ -399,23 +305,7 @@ namespace Videre
         /// </summary>
         public void ResumeOrPause( )
         {
-            if ( !this.HasMediaBeenLoaded )
-                throw new Exception( "No media loaded." );
-
-            switch ( this.CurrentState )
-            {
-                case PlayerState.Playing:
-                    this.Pause( );
-                    return;
-
-                case PlayerState.Stopped:
-                case PlayerState.Paused:
-                    this.Play( );
-                    return;
-
-                default:
-                    throw new Exception( $"Undefined actions for player state {this.CurrentState})" );
-            }
+            this.stateComponent.ResumeOrPause( );
         }
 
         #endregion

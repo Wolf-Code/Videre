@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Videre
+namespace VidereLib
 {
-    class SubtitleData
+    public class SubtitleData
     {
         /// <summary>
         /// The subtitle data for when there is no subtitle data.

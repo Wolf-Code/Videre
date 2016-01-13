@@ -67,13 +67,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="EventArgs\OnPositionChangedEventArgs.cs" />
-    <Compile Include="EventArgs\OnStateChangedEventArgs.cs" />
-    <Compile Include="EventArgs\OnSubtitlesChangedEventArgs.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="SubtitleData.cs" />
-    <Compile Include="Subtitles.cs" />
-    <Compile Include="ViderePlayer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -126,6 +120,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Entypo-license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VidereLib\VidereLib.csproj">
+      <Project>{bdd33a5d-4061-484d-a925-79b9571b8edc}</Project>
+      <Name>VidereLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
