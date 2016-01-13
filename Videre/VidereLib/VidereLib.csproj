@@ -56,7 +56,9 @@
   <ItemGroup>
     <Compile Include="Components\ComponentBase.cs" />
     <Compile Include="Components\InputComponent.cs" />
+    <Compile Include="Components\ScreenComponent.cs" />
     <Compile Include="Components\StateComponent.cs" />
+    <Compile Include="Components\SubtitlesComponent.cs" />
     <Compile Include="EventArgs\OnPositionChangedEventArgs.cs" />
     <Compile Include="EventArgs\OnStateChangedEventArgs.cs" />
     <Compile Include="EventArgs\OnSubtitlesChangedEventArgs.cs" />

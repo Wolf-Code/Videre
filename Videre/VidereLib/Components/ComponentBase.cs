@@ -6,7 +6,7 @@
 
         protected ComponentBase( ViderePlayer player )
         {
-            this.Player = player;
+            Player = player;
         }
     }
 }

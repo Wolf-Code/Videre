@@ -9,7 +9,7 @@ namespace VidereLib.EventArgs
 
         public OnStateChangedEventArgs( StateComponent.PlayerState state )
         {
-            this.State = state;
+            State = state;
         }
     }
 }

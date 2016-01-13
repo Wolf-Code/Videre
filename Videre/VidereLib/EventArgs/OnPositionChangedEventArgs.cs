@@ -10,8 +10,8 @@ namespace VidereLib.EventArgs
 
         public OnPositionChangedEventArgs( TimeSpan position, double progress )
         {
-            this.Position = position;
-            this.Progress = progress;
+            Position = position;
+            Progress = progress;
         }
     }
 }

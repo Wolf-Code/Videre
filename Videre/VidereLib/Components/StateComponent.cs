@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Windows.Controls;
 using VidereLib.EventArgs;
 
 namespace VidereLib.Components
 {
     public class StateComponent : ComponentBase
     {
-        private MediaElement mediaElement;
+        public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
 
         /// <summary>
         /// The different states the player can have.
@@ -45,16 +44,16 @@ namespace VidereLib.Components
                     return;
 
                 m_CurrentState = value;
-                Player.StateChanged( value );
+                this.OnStateChanged?.Invoke( this, new OnStateChangedEventArgs( value ) );
             }
             get { return m_CurrentState; }
         }
 
         private PlayerState m_CurrentState = PlayerState.Stopped;
 
-        public StateComponent( ViderePlayer player, MediaElement element ) : base( player )
+        public StateComponent( ViderePlayer player ) : base( player )
         {
-            this.mediaElement = element;
+
         }
 
 
@@ -62,7 +61,7 @@ namespace VidereLib.Components
         /// Returns whether the player can be paused or not.
         /// </summary>
         /// <returns>True if the player can be paused, false otherwise.</returns>
-        internal bool CanPause( )
+        public bool CanPause( )
         {
             return Player.mediaPlayer.CanPause;
         }
@@ -70,83 +69,83 @@ namespace VidereLib.Components
         /// <summary>
         /// Stops the player and unloads the media.
         /// </summary>
-        internal void Stop( )
+        public void Stop( )
         {
-            if ( this.CurrentState == StateComponent.PlayerState.Stopped )
+            if ( CurrentState == PlayerState.Stopped )
                 return;
 
-            this.Pause( );
-            this.Player.HasMediaBeenLoaded = false;
-            this.mediaElement.Source = null;
+            Pause( );
+            Player.HasMediaBeenLoaded = false;
+            Player.windowData.MediaPlayer.Source = null;
         }
 
         /// <summary>
         /// Players the currently loaded media.
         /// </summary>
-        internal void Play( )
+        public void Play( )
         {
-            if ( this.CurrentState == StateComponent.PlayerState.Playing )
+            if ( CurrentState == PlayerState.Playing )
                 return;
 
-            if ( !this.Player.HasMediaBeenLoaded )
+            if ( !Player.HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
 
-            this.mediaElement.Play( );
-            this.CurrentState = StateComponent.PlayerState.Playing;
+            Player.windowData.MediaPlayer.Play( );
+            CurrentState = PlayerState.Playing;
 
-            if ( Player.subtitles.AnySubtitlesLeft( this.mediaElement.Position ) )
-                Player.CheckForSubtitles( );
+            if ( Player.SubtitlesHandler.Subtitles.AnySubtitlesLeft( Player.windowData.MediaPlayer.Position ) )
+                Player.SubtitlesHandler.CheckForSubtitles( );
         }
 
         /// <summary>
         /// Pauses the currently loaded media.
         /// </summary>
-        internal void Pause( )
+        public void Pause( )
         {
-            if ( this.CurrentState == StateComponent.PlayerState.Paused )
+            if ( CurrentState == PlayerState.Paused )
                 return;
 
-            if ( !this.Player.HasMediaBeenLoaded )
+            if ( !Player.HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
 
-            if ( !this.CanPause( ) )
+            if ( !CanPause( ) )
                 throw new Exception( "Player can't be paused at this time." );
 
-            switch ( this.CurrentState )
+            switch ( CurrentState )
             {
-                case StateComponent.PlayerState.Playing:
+                case PlayerState.Playing:
                     Player.mediaPlayer.Pause( );
                     break;
 
                 default:
-                    throw new Exception( $"Undefined actions for player state {this.CurrentState})" );
+                    throw new Exception( $"Undefined actions for player state {CurrentState})" );
             }
 
-            this.CurrentState = StateComponent.PlayerState.Paused;
-            Player.subtitlesTimer.Stop( );
+            CurrentState = PlayerState.Paused;
+            Player.SubtitlesHandler.subtitlesTimer.Stop( );
         }
 
         /// <summary>
         /// Resumes the player if it has been paused, or pauses the player if it's currently playing.
         /// </summary>
-        internal void ResumeOrPause( )
+        public void ResumeOrPause( )
         {
-            if ( !this.Player.HasMediaBeenLoaded )
+            if ( !Player.HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
 
-            switch ( this.CurrentState )
+            switch ( CurrentState )
             {
-                case StateComponent.PlayerState.Playing:
-                    this.Pause( );
+                case PlayerState.Playing:
+                    Pause( );
                     return;
 
-                case StateComponent.PlayerState.Stopped:
-                case StateComponent.PlayerState.Paused:
-                    this.Play( );
+                case PlayerState.Stopped:
+                case PlayerState.Paused:
+                    Play( );
                     return;
 
                 default:
-                    throw new Exception( $"Undefined actions for player state {this.CurrentState})" );
+                    throw new Exception( $"Undefined actions for player state {CurrentState})" );
             }
         }
     }

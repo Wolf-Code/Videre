@@ -17,10 +17,10 @@ namespace VidereLib
 
         public SubtitleData( int id, TimeSpan start, TimeSpan end, List<string> lines  )
         {
-            this.Index = id;
-            this.From = start;
-            this.To = end;
-            this.Lines = lines;
+            Index = id;
+            From = start;
+            To = end;
+            Lines = lines;
         }
     }
 }

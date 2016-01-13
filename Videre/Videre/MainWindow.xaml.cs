@@ -35,10 +35,10 @@ namespace Videre
 
             player = new ViderePlayer( new WindowData { Window = this, ControlsGrid = controlsGrid, MediaPlayer = mediaElement } );
             player.LoadMedia( @"D:\Folders\Videos\Movies\Minions (2015)\Minions 2015 1080p BluRay x264 AC3-JYK.mkv" );
-            player.LoadSubtitles( @"D:\Folders\Videos\Movies\Minions (2015)\Subs\English.srt" );
+            player.SubtitlesHandler.LoadSubtitles( @"D:\Folders\Videos\Movies\Minions (2015)\Subs\English.srt" );
             player.OnPositionChanged += PlayerOnOnPositionChanged;
-            player.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
-            player.OnStateChanged += ( Sender, Args ) =>
+            player.SubtitlesHandler.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
+            player.StateHandler.OnStateChanged += ( Sender, Args ) =>
             {
                 IsPlaying = Args.State == StateComponent.PlayerState.Playing;
                 this.OnPropertyChanged( nameof( IsPlaying ) );
@@ -72,7 +72,7 @@ namespace Videre
 
         private void OnPlayPauseButtonClick( object Sender, RoutedEventArgs E )
         {
-            player.ResumeOrPause( );
+            player.StateHandler.ResumeOrPause( );
         }
 
         private void OnForwardButtonClick( object Sender, RoutedEventArgs E )
@@ -111,7 +111,7 @@ namespace Videre
         private void OnVideoMouseDown( object Sender, MouseButtonEventArgs E )
         {
             if ( E.ClickCount == 2 && E.ChangedButton == MouseButton.Left )
-                player.ToggleFullScreen( );
+                player.ScreenHandler.ToggleFullScreen( );
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
