@@ -63,7 +63,7 @@ namespace VidereLib.Components
         /// <returns>True if the player can be paused, false otherwise.</returns>
         public bool CanPause( )
         {
-            return Player.mediaPlayer.CanPause;
+            return Player.MediaPlayer.CanPause;
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace VidereLib.Components
             switch ( CurrentState )
             {
                 case PlayerState.Playing:
-                    Player.mediaPlayer.Pause( );
+                    Player.MediaPlayer.Pause( );
                     break;
 
                 default:

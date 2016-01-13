@@ -28,7 +28,7 @@ namespace Videre
             InitializeComponent( );
         }
 
-        protected override void OnInitialized( System.EventArgs e )
+        protected override void OnInitialized( EventArgs e )
         {
             SliderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 250 ) };
             SliderTimer.Tick += ( sender, args ) => PerformTimeSlide( );
@@ -36,7 +36,7 @@ namespace Videre
             player = new ViderePlayer( new WindowData { Window = this, ControlsGrid = controlsGrid, MediaPlayer = mediaElement } );
             player.LoadMedia( @"D:\Folders\Videos\Movies\Minions (2015)\Minions 2015 1080p BluRay x264 AC3-JYK.mkv" );
             player.SubtitlesHandler.LoadSubtitles( @"D:\Folders\Videos\Movies\Minions (2015)\Subs\English.srt" );
-            player.OnPositionChanged += PlayerOnOnPositionChanged;
+            player.TimeHandler.OnPositionChanged += PlayerOnOnPositionChanged;
             player.SubtitlesHandler.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
             player.StateHandler.OnStateChanged += ( Sender, Args ) =>
             {
@@ -64,10 +64,10 @@ namespace Videre
         private void PerformTimeSlide( )
         {
             double progress = TimeSlider.Value / TimeSlider.Maximum;
-            player.SetPosition( progress );
+            player.TimeHandler.SetPosition( progress );
 
             SliderTimer.Stop( );
-            player.StopChangingPosition( );
+            player.TimeHandler.StopChangingPosition( );
         }
 
         private void OnPlayPauseButtonClick( object Sender, RoutedEventArgs E )
@@ -93,7 +93,7 @@ namespace Videre
             }
 
             if ( !SliderTimer.IsEnabled )
-                player.StartChangingPosition( );
+                player.TimeHandler.StartChangingPosition( );
 
             // Reset the timer.
             SliderTimer.Start( );
