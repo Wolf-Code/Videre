@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Videre", "Videre\Videre.csproj", "{246E7495-C9F8-480F-B1EF-0049E62D213A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VidereLib", "VidereLib\VidereLib.csproj", "{BDD33A5D-4061-484D-A925-79B9571B8EDC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{246E7495-C9F8-480F-B1EF-0049E62D213A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{246E7495-C9F8-480F-B1EF-0049E62D213A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{246E7495-C9F8-480F-B1EF-0049E62D213A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{246E7495-C9F8-480F-B1EF-0049E62D213A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDD33A5D-4061-484D-A925-79B9571B8EDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDD33A5D-4061-484D-A925-79B9571B8EDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDD33A5D-4061-484D-A925-79B9571B8EDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDD33A5D-4061-484D-A925-79B9571B8EDC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
