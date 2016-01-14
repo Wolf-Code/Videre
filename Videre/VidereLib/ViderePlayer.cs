@@ -5,6 +5,9 @@ using VidereLib.Components;
 
 namespace VidereLib
 {
+    /// <summary>
+    /// The media player controller.
+    /// </summary>
     public class ViderePlayer
     {
         internal readonly WindowData windowData;
@@ -41,7 +44,7 @@ namespace VidereLib
         /// Gets the <typeparamref name="T"/> in the <see cref="ViderePlayer"/>.
         /// </summary>
         /// <typeparam name="T">The type of the <see cref="ComponentBase"/>.</typeparam>
-        /// <returns>The component.</returns>
+        /// <returns>The component <typeparamref name="T"/>.</returns>
         public T GetComponent<T>( ) where T : ComponentBase
         {
             return components[ typeof ( T ) ] as T;

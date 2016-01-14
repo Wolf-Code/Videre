@@ -5,6 +5,9 @@ using System.IO;
 
 namespace VidereLib
 {
+    /// <summary>
+    /// Contains all <see cref="SubtitleData"/> for a given .srt file.
+    /// </summary>
     public class Subtitles
     {
         private readonly Dictionary<TimeSpan, SubtitleData> SubtitleDatas = new Dictionary<TimeSpan, SubtitleData>( );
@@ -15,6 +18,10 @@ namespace VidereLib
         /// </summary>
         public int Count => Keys.Count;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="FilePath">The path to the .srt file.</param>
         public Subtitles( string FilePath )
         {
             ParseFile( FilePath );
