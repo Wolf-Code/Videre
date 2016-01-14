@@ -5,6 +5,9 @@ using VidereLib.EventArgs;
 
 namespace VidereLib.Components
 {
+    /// <summary>
+    /// The screen component.
+    /// </summary>
     public class ScreenComponent : ComponentBase
     {
         /// <summary>
@@ -14,8 +17,15 @@ namespace VidereLib.Components
 
         private Rectangle oldBounds;
 
+        /// <summary>
+        /// Gets called whenever the screen switches between fullscreen or non-fullscreen.
+        /// </summary>
         public event EventHandler<OnFullscreenChangedEventArgs> OnFullscreenChanged; 
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="player">the <see cref="ViderePlayer"/>.</param>
         public ScreenComponent( ViderePlayer player ) : base( player )
         {
 

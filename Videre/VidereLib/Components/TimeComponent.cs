@@ -4,15 +4,25 @@ using VidereLib.EventArgs;
 
 namespace VidereLib.Components
 {
+    /// <summary>
+    /// The time component.
+    /// </summary>
     public class TimeComponent : ComponentBase
     {
         private bool pausedWhenChangingPosition;
 
         private DispatcherTimer timeTimer;
 
+        /// <summary>
+        /// Gets called whenever the position in the media file has changed.
+        /// </summary>
         public event EventHandler<OnPositionChangedEventArgs> OnPositionChanged;
         private TimeSpan previousTimeSpan;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="player">The <see cref="ViderePlayer"/>.</param>
         public TimeComponent( ViderePlayer player ) : base( player )
         {
             player.GetComponent<StateComponent>(  ).OnStateChanged += OnOnStateChanged;
@@ -33,12 +43,19 @@ namespace VidereLib.Components
             }
         }
 
+        /// <summary>
+        /// Creates the timing timer.
+        /// </summary>
         protected override void OnInitialize( )
         {
             timeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 100 ) };
             timeTimer.Tick += TimeTimerOnTick;
         }
 
+        /// <summary>
+        /// Gets the current position in the media as a <see cref="TimeSpan"/>.
+        /// </summary>
+        /// <returns>The current position in the media.</returns>
         public TimeSpan GetPosition( )
         {
             return Player.windowData.MediaPlayer.Position;

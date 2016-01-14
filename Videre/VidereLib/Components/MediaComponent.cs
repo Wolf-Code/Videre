@@ -4,6 +4,9 @@ using VidereLib.EventArgs;
 
 namespace VidereLib.Components
 {
+    /// <summary>
+    /// The media componenet.
+    /// </summary>
     public class MediaComponent : ComponentBase
     {
         /// <summary>
@@ -21,10 +24,18 @@ namespace VidereLib.Components
         /// </summary>
         public event EventHandler<OnMediaUnloadedEventArgs> OnMediaUnloaded; 
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="player">The <see cref="ViderePlayer"/>.</param>
         public MediaComponent( ViderePlayer player ) : base( player )
         {
         }
 
+        /// <summary>
+        /// Gets the length of the media as a <see cref="TimeSpan"/>.
+        /// </summary>
+        /// <returns>The length of the media.</returns>
         public TimeSpan GetMediaLength( )
         {
             if ( !HasMediaBeenLoaded )

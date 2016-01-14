@@ -4,10 +4,19 @@ using VidereLib.EventArgs;
 
 namespace VidereLib.Components
 {
+    /// <summary>
+    /// The subtitles component.
+    /// </summary>
     public class SubtitlesComponent : ComponentBase
     {
+        /// <summary>
+        /// Gets called whenever the current subtitles changed.
+        /// </summary>
         public event EventHandler<OnSubtitlesChangedEventArgs> OnSubtitlesChanged;
 
+        /// <summary>
+        /// The subtitles data currently loaded.
+        /// </summary>
         public Subtitles Subtitles { private set; get; }
         private TimeSpan subtitlesOffset;
 
@@ -18,11 +27,18 @@ namespace VidereLib.Components
         /// </summary>
         public bool HaveSubtitlesBeenLoaded => Subtitles != null;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="player">The <see cref="ViderePlayer"/>.</param>
         public SubtitlesComponent( ViderePlayer player ) : base( player )
         {
 
         }
 
+        /// <summary>
+        /// Creates the subtitles timer and adds a hook to the <see cref="StateComponent.OnStateChanged"/> event.
+        /// </summary>
         protected override void OnInitialize( )
         {
             subtitlesTimer = new DispatcherTimer( );
@@ -69,6 +85,10 @@ namespace VidereLib.Components
             subtitlesOffset = offset;
         }
 
+        /// <summary>
+        /// Loads a subtitles file.
+        /// </summary>
+        /// <param name="filePath">The path to the file.</param>
         public void LoadSubtitles( string filePath )
         {
             if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )

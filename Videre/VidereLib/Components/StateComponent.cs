@@ -3,8 +3,14 @@ using VidereLib.EventArgs;
 
 namespace VidereLib.Components
 {
+    /// <summary>
+    /// The state component.
+    /// </summary>
     public class StateComponent : ComponentBase
     {
+        /// <summary>
+        /// Gets called whenever the player changes state.
+        /// </summary>
         public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
 
         /// <summary>
@@ -51,12 +57,11 @@ namespace VidereLib.Components
 
         private PlayerState m_CurrentState = PlayerState.Stopped;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="player">The <see cref="ViderePlayer"/>.</param>
         public StateComponent( ViderePlayer player ) : base( player )
-        {
-
-        }
-
-        protected override void OnInitialize( )
         {
 
         }
