@@ -9,6 +9,8 @@ namespace VidereLib
 
         public Grid ControlsGrid { set; get; }
 
+        public Grid MediaArea { set; get; }
+
         public MediaElement MediaPlayer { set; get; }
     }
 }

@@ -56,14 +56,9 @@ namespace VidereLib.Components
 
         }
 
-
-        /// <summary>
-        /// Returns whether the player can be paused or not.
-        /// </summary>
-        /// <returns>True if the player can be paused, false otherwise.</returns>
-        public bool CanPause( )
+        protected override void OnInitialize( )
         {
-            return Player.MediaPlayer.CanPause;
+
         }
 
         /// <summary>
@@ -75,8 +70,8 @@ namespace VidereLib.Components
                 return;
 
             Pause( );
-            Player.HasMediaBeenLoaded = false;
-            Player.windowData.MediaPlayer.Source = null;
+            Player.GetComponent<MediaComponent>( ).UnloadMedia( );
+            this.CurrentState = PlayerState.Stopped;
         }
 
         /// <summary>
@@ -87,14 +82,11 @@ namespace VidereLib.Components
             if ( CurrentState == PlayerState.Playing )
                 return;
 
-            if ( !Player.HasMediaBeenLoaded )
+            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
 
             Player.windowData.MediaPlayer.Play( );
             CurrentState = PlayerState.Playing;
-
-            if ( Player.SubtitlesHandler.Subtitles.AnySubtitlesLeft( Player.windowData.MediaPlayer.Position ) )
-                Player.SubtitlesHandler.CheckForSubtitles( );
         }
 
         /// <summary>
@@ -105,16 +97,13 @@ namespace VidereLib.Components
             if ( CurrentState == PlayerState.Paused )
                 return;
 
-            if ( !Player.HasMediaBeenLoaded )
+            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
-
-            if ( !CanPause( ) )
-                throw new Exception( "Player can't be paused at this time." );
 
             switch ( CurrentState )
             {
                 case PlayerState.Playing:
-                    Player.MediaPlayer.Pause( );
+                    Player.windowData.MediaPlayer.Pause( );
                     break;
 
                 default:
@@ -122,7 +111,6 @@ namespace VidereLib.Components
             }
 
             CurrentState = PlayerState.Paused;
-            Player.SubtitlesHandler.subtitlesTimer.Stop( );
         }
 
         /// <summary>
@@ -130,7 +118,7 @@ namespace VidereLib.Components
         /// </summary>
         public void ResumeOrPause( )
         {
-            if ( !Player.HasMediaBeenLoaded )
+            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
 
             switch ( CurrentState )

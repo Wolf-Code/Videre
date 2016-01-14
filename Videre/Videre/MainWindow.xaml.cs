@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 using System.Windows.Threading;
+using MahApps.Metro.Controls;
+using Microsoft.Win32;
 using Videre.Properties;
 using VidereLib;
 using VidereLib.Components;
@@ -33,18 +36,72 @@ namespace Videre
             SliderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 250 ) };
             SliderTimer.Tick += ( sender, args ) => PerformTimeSlide( );
 
-            player = new ViderePlayer( new WindowData { Window = this, ControlsGrid = controlsGrid, MediaPlayer = mediaElement } );
-            player.LoadMedia( @"D:\Folders\Videos\Movies\Minions (2015)\Minions 2015 1080p BluRay x264 AC3-JYK.mkv" );
-            player.SubtitlesHandler.LoadSubtitles( @"D:\Folders\Videos\Movies\Minions (2015)\Subs\English.srt" );
-            player.TimeHandler.OnPositionChanged += PlayerOnOnPositionChanged;
-            player.SubtitlesHandler.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
-            player.StateHandler.OnStateChanged += ( Sender, Args ) =>
+            player = new ViderePlayer( new WindowData { Window = this, ControlsGrid = ControlsGrid, MediaPlayer = MediaPlayer, MediaArea = MediaArea } );
+            player.GetComponent<TimeComponent>( ).OnPositionChanged += PlayerOnOnPositionChanged;
+            player.GetComponent<SubtitlesComponent>( ).OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
+
+            MediaComponent mediaComponent = player.GetComponent<MediaComponent>( );
+            mediaComponent.OnMediaLoaded += OnOnMediaLoaded;
+            mediaComponent.OnMediaUnloaded += OnOnMediaUnloaded;
+
+            StateComponent stateComponent = player.GetComponent<StateComponent>( );
+            stateComponent.OnStateChanged += OnOnStateChanged;
+
+            InputComponent inputComponent = player.GetComponent<InputComponent>( );
+            inputComponent.OnShowControls += ( Sender, Args ) => ControlsGrid.Visibility = Visibility.Visible;
+            inputComponent.OnHideControls += ( Sender, Args ) => ControlsGrid.Visibility = Visibility.Collapsed;
+
+            WindowButtonCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
+            RightWindowCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
+            LeftWindowCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
+
+            Application.Current.DispatcherUnhandledException += ( Sender, Args ) =>
             {
-                IsPlaying = Args.State == StateComponent.PlayerState.Playing;
-                this.OnPropertyChanged( nameof( IsPlaying ) );
+                using ( FileStream FS = File.Create( "exception.txt" ) )
+                    using ( TextWriter Writer = new StreamWriter( FS ) )
+                        WriteExceptionDetails( Args.Exception, Writer );
+
+                MessageBox.Show( "An exception has been encountered. The exact details have been saved in exception.txt. Please contact the developer and hand them this file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error );
+                Args.Handled = true;
+                Application.Current.Shutdown( );
             };
 
             base.OnInitialized( e );
+        }
+
+        private void OnOnMediaUnloaded( object Sender, OnMediaUnloadedEventArgs MediaUnloadedEventArgs )
+        {
+            ControlsGrid.IsEnabled = false;
+            SubtitlesButton.IsEnabled = false;
+        }
+
+        private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
+        {
+            ControlsGrid.IsEnabled = true;
+            SubtitlesButton.IsEnabled = true;
+        }
+
+        private static void WriteExceptionDetails( Exception exception, TextWriter writer )
+        {
+            writer.WriteLine( $"Source: {exception.Source}" );
+            writer.WriteLine( exception.ToString( ) );
+            writer.WriteLine( );
+            writer.WriteLine( "Data:" );
+            foreach ( object key in exception.Data.Keys )
+                writer.WriteLine( $"{key}: {exception.Data[ key ]}" );
+        }
+
+        private void OnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )
+        {
+            IsPlaying = StateChangedEventArgs.State == StateComponent.PlayerState.Playing;
+            this.OnPropertyChanged( nameof( IsPlaying ) );
+
+            switch ( StateChangedEventArgs.State )
+            {
+                case StateComponent.PlayerState.Stopped:
+                    TimeSlider.Value = 0;
+                    break;
+            }
         }
 
         private void PlayerOnOnSubtitlesChanged( object Sender, OnSubtitlesChangedEventArgs SubtitlesChangedEventArgs )
@@ -63,16 +120,20 @@ namespace Videre
 
         private void PerformTimeSlide( )
         {
+            TimeComponent timeHandler = player.GetComponent<TimeComponent>( );
             double progress = TimeSlider.Value / TimeSlider.Maximum;
-            player.TimeHandler.SetPosition( progress );
+            timeHandler.SetPosition( progress );
 
             SliderTimer.Stop( );
-            player.TimeHandler.StopChangingPosition( );
+            timeHandler.StopChangingPosition( );
         }
 
         private void OnPlayPauseButtonClick( object Sender, RoutedEventArgs E )
         {
-            player.StateHandler.ResumeOrPause( );
+            if ( !player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+                return;
+
+            player.GetComponent<StateComponent>( ).ResumeOrPause( );
         }
 
         private void OnForwardButtonClick( object Sender, RoutedEventArgs E )
@@ -86,6 +147,9 @@ namespace Videre
 
         private void OnTimeSliderValueChanged( object Sender, RoutedPropertyChangedEventArgs<double> E )
         {
+            if ( !player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+                return;
+
             if ( ChangedExternally )
             {
                 ChangedExternally = false;
@@ -93,7 +157,7 @@ namespace Videre
             }
 
             if ( !SliderTimer.IsEnabled )
-                player.TimeHandler.StartChangingPosition( );
+                player.GetComponent<TimeComponent>( ).StartChangingPosition( );
 
             // Reset the timer.
             SliderTimer.Start( );
@@ -108,18 +172,48 @@ namespace Videre
             PerformTimeSlide( );
         }
 
-        private void OnVideoMouseDown( object Sender, MouseButtonEventArgs E )
-        {
-            if ( E.ClickCount == 2 && E.ChangedButton == MouseButton.Left )
-                player.ScreenHandler.ToggleFullScreen( );
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged( [CallerMemberName] string PropertyName = null )
         {
             PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( PropertyName ) );
+        }
+
+        private void OnSettingsButtonClicked( object Sender, RoutedEventArgs E )
+        {
+            SettingsFlyout.IsOpen = true;
+        }
+
+        private void OnFileButtonClicked( object Sender, RoutedEventArgs E )
+        {
+            FileFlyout.IsOpen = true;
+        }
+
+        private void OnLoadMediaButtonClick( object Sender, RoutedEventArgs E )
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog( );
+            bool? res = fileDialog.ShowDialog( this );
+
+            if ( !res.Value  )
+                return;
+
+            player.GetComponent<StateComponent>( ).Stop( );
+            player.GetComponent<MediaComponent>( ).LoadMedia( fileDialog.FileName );
+            FileFlyout.IsOpen = false;
+            player.GetComponent<StateComponent>( ).Play( );
+        }
+
+        private void OnLoadSubtitlesButtonClick( object Sender, RoutedEventArgs E )
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog { Filter = "SubRip (*.srt)|*.srt" };
+            bool? res = fileDialog.ShowDialog( this );
+
+            if ( !res.Value )
+                return;
+
+            player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( fileDialog.FileName );
+            FileFlyout.IsOpen = false;
         }
     }
 }

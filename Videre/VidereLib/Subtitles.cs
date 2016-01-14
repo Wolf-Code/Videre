@@ -34,7 +34,7 @@ namespace VidereLib
                     Data = Reader.ReadToEnd( ).Split( '\n' );
 
             int X = 0;
-            while ( X < Data.Length )
+            while ( X < Data.Length - 1 )
             {
                 int ID = int.Parse( Data[ X++ ] );
 
@@ -44,8 +44,11 @@ namespace VidereLib
 
                 List<string> subs = new List<string>( );
                 int parsed;
-                while ( Data[ X++ ].Length > 0 && !int.TryParse( Data[ X ], out parsed ) && parsed != ID + 1 )
-                    subs.Add( Data[ X - 1 ] );
+                while ( Data[ X ].Length > 0 && X < Data.Length - 1 && !int.TryParse( Data[ X ], out parsed ) && parsed != ID + 1 )
+                {
+                    subs.Add( Data[ X ] );
+                    X++;
+                }
 
                 SubtitleDatas.Add( Start, new SubtitleData( ID, Start, End, subs ) );
             }

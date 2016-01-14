@@ -1,22 +1,26 @@
-﻿
+﻿using System;
 using System.Drawing;
 using System.Windows;
+using VidereLib.EventArgs;
 
 namespace VidereLib.Components
 {
     public class ScreenComponent : ComponentBase
-    {        /// <summary>
-             /// Whether or not the media is currently fullscreen.
-             /// </summary>
-        public bool IsFullScreen { internal set; get; }
+    {
+        /// <summary>
+        /// Whether or not the media is currently fullscreen.
+        /// </summary>
+        public bool IsFullScreen { private set; get; }
 
         private Rectangle oldBounds;
 
+        public event EventHandler<OnFullscreenChangedEventArgs> OnFullscreenChanged; 
+
         public ScreenComponent( ViderePlayer player ) : base( player )
         {
+
         }
-
-
+        
         /// <summary>
         /// Toggles the fullscreen state.
         /// </summary>
@@ -40,11 +44,11 @@ namespace VidereLib.Components
             Player.windowData.Window.Left = fullScreen ? 0 : oldBounds.X;
             Player.windowData.Window.Top = fullScreen ? 0 : oldBounds.Y;
             Player.windowData.Window.ResizeMode = fullScreen ? ResizeMode.NoResize : ResizeMode.CanResize;
-            Player.windowData.ControlsGrid.Visibility = fullScreen ? Visibility.Collapsed : Visibility.Visible;
             Player.windowData.Window.ShowTitleBar = !fullScreen;
             Player.windowData.Window.ShowCloseButton = !fullScreen;
 
             IsFullScreen = fullScreen;
+            OnFullscreenChanged?.Invoke( this, new OnFullscreenChangedEventArgs( IsFullScreen ) );
         }
     }
 }

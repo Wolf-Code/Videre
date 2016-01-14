@@ -12,6 +12,13 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="NoFocusStyle1" TargetType="{x:Type FrameworkElement }">
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            </Style>
+            <Style x:Key="NoFocusStyle2" TargetType="{x:Type FrameworkContentElement }">
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
