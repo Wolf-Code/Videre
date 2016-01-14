@@ -6,21 +6,42 @@ using VidereLib.EventArgs;
 
 namespace VidereLib.Components
 {
+    /// <summary>
+    /// The input component.
+    /// </summary>
     public class InputComponent : ComponentBase
     {
         private DispatcherTimer hideControlsTimer;
+
+        /// <summary>
+        /// True if controls are currently hidden, false otherwise.
+        /// </summary>
         public bool AreControlsHidden { private set; get; }
 
+        /// <summary>
+        /// Called whenever the events should be shown.
+        /// </summary>
         public event EventHandler<OnShowControlsEventArgs> OnShowControls;
+
+        /// <summary>
+        /// Called whenever the events should be hidden.
+        /// </summary>
         public event EventHandler<OnHideControlsEventArgs> OnHideControls;
 
         private Point lastCursorPos;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="Player">The <see cref="ViderePlayer"/>.</param>
         public InputComponent( ViderePlayer Player ) : base( Player )
         {
 
         }
 
+        /// <summary>
+        /// Gets called after all components have been added to the player.
+        /// </summary>
         protected override void OnInitialize( )
         {
             hideControlsTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 1500 ) };
