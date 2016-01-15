@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using VidereLib.EventArgs;
 
 namespace VidereLib.Components
@@ -14,6 +15,8 @@ namespace VidereLib.Components
         /// </summary>
         public bool HasMediaBeenLoaded { private set; get; }
 
+        private FileInfo lastLoadedFile;
+
         /// <summary>
         /// Gets called whenever media has been loaded.
         /// </summary>
@@ -22,7 +25,12 @@ namespace VidereLib.Components
         /// <summary>
         /// Gets called whenever media has been unloaded.
         /// </summary>
-        public event EventHandler<OnMediaUnloadedEventArgs> OnMediaUnloaded; 
+        public event EventHandler<OnMediaUnloadedEventArgs> OnMediaUnloaded;
+
+        /// <summary>
+        /// Gets called whenever media failed to load.
+        /// </summary>
+        public event EventHandler<OnMediaFailedToLoadEventArgs> OnMediaFailedToLoad;
 
         /// <summary>
         /// Constructor.
@@ -30,6 +38,27 @@ namespace VidereLib.Components
         /// <param name="player">The <see cref="ViderePlayer"/>.</param>
         public MediaComponent( ViderePlayer player ) : base( player )
         {
+        }
+
+        /// <summary>
+        /// Initializes the <see cref="MediaComponent"/>.
+        /// </summary>
+        protected override void OnInitialize( )
+        {
+            Player.windowData.MediaPlayer.MediaFailed += MediaPlayerOnMediaFailed;
+            Player.windowData.MediaPlayer.MediaOpened += MediaPlayerOnMediaOpened;
+        }
+
+        private void MediaPlayerOnMediaOpened( object Sender, RoutedEventArgs Args )
+        {
+            HasMediaBeenLoaded = true;
+            OnMediaLoaded?.Invoke( this, new OnMediaLoadedEventArgs( lastLoadedFile ) );
+        }
+
+        private void MediaPlayerOnMediaFailed( object Sender, ExceptionRoutedEventArgs ExceptionRoutedEventArgs )
+        {
+            HasMediaBeenLoaded = false;
+            OnMediaFailedToLoad?.Invoke( this, new OnMediaFailedToLoadEventArgs( ExceptionRoutedEventArgs.ErrorException, lastLoadedFile ) );
         }
 
         /// <summary>
@@ -55,9 +84,10 @@ namespace VidereLib.Components
 
             FileInfo info = new FileInfo( Path );
 
+            lastLoadedFile = info;
             Player.windowData.MediaPlayer.Source = new Uri( info.FullName );
-            HasMediaBeenLoaded = true;
-            OnMediaLoaded?.Invoke( this, new OnMediaLoadedEventArgs( info ) );
+            Player.windowData.MediaPlayer.Play( );
+            Player.windowData.MediaPlayer.Stop( );
         }
 
         /// <summary>

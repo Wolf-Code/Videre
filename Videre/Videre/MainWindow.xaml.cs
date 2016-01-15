@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using Videre.Properties;
 using VidereLib;
@@ -53,6 +55,7 @@ namespace Videre
             MediaComponent mediaComponent = player.GetComponent<MediaComponent>( );
             mediaComponent.OnMediaLoaded += OnOnMediaLoaded;
             mediaComponent.OnMediaUnloaded += OnOnMediaUnloaded;
+            mediaComponent.OnMediaFailedToLoad += MediaComponentOnOnMediaFailedToLoad;
 
             StateComponent stateComponent = player.GetComponent<StateComponent>( );
             stateComponent.OnStateChanged += OnOnStateChanged;
@@ -79,6 +82,11 @@ namespace Videre
             base.OnInitialized( e );
         }
 
+        private async void MediaComponentOnOnMediaFailedToLoad( object Sender, OnMediaFailedToLoadEventArgs MediaFailedToLoadEventArgs )
+        {
+            await this.ShowMessageAsync( "Failed to load media", $"Unable to load {MediaFailedToLoadEventArgs.MediaFile.Name}. Reason: {MediaFailedToLoadEventArgs.Exception.Message}" );
+        }
+
         private void OnOnMediaUnloaded( object Sender, OnMediaUnloadedEventArgs MediaUnloadedEventArgs )
         {
             ControlsGrid.IsEnabled = false;
@@ -89,6 +97,8 @@ namespace Videre
         {
             ControlsGrid.IsEnabled = true;
             SubtitlesButton.IsEnabled = true;
+            FileFlyout.IsOpen = false;
+            player.GetComponent<StateComponent>( ).Play( );
         }
 
         private static void WriteExceptionDetails( Exception exception, TextWriter writer )
@@ -197,13 +207,11 @@ namespace Videre
             OpenFileDialog fileDialog = new OpenFileDialog( );
             bool? res = fileDialog.ShowDialog( this );
 
-            if ( !res.Value  )
+            if ( !res.Value )
                 return;
 
             player.GetComponent<StateComponent>( ).Stop( );
             player.GetComponent<MediaComponent>( ).LoadMedia( fileDialog.FileName );
-            FileFlyout.IsOpen = false;
-            player.GetComponent<StateComponent>( ).Play( );
         }
 
         private void OnLoadSubtitlesButtonClick( object Sender, RoutedEventArgs E )

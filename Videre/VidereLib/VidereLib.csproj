@@ -68,6 +68,7 @@
     <Compile Include="Components\TimeComponent.cs" />
     <Compile Include="EventArgs\OnFullscreenChangedEventArgs.cs" />
     <Compile Include="EventArgs\OnHideControlsEventArgs.cs" />
+    <Compile Include="EventArgs\OnMediaFailedToLoadEventArgs.cs" />
     <Compile Include="EventArgs\OnShowControlsEventArgs.cs" />
     <Compile Include="EventArgs\OnMediaUnloadedEventArgs.cs" />
     <Compile Include="EventArgs\OnMediaLoadedEventArgs.cs" />
