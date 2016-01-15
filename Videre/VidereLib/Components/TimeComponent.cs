@@ -17,6 +17,7 @@ namespace VidereLib.Components
         /// Gets called whenever the position in the media file has changed.
         /// </summary>
         public event EventHandler<OnPositionChangedEventArgs> OnPositionChanged;
+
         private TimeSpan previousTimeSpan;
 
         /// <summary>
@@ -103,8 +104,7 @@ namespace VidereLib.Components
         {
             if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
-
-
+            
             Player.windowData.MediaPlayer.Position = Span;
         }
 

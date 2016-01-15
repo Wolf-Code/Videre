@@ -91,6 +91,8 @@ namespace Videre
         {
             ControlsGrid.IsEnabled = false;
             SubtitlesButton.IsEnabled = false;
+            TimeLabel_Total.Content = "--:--:--";
+            TimeLabel_Current.Content = TimeLabel_Total.Content;
         }
 
         private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
@@ -99,6 +101,8 @@ namespace Videre
             SubtitlesButton.IsEnabled = true;
             FileFlyout.IsOpen = false;
             SubtitlesOffset.Value = 0;
+            
+            TimeLabel_Total.Content = player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
             player.GetComponent<StateComponent>( ).Play( );
         }
 
@@ -137,6 +141,7 @@ namespace Videre
         {
             ChangedExternally = true;
             TimeSlider.Value = OnPositionChangedEventArgs.Progress * TimeSlider.Maximum;
+            TimeLabel_Current.Content = OnPositionChangedEventArgs.Position.ToString( @"hh\:mm\:ss" );
         }
 
         private void PerformTimeSlide( )
