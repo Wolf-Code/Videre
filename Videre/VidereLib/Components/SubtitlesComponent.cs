@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Threading;
 using VidereLib.EventArgs;
 
@@ -13,6 +14,11 @@ namespace VidereLib.Components
         /// Gets called whenever the current subtitles changed.
         /// </summary>
         public event EventHandler<OnSubtitlesChangedEventArgs> OnSubtitlesChanged;
+
+        /// <summary>
+        /// Gets called whenever subtitles failed to load.
+        /// </summary>
+        public event EventHandler<OnSubtitlesFailedToLoadEventArgs> OnSubtitlesFailedToLoad; 
 
         /// <summary>
         /// The subtitles data currently loaded.
@@ -98,7 +104,13 @@ namespace VidereLib.Components
                 throw new Exception( "Unable to load subtitles before any media has been loaded." );
 
             Subtitles = new Subtitles( filePath );
-            this.CheckForSubtitles( );
+            if ( Subtitles.SubtitlesParsedSuccesfully )
+                this.CheckForSubtitles( );
+            else
+            {
+                Subtitles = null;
+                OnSubtitlesFailedToLoad?.Invoke( this, new OnSubtitlesFailedToLoadEventArgs( new FileInfo( filePath ) ) );
+            }
         }
 
         internal void CheckForSubtitles( )

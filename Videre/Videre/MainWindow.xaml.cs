@@ -50,7 +50,9 @@ namespace Videre
 
             player = new ViderePlayer( new WindowData { Window = this, ControlsGrid = ControlsGrid, MediaPlayer = MediaPlayer, MediaArea = MediaArea } );
             player.GetComponent<TimeComponent>( ).OnPositionChanged += PlayerOnOnPositionChanged;
-            player.GetComponent<SubtitlesComponent>( ).OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
+            SubtitlesComponent subtitlesComponent = player.GetComponent<SubtitlesComponent>( );
+            subtitlesComponent.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
+            subtitlesComponent.OnSubtitlesFailedToLoad += SubtitlesComponentOnOnSubtitlesFailedToLoad;
 
             MediaComponent mediaComponent = player.GetComponent<MediaComponent>( );
             mediaComponent.OnMediaLoaded += OnOnMediaLoaded;
@@ -129,6 +131,8 @@ namespace Videre
             }
         }
 
+        #region Subtitles
+
         private void PlayerOnOnSubtitlesChanged( object Sender, OnSubtitlesChangedEventArgs SubtitlesChangedEventArgs )
         {
             subtitleLabel.Inlines.Clear( );
@@ -136,6 +140,13 @@ namespace Videre
             foreach ( string S in SubtitlesChangedEventArgs.Subtitles.Lines )
                 subtitleLabel.Inlines.Add( S );
         }
+
+        private async void SubtitlesComponentOnOnSubtitlesFailedToLoad( object Sender, OnSubtitlesFailedToLoadEventArgs SubtitlesFailedToLoadEventArgs )
+        {
+            await this.ShowMessageAsync( "Failed to load subtitles", $"Unable to load {SubtitlesFailedToLoadEventArgs.Subtitles.Name}." );
+        }
+
+        #endregion
 
         private void PlayerOnOnPositionChanged( object Sender, OnPositionChangedEventArgs OnPositionChangedEventArgs )
         {

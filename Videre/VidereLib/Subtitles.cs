@@ -19,13 +19,25 @@ namespace VidereLib
         public int Count => Keys.Count;
 
         /// <summary>
+        /// True if the subtitles were parsed succesfully, false otherwise.
+        /// </summary>
+        public bool SubtitlesParsedSuccesfully { private set; get; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="FilePath">The path to the .srt file.</param>
         public Subtitles( string FilePath )
         {
-            ParseFile( FilePath );
-
+            try
+            {
+                ParseFile( FilePath );
+                SubtitlesParsedSuccesfully = true;
+            }
+            catch
+            {
+                SubtitlesParsedSuccesfully = false;
+            }
             Keys = new List<TimeSpan>( SubtitleDatas.Keys );
         }
 

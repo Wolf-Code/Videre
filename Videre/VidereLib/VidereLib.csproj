@@ -74,6 +74,7 @@
     <Compile Include="EventArgs\OnMediaLoadedEventArgs.cs" />
     <Compile Include="EventArgs\OnPositionChangedEventArgs.cs" />
     <Compile Include="EventArgs\OnStateChangedEventArgs.cs" />
+    <Compile Include="EventArgs\OnSubtitlesFailedToLoadEventArgs.cs" />
     <Compile Include="EventArgs\OnSubtitlesChangedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubtitleData.cs" />
