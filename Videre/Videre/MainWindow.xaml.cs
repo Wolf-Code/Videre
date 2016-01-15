@@ -98,6 +98,7 @@ namespace Videre
             ControlsGrid.IsEnabled = true;
             SubtitlesButton.IsEnabled = true;
             FileFlyout.IsOpen = false;
+            SubtitlesOffset.Value = 0;
             player.GetComponent<StateComponent>( ).Play( );
         }
 
@@ -224,6 +225,17 @@ namespace Videre
 
             player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( fileDialog.FileName );
             FileFlyout.IsOpen = false;
+        }
+
+        private void NumericUpDown_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
+        {
+            if ( !player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+                return;
+
+            if ( !E.NewValue.HasValue )
+                return;
+
+            player.GetComponent<SubtitlesComponent>(  ).SetSubtitlesOffset( TimeSpan.FromMilliseconds( E.NewValue.Value ) );
         }
 
         #region Property Change

@@ -83,6 +83,9 @@ namespace VidereLib.Components
         public void SetSubtitlesOffset( TimeSpan offset )
         {
             subtitlesOffset = offset;
+            this.subtitlesTimer.Stop( );
+
+            this.CheckForSubtitles( );
         }
 
         /// <summary>
@@ -104,7 +107,7 @@ namespace VidereLib.Components
                 return;
 
             TimeSpan position = Player.windowData.MediaPlayer.Position;
-            TimeSpan currentPosition = position + subtitlesOffset;
+            TimeSpan currentPosition = position - subtitlesOffset;
             if ( !Subtitles.AnySubtitlesLeft( currentPosition ) )
                 return;
 

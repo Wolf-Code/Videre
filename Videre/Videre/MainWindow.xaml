@@ -44,7 +44,15 @@
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
             <Controls:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" Width="auto">
-                <!-- Your custom content here -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0">Subtitles Offset</Label>
+                    <Controls:NumericUpDown Grid.Row="1" x:Name="SubtitlesOffset" Interval="1" Speedup="True" HasDecimals="False" ValueChanged="NumericUpDown_OnValueChanged"></Controls:NumericUpDown>
+                </Grid>
             </Controls:Flyout>
 
             <Controls:Flyout x:Name="FileFlyout" Header="File" Position="Left" Width="auto">
