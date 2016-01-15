@@ -24,13 +24,23 @@ namespace Videre
         private DispatcherTimer SliderTimer;
         private bool ChangedExternally;
 
+        /// <summary>
+        /// True if the player is playing, false otherwise.
+        /// </summary>
         public bool IsPlaying { private set; get; }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public MainWindow( )
         {
             InitializeComponent( );
         }
 
+        /// <summary>
+        /// Initializes player.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnInitialized( EventArgs e )
         {
             SliderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 250 ) };
@@ -172,14 +182,6 @@ namespace Videre
             PerformTimeSlide( );
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged( [CallerMemberName] string PropertyName = null )
-        {
-            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( PropertyName ) );
-        }
-
         private void OnSettingsButtonClicked( object Sender, RoutedEventArgs E )
         {
             SettingsFlyout.IsOpen = true;
@@ -215,5 +217,22 @@ namespace Videre
             player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( fileDialog.FileName );
             FileFlyout.IsOpen = false;
         }
+
+        #region Property Change
+        /// <summary>
+        /// Gets called whenever a property is changed.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Virtual method called on a change in properties.
+        /// </summary>
+        /// <param name="PropertyName">The name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged( [CallerMemberName] string PropertyName = null )
+        {
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( PropertyName ) );
+        }
+        #endregion
     }
 }
