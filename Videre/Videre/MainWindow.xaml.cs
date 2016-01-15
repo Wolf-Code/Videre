@@ -131,12 +131,17 @@ namespace Videre
         }
 
         #region Subtitles
+        
+        private void SubtitlesPosition_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
+        {
+            if ( !E.NewValue.HasValue )
+                return;
+
+            subtitleLabel.Margin = new Thickness( 0, 0, 0, E.NewValue.Value );
+        }
 
         private void NumericUpDown_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
         {
-            if ( !player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
-                return;
-
             if ( !E.NewValue.HasValue )
                 return;
 

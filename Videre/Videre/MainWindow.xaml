@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:videre="clr-namespace:Videre"
+        xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
         Title="Videre" Height="350" Width="525" x:Name="VideoWindow" videre:FocusVisualTreeChanger.IsChanged="True">
 
@@ -50,6 +51,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0">Subtitles Offset</Label>
@@ -64,6 +67,16 @@
                         HasDecimals="False" 
                         ValueChanged="SubtitlesSize_OnValueChanged"
                         Value="{Binding ElementName=subtitleLabel, Path=FontSize}"></Controls:NumericUpDown>
+
+                    <Label Grid.Row="4">Subtitles Position</Label>
+                    <Controls:NumericUpDown 
+                        Grid.Row="5" x:Name="SubtitlesPosition" 
+                        Interval="1" 
+                        Speedup="True" 
+                        HasDecimals="False" 
+                        Minimum="0"
+                        ValueChanged="SubtitlesPosition_OnValueChanged"
+                        Value="{Binding ElementName=subtitleLabel, Path=Margin.Bottom}"></Controls:NumericUpDown>
                 </Grid>
             </Controls:Flyout>
 
