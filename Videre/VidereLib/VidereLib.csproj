@@ -77,13 +77,17 @@
     <Compile Include="EventArgs\OnSubtitlesFailedToLoadEventArgs.cs" />
     <Compile Include="EventArgs\OnSubtitlesChangedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubtitleData.cs" />
-    <Compile Include="Subtitles.cs" />
     <Compile Include="ViderePlayer.cs" />
     <Compile Include="WindowData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VidereSubs\VidereSubs.csproj">
+      <Project>{f2d9b0ae-0864-44e1-8b07-0ce2a595e724}</Project>
+      <Name>VidereSubs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

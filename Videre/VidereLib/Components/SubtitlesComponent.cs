@@ -2,6 +2,8 @@
 using System.IO;
 using System.Windows.Threading;
 using VidereLib.EventArgs;
+using VidereSubs;
+using VidereSubs.SubtitleFormats;
 
 namespace VidereLib.Components
 {
@@ -103,7 +105,7 @@ namespace VidereLib.Components
             if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "Unable to load subtitles before any media has been loaded." );
 
-            Subtitles = new Subtitles( filePath );
+            Subtitles = new SRT( filePath );
             if ( Subtitles.SubtitlesParsedSuccesfully )
                 this.CheckForSubtitles( );
             else

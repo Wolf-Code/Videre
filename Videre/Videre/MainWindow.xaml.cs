@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
@@ -133,12 +131,38 @@ namespace Videre
 
         #region Subtitles
 
+        private void NumericUpDown_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
+        {
+            if ( !player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+                return;
+
+            if ( !E.NewValue.HasValue )
+                return;
+
+            player.GetComponent<SubtitlesComponent>( ).SetSubtitlesOffset( TimeSpan.FromMilliseconds( E.NewValue.Value ) );
+        }
+
+        private void SubtitlesSize_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
+        {
+            if ( !E.NewValue.HasValue )
+                return;
+
+            subtitleLabel.FontSize = E.NewValue.Value;
+        }
+
         private void PlayerOnOnSubtitlesChanged( object Sender, OnSubtitlesChangedEventArgs SubtitlesChangedEventArgs )
         {
             subtitleLabel.Inlines.Clear( );
-
+            if ( SubtitlesChangedEventArgs.Subtitles.Lines.Count <= 0 )
+                return;
+            
             foreach ( string S in SubtitlesChangedEventArgs.Subtitles.Lines )
+            {
+                Console.WriteLine("Adding line " + S);
                 subtitleLabel.Inlines.Add( S );
+            }
+
+            Console.WriteLine();
         }
 
         private async void SubtitlesComponentOnOnSubtitlesFailedToLoad( object Sender, OnSubtitlesFailedToLoadEventArgs SubtitlesFailedToLoadEventArgs )
@@ -241,17 +265,6 @@ namespace Videre
 
             player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( fileDialog.FileName );
             FileFlyout.IsOpen = false;
-        }
-
-        private void NumericUpDown_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
-        {
-            if ( !player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
-                return;
-
-            if ( !E.NewValue.HasValue )
-                return;
-
-            player.GetComponent<SubtitlesComponent>(  ).SetSubtitlesOffset( TimeSpan.FromMilliseconds( E.NewValue.Value ) );
         }
 
         #region Property Change

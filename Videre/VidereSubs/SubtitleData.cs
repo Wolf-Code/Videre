@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VidereLib
+namespace VidereSubs
 {
     /// <summary>
     /// Contains data about a subtitle.

@@ -128,6 +128,10 @@
       <Project>{bdd33a5d-4061-484d-a925-79b9571b8edc}</Project>
       <Name>VidereLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VidereSubs\VidereSubs.csproj">
+      <Project>{f2d9b0ae-0864-44e1-8b07-0ce2a595e724}</Project>
+      <Name>VidereSubs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

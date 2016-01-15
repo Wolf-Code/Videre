@@ -1,4 +1,6 @@
 ﻿
+using VidereSubs;
+
 namespace VidereLib.EventArgs
 {
     /// <summary>

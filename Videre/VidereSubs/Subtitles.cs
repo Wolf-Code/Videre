@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 
-namespace VidereLib
+namespace VidereSubs
 {
     /// <summary>
     /// Contains all <see cref="SubtitleData"/> for a given .srt file.
     /// </summary>
-    public class Subtitles
+    public abstract class Subtitles
     {
-        private readonly Dictionary<TimeSpan, SubtitleData> SubtitleDatas = new Dictionary<TimeSpan, SubtitleData>( );
+        private Dictionary<TimeSpan, SubtitleData> SubtitleDatas = new Dictionary<TimeSpan, SubtitleData>( );
         private readonly List<TimeSpan> Keys;
 
         /// <summary>
@@ -27,51 +25,31 @@ namespace VidereLib
         /// Constructor.
         /// </summary>
         /// <param name="FilePath">The path to the .srt file.</param>
-        public Subtitles( string FilePath )
+        protected Subtitles( string FilePath )
+        {
+            this.LoadSubtitles( FilePath );
+            Keys = new List<TimeSpan>( SubtitleDatas.Keys );
+        }
+
+        private void LoadSubtitles( string filePath )
         {
             try
             {
-                ParseFile( FilePath );
-                SubtitlesParsedSuccesfully = true;
+                this.SubtitleDatas = ParseFile( filePath );
+                SubtitlesParsedSuccesfully = this.SubtitleDatas != null;
             }
             catch
             {
                 SubtitlesParsedSuccesfully = false;
             }
-            Keys = new List<TimeSpan>( SubtitleDatas.Keys );
         }
 
-        private void ParseFile( string FilePath )
-        {
-            if ( !File.Exists( FilePath ) )
-                return;
-
-            CultureInfo france = new CultureInfo( "fr-Fr" );
-            string[ ] Data;
-            using ( FileStream FS = File.OpenRead( FilePath ) )
-                using ( TextReader Reader = new StreamReader( FS ) )
-                    Data = Reader.ReadToEnd( ).Split( '\n' );
-
-            int X = 0;
-            while ( X < Data.Length - 1 )
-            {
-                int ID = int.Parse( Data[ X++ ] );
-
-                string[ ] SplitTime = Data[ X++ ].Split( new[ ] { "-->" }, StringSplitOptions.RemoveEmptyEntries );
-                TimeSpan Start = TimeSpan.Parse( SplitTime[ 0 ].Trim( ), france );
-                TimeSpan End = TimeSpan.Parse( SplitTime[ 1 ].Trim( ), france );
-
-                List<string> subs = new List<string>( );
-                int parsed;
-                while ( Data[ X ].Length > 0 && X < Data.Length - 1 && !int.TryParse( Data[ X ], out parsed ) && parsed != ID + 1 )
-                {
-                    subs.Add( Data[ X ] );
-                    X++;
-                }
-
-                SubtitleDatas.Add( Start, new SubtitleData( ID, Start, End, subs ) );
-            }
-        }
+        /// <summary>
+        /// Parses the file and returns a dictionary containing the timespan at which it starts as the key, and the actual subtitle data as the value.
+        /// </summary>
+        /// <param name="FilePath">The path to the subtitle file.</param>
+        /// <returns>The subtitle data.</returns>
+        protected abstract Dictionary<TimeSpan, SubtitleData> ParseFile( string FilePath );
 
         /// <summary>
         /// Checks if there are subtitles left for a given time.
