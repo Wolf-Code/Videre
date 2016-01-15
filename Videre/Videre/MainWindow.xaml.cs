@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Threading;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -155,14 +156,14 @@ namespace Videre
             subtitleLabel.Inlines.Clear( );
             if ( SubtitlesChangedEventArgs.Subtitles.Lines.Count <= 0 )
                 return;
-            
-            foreach ( string S in SubtitlesChangedEventArgs.Subtitles.Lines )
-            {
-                Console.WriteLine("Adding line " + S);
-                subtitleLabel.Inlines.Add( S );
-            }
 
-            Console.WriteLine();
+            for ( int X = 0; X < SubtitlesChangedEventArgs.Subtitles.Lines.Count; X++ )
+            {
+                subtitleLabel.Inlines.Add( SubtitlesChangedEventArgs.Subtitles.Lines[ X ] );
+
+                if ( X < SubtitlesChangedEventArgs.Subtitles.Lines.Count - 1 )
+                    subtitleLabel.Inlines.Add( Environment.NewLine );
+            }
         }
 
         private async void SubtitlesComponentOnOnSubtitlesFailedToLoad( object Sender, OnSubtitlesFailedToLoadEventArgs SubtitlesFailedToLoadEventArgs )

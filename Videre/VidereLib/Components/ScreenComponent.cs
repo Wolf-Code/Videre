@@ -17,6 +17,8 @@ namespace VidereLib.Components
 
         private Rectangle oldBounds;
 
+        private WindowState oldState;
+
         /// <summary>
         /// Gets called whenever the screen switches between fullscreen or non-fullscreen.
         /// </summary>
@@ -46,8 +48,10 @@ namespace VidereLib.Components
         public void SetFullScreen( bool fullScreen = true )
         {
             if ( fullScreen && !IsFullScreen )
+            {
                 oldBounds = new Rectangle( ( int ) Player.windowData.Window.Left, ( int ) Player.windowData.Window.Top, ( int ) Player.windowData.Window.Width, ( int ) Player.windowData.Window.Height );
-
+                oldState = Player.windowData.Window.WindowState;
+            }
             Player.windowData.Window.Height = fullScreen ? SystemParameters.PrimaryScreenHeight : oldBounds.Height;
             Player.windowData.Window.Width = fullScreen ? SystemParameters.PrimaryScreenWidth : oldBounds.Width;
             Player.windowData.Window.Topmost = fullScreen;
@@ -56,6 +60,7 @@ namespace VidereLib.Components
             Player.windowData.Window.ResizeMode = fullScreen ? ResizeMode.NoResize : ResizeMode.CanResize;
             Player.windowData.Window.ShowTitleBar = !fullScreen;
             Player.windowData.Window.ShowCloseButton = !fullScreen;
+            Player.windowData.Window.WindowState = fullScreen ? WindowState.Normal : oldState;
 
             IsFullScreen = fullScreen;
             OnFullscreenChanged?.Invoke( this, new OnFullscreenChangedEventArgs( IsFullScreen ) );

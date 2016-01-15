@@ -106,7 +106,7 @@
             <MediaElement x:Name="MediaPlayer" ScrubbingEnabled="True" LoadedBehavior="Manual"></MediaElement>
             <TextBlock  x:Name="subtitleLabel"
                     Foreground="White"
-                    FontSize="20"
+                    FontSize="30"
                     TextAlignment="Center"
                     VerticalAlignment="Bottom"
                     FontFamily="Trebuchet MS"

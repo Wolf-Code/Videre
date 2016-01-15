@@ -47,6 +47,7 @@ namespace VidereSubs.SubtitleFormats
 
                 List<string> subs = new List<string>( );
                 int parsed;
+
                 while ( Data[ X ].Length > 0 && X < Data.Length - 1 && !int.TryParse( Data[ X ], out parsed ) && parsed != ID + 1 )
                 {
                     subs.Add( Data[ X ] );
