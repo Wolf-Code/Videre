@@ -161,44 +161,54 @@
                 <Label x:Name="TimeLabel_Total" Grid.Column="2" Grid.Row="0" Content="--:--:--"/>
             </Grid>
 
-            <Button Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.Column="0" Click="OnBackButtonClick">
-                <Rectangle Width="20" Height="20">
-                    <Rectangle.Fill>
-                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_rewind}" />
-                    </Rectangle.Fill>
-                </Rectangle>
-            </Button>
-            <Button x:Name="PlayPauseButton" Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.Column="1" Click="OnPlayPauseButtonClick">
-                <Rectangle x:Name="PlayPauseButtonRectangle" Width="20" Height="20">
-                    <Rectangle.Style>
-                        <Style TargetType="{x:Type Rectangle}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=VideoWindow, Path=IsPlaying}"  Value="True">
-                                    <Setter Property="Fill">
-                                        <Setter.Value>
-                                            <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_pause}" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding ElementName=VideoWindow, Path=IsPlaying}" Value="False">
-                                    <Setter Property="Fill">
-                                        <Setter.Value>
-                                            <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_play}" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Rectangle.Style>
-                </Rectangle>
-            </Button>
-            <Button Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.Column="2" Click="OnForwardButtonClick">
-                <Rectangle Width="20" Height="20">
-                    <Rectangle.Fill>
-                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_fastforward}" />
-                    </Rectangle.Fill>
-                </Rectangle>
-            </Button>
+            <Grid Grid.Row="1" ColumnSpan="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Button Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="0" Click="OnBackButtonClick">
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_rewind}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Button>
+                <Button x:Name="PlayPauseButton" Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="1" Click="OnPlayPauseButtonClick">
+                    <Rectangle x:Name="PlayPauseButtonRectangle" Width="20" Height="20">
+                        <Rectangle.Style>
+                            <Style TargetType="{x:Type Rectangle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=VideoWindow, Path=IsPlaying}"  Value="True">
+                                        <Setter Property="Fill">
+                                            <Setter.Value>
+                                                <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_pause}" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=VideoWindow, Path=IsPlaying}" Value="False">
+                                        <Setter Property="Fill">
+                                            <Setter.Value>
+                                                <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_play}" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Style>
+                    </Rectangle>
+                </Button>
+                <Button Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="2" Click="OnForwardButtonClick">
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_fastforward}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Button>
+                <Slider x:Name="VolumeSlider" VerticalAlignment="Center" Margin="0 0 5 0" Grid.Row="0" Grid.Column="4" Orientation="Horizontal" Value="1" Minimum="0" Maximum="1" ValueChanged="VolumeSlider_OnValueChanged"/>
+            </Grid>
         </Grid>
 
     </Grid>

@@ -53,6 +53,24 @@ namespace VidereLib.Components
             subtitlesTimer.Tick += SubtitlesTimerOnTick;
 
             Player.GetComponent<StateComponent>( ).OnStateChanged += StateHandlerOnOnStateChanged;
+            Player.GetComponent<MediaComponent>( ).OnMediaUnloaded += OnOnMediaUnloaded;
+            Player.GetComponent<MediaComponent>( ).OnMediaLoaded += OnOnMediaLoaded;
+        }
+
+        private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
+        {
+            string mediaName = Path.GetFileNameWithoutExtension( MediaLoadedEventArgs.MediaFile.FullName );
+            string subtitlesPath = Path.Combine( MediaLoadedEventArgs.MediaFile.DirectoryName, mediaName + ".srt" );
+
+            FileInfo subtitlesInfo = new FileInfo( subtitlesPath );
+            if ( subtitlesInfo.Exists )
+                this.LoadSubtitles( subtitlesInfo.FullName );
+        }
+
+        private void OnOnMediaUnloaded( object Sender, OnMediaUnloadedEventArgs MediaUnloadedEventArgs )
+        {
+            this.StopSubtitles( );
+            this.Subtitles = null;
         }
 
         private void StateHandlerOnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )

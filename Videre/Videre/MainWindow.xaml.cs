@@ -289,5 +289,10 @@ namespace Videre
             PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( PropertyName ) );
         }
         #endregion
+
+        private void VolumeSlider_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double> E )
+        {
+            MediaPlayer.Volume = E.NewValue;
+        }
     }
 }
