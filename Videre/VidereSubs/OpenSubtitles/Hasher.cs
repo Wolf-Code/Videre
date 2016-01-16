@@ -14,13 +14,23 @@ namespace VidereSubs.OpenSubtitles
         /// </summary>
         /// <param name="filename">The path to the file.</param>
         /// <returns>A byte array containing the movie's hash.</returns>
-        public static byte[ ] ComputeMovieHash( string filename )
+        public static byte[ ] ComputeMovieHashBytes( string filename )
         {
             byte[ ] result;
             using ( Stream input = File.OpenRead( filename ) )
                 result = ComputeMovieHash( input );
 
             return result;
+        }
+
+        /// <summary>
+        /// Computes the hash for a given movie file.
+        /// </summary>
+        /// <param name="filename">The path to the file.</param>
+        /// <returns>The movie's hash.</returns>
+        public static string ComputeMovieHash( string filename )
+        {
+            return ToHexadecimal( ComputeMovieHashBytes( filename ) );
         }
 
         private static byte[ ] ComputeMovieHash( Stream input )

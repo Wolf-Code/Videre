@@ -1,5 +1,8 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 using CookComputing.XmlRpc;
+using VidereSubs.OpenSubtitles.Data;
 using VidereSubs.OpenSubtitles.Interfaces;
 using VidereSubs.OpenSubtitles.Outputs;
 
@@ -37,10 +40,7 @@ namespace VidereSubs.OpenSubtitles
 
             XmlRpcStruct ret = clientProxy.LogIn( username, hashedPassword, "eng", "OSTestUserAgent" );
 
-            this.login = new LogInOutput( ret )
-            {
-                Token = ( string ) ret[ "token" ]
-            };
+            this.login = new LogInOutput( ret );
 
             return login;
         }
@@ -59,6 +59,34 @@ namespace VidereSubs.OpenSubtitles
             LogOutOutput output = new LogOutOutput( ret );
 
             return output;
+        }
+
+        /// <summary>
+        /// Retrieves information about the movie hash.
+        /// </summary>
+        /// <param name="movieHashes">The hashes to check the information for.</param>
+        public void CheckMovieHash2( params string[ ] movieHashes )
+        {
+            XmlRpcStruct ret = clientProxy.CheckMovieHash2( login.Token, movieHashes );
+
+            CheckMovieHashOutput output = new CheckMovieHashOutput( ret );
+            foreach( KeyValuePair<string, MovieData[]> pair in output.MovieData)
+                foreach ( MovieData data in pair.Value )
+                    Console.WriteLine( data.MovieName );
+        }
+
+        private void DebugStruct( XmlRpcStruct output, int tabs = 0 )
+        {
+            foreach ( var key in output.Keys )
+            {
+                if ( output[ key ] is XmlRpcStruct )
+                    DebugStruct( ( XmlRpcStruct ) output[ key ], tabs + 1 );
+                else if ( output[ key ] is XmlRpcStruct[ ] )
+                    foreach ( var s in ( XmlRpcStruct[ ] ) output[ key ] )
+                        DebugStruct( s, tabs + 1 );
+                else
+                    Console.WriteLine( $"{new String( '\t', tabs )}{key}: {output[ key ]}" );
+            }
         }
     }
 }

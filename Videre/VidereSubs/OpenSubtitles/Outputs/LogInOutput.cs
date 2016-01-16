@@ -11,7 +11,7 @@ namespace VidereSubs.OpenSubtitles.Outputs
         /// <summary>
         /// The session token.
         /// </summary>
-        public string Token { internal set; get; }
+        public string Token { private set; get; }
 
         /// <summary>
         /// Whether or not the login was succesful.
@@ -24,6 +24,7 @@ namespace VidereSubs.OpenSubtitles.Outputs
         /// <param name="output">The login request output.</param>
         public LogInOutput( XmlRpcStruct output ) : base( output )
         {
+            this.Token = ( string ) output[ "token" ];
         }
     }
 }

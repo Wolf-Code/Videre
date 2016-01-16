@@ -32,87 +32,87 @@ namespace VidereSubs.OpenSubtitles.Outputs
         /// <summary>
         /// Version of server's XML-RPC API implementation.
         /// </summary>
-        public string Version { internal set; get; }
+        public string Version { private set; get; }
 
         /// <summary>
         /// XML-RPC interface URL.
         /// </summary>
-        public string RequestURL { internal set; get; }
+        public string RequestURL { private set; get; }
 
         /// <summary>
         /// Server's application name and version.
         /// </summary>
-        public string Application { internal set; get; }
+        public string Application { private set; get; }
 
         /// <summary>
         /// Contact e-mail address for server related quuestions and problems.
         /// </summary>
-        public string Contact { internal set; get; }
+        public string Contact { private set; get; }
 
         /// <summary>
         /// Main server URL.
         /// </summary>
-        public string WebsiteURL { internal set; get; }
+        public string WebsiteURL { private set; get; }
 
         /// <summary>
         /// Number of users currently online.
         /// </summary>
-        public int UsersOnlineTotal { internal set; get; }
+        public int UsersOnlineTotal { private set; get; }
 
         /// <summary>
         /// Number of users currently online using a client application (XML-RPC API).
         /// </summary>
-        public int UsersOnlineProgram { internal set; get; }
+        public int UsersOnlineProgram { private set; get; }
 
         /// <summary>
         /// Number of currently logged-in users.
         /// </summary>
-        public int UsersLoggedIn { internal set; get; }
+        public int UsersLoggedIn { private set; get; }
 
         /// <summary>
         /// Maximum number of users throughout the history.
         /// </summary>
-        public uint UsersOnlineMaxAllTime { internal set; get; }
+        public uint UsersOnlineMaxAllTime { private set; get; }
 
         /// <summary>
         /// Number of registered users.
         /// </summary>
-        public uint UsersRegistered { internal set; get; }
+        public uint UsersRegistered { private set; get; }
 
         /// <summary>
         /// Total number of subtitle downloads.
         /// </summary>
-        public ulong SubsDownloads { internal set; get; }
+        public ulong SubsDownloads { private set; get; }
 
         /// <summary>
         /// Total number of subtitle files stored on the server.
         /// </summary>
-        public uint SubtitleFiles { internal set; get; }
+        public uint SubtitleFiles { private set; get; }
 
         /// <summary>
         /// Total number of movies in the database.
         /// </summary>
-        public uint MoviesTotal { internal set; get; }
+        public uint MoviesTotal { private set; get; }
 
         /// <summary>
         /// Total number of movie A.K.A. titles in the database.
         /// </summary>
-        public uint MoviesAKA { internal set; get; }
+        public uint MoviesAKA { private set; get; }
 
         /// <summary>
         /// Total number of subtitle languages supported.
         /// </summary>
-        public uint TotalSubtitleLanguages { internal set; get; }
+        public uint TotalSubtitleLanguages { private set; get; }
 
         /// <summary>
         /// Structure containing information about last updates of translations.
         /// </summary>
-        public XmlRpcStruct LastUpdateStrings { internal set; get; }
+        public XmlRpcStruct LastUpdateStrings { private set; get; }
 
         /// <summary>
         /// The download limits.
         /// </summary>
-        public XmlRpcStruct DownloadLimits { internal set; get; }
+        public XmlRpcStruct DownloadLimits { private set; get; }
 
         /// <summary>
         /// Returns a string that represents the current object.
@@ -124,7 +124,7 @@ namespace VidereSubs.OpenSubtitles.Outputs
         public override string ToString( )
         {
             return
-$@"Version: {Version}
+                $@"Version: {Version}
 Request URL: {RequestURL}
 Application: {Application}
 Contact: {Contact}
@@ -148,8 +148,23 @@ Seconds: {Seconds}";
         /// <param name="output">The server request output.</param>
         public ServerInfoOutput( XmlRpcStruct output ) : base( output )
         {
+            Version = ( string ) output[ "xmlrpc_version" ];
+            RequestURL = ( string ) output[ "xmlrpc_url" ];
+            Application = ( string ) output[ "application" ];
+            Contact = ( string ) output[ "contact" ];
+            WebsiteURL = ( string ) output[ "website_url" ];
+            UsersOnlineTotal = ( int ) output[ "users_online_total" ];
+            UsersOnlineProgram = ( int ) output[ "users_online_program" ];
+            UsersLoggedIn = ( int ) output[ "users_loggedin" ];
+            UsersOnlineMaxAllTime = uint.Parse( ( string ) output[ "users_max_alltime" ] );
+            UsersRegistered = uint.Parse( ( string ) output[ "users_registered" ] );
+            SubsDownloads = ulong.Parse( ( string ) output[ "subs_downloads" ] );
+            SubtitleFiles = uint.Parse( ( string ) output[ "subs_subtitle_files" ] );
+            MoviesTotal = uint.Parse( ( string ) output[ "movies_total" ] );
+            MoviesAKA = uint.Parse( ( string ) output[ "movies_aka" ] );
+            TotalSubtitleLanguages = uint.Parse( ( string ) output[ "total_subtitles_languages" ] );
+            LastUpdateStrings = ( XmlRpcStruct ) output[ "last_update_strings" ];
+            DownloadLimits = ( XmlRpcStruct ) output[ "download_limits" ];
         }
     }
 }
-
-

@@ -26,5 +26,14 @@ namespace VidereSubs.OpenSubtitles.Interfaces
         /// <returns>The output from the server.</returns>
         [XmlRpcMethod( "LogOut" )]
         XmlRpcStruct LogOut( string token );
+
+        /// <summary>
+        /// Retrieves information about a hash.
+        /// </summary>
+        /// <param name="token">The token of the client.</param>
+        /// <param name="movieHashes">The hashes.</param>
+        /// <returns></returns>
+        [XmlRpcMethod( "CheckMovieHash2" )]
+        XmlRpcStruct CheckMovieHash2( string token, string[ ] movieHashes );
     }
 }

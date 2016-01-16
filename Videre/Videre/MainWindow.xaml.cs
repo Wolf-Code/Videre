@@ -82,14 +82,6 @@ namespace Videre
                 Application.Current.Shutdown( );
             };
 
-            ServerInfoOutput info = Server.ServerInfo( );
-            Console.WriteLine( info );
-
-            Client cl = new Client( );
-            LogInOutput outp = cl.LogIn( "", "" );
-            Console.WriteLine( outp.Status );
-            cl.LogOut( );
-
             base.OnInitialized( e );
         }
 
@@ -115,6 +107,10 @@ namespace Videre
             
             TimeLabel_Total.Content = player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
             player.GetComponent<StateComponent>( ).Play( );
+            Client cl = new Client( );
+            LogInOutput outp = cl.LogIn( "", "" );
+            cl.CheckMovieHash2( Hasher.ComputeMovieHash( MediaLoadedEventArgs.MediaFile.FullName ) );
+            cl.LogOut( );
         }
 
         private static void WriteExceptionDetails( Exception exception, TextWriter writer )
@@ -269,7 +265,7 @@ namespace Videre
 
             player.GetComponent<StateComponent>( ).Stop( );
             player.GetComponent<MediaComponent>( ).LoadMedia( fileDialog.FileName );
-            Console.WriteLine( VidereSubs.OpenSubtitles.Hasher.ToHexadecimal( VidereSubs.OpenSubtitles.Hasher.ComputeMovieHash( fileDialog.FileName ) ) );
+            Console.WriteLine( VidereSubs.OpenSubtitles.Hasher.ComputeMovieHash( fileDialog.FileName ) );
         }
 
         private void OnLoadSubtitlesButtonClick( object Sender, RoutedEventArgs E )

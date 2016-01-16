@@ -42,9 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OpenSubtitles\Client.cs" />
+    <Compile Include="OpenSubtitles\Data\MovieData.cs" />
     <Compile Include="OpenSubtitles\Hasher.cs" />
     <Compile Include="OpenSubtitles\Interfaces\IClient.cs" />
     <Compile Include="OpenSubtitles\Interfaces\IServer.cs" />
+    <Compile Include="OpenSubtitles\Outputs\CheckMovieHashOutput.cs" />
     <Compile Include="OpenSubtitles\Outputs\LogOutOutput.cs" />
     <Compile Include="OpenSubtitles\Outputs\LogInOutput.cs" />
     <Compile Include="OpenSubtitles\Outputs\Output.cs" />
