@@ -1,36 +1,23 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
-using System.Windows.Threading;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
-using Videre.Properties;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.EventArgs;
 using VidereSubs.OpenSubtitles;
 using VidereSubs.OpenSubtitles.Outputs;
 
-namespace Videre
+namespace Videre.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : INotifyPropertyChanged
+    public partial class MainWindow
     {
         private ViderePlayer player;
-        private DispatcherTimer SliderTimer;
-        private bool ChangedExternally;
-
-        /// <summary>
-        /// True if the player is playing, false otherwise.
-        /// </summary>
-        public bool IsPlaying { private set; get; }
 
         /// <summary>
         /// Constructor.
@@ -46,11 +33,9 @@ namespace Videre
         /// <param name="e"></param>
         protected override void OnInitialized( EventArgs e )
         {
-            SliderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 250 ) };
-            SliderTimer.Tick += ( sender, args ) => PerformTimeSlide( );
+            player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = MediaPlayer, MediaArea = MediaArea } );
+            this.MediaControlsContainer.Initialize( player );
 
-            player = new ViderePlayer( new WindowData { Window = this, ControlsGrid = ControlsGrid, MediaPlayer = MediaPlayer, MediaArea = MediaArea } );
-            player.GetComponent<TimeComponent>( ).OnPositionChanged += PlayerOnOnPositionChanged;
             SubtitlesComponent subtitlesComponent = player.GetComponent<SubtitlesComponent>( );
             subtitlesComponent.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
             subtitlesComponent.OnSubtitlesFailedToLoad += SubtitlesComponentOnOnSubtitlesFailedToLoad;
@@ -59,13 +44,6 @@ namespace Videre
             mediaComponent.OnMediaLoaded += OnOnMediaLoaded;
             mediaComponent.OnMediaUnloaded += OnOnMediaUnloaded;
             mediaComponent.OnMediaFailedToLoad += MediaComponentOnOnMediaFailedToLoad;
-
-            StateComponent stateComponent = player.GetComponent<StateComponent>( );
-            stateComponent.OnStateChanged += OnOnStateChanged;
-
-            InputComponent inputComponent = player.GetComponent<InputComponent>( );
-            inputComponent.OnShowControls += ( Sender, Args ) => ControlsGrid.Visibility = Visibility.Visible;
-            inputComponent.OnHideControls += ( Sender, Args ) => ControlsGrid.Visibility = Visibility.Collapsed;
 
             WindowButtonCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
             RightWindowCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
@@ -92,20 +70,20 @@ namespace Videre
 
         private void OnOnMediaUnloaded( object Sender, OnMediaUnloadedEventArgs MediaUnloadedEventArgs )
         {
-            ControlsGrid.IsEnabled = false;
+            MediaControlsContainer.IsEnabled = false;
             SubtitlesButton.IsEnabled = false;
-            TimeLabel_Total.Content = "--:--:--";
-            TimeLabel_Current.Content = TimeLabel_Total.Content;
+            MediaControlsContainer.TimeLabel_Total.Content = "--:--:--";
+            MediaControlsContainer.TimeLabel_Current.Content = MediaControlsContainer.TimeLabel_Total.Content;
         }
 
         private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
         {
-            ControlsGrid.IsEnabled = true;
+            MediaControlsContainer.IsEnabled = true;
             SubtitlesButton.IsEnabled = true;
             FileFlyout.IsOpen = false;
             SubtitlesOffset.Value = 0;
-            
-            TimeLabel_Total.Content = player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
+
+            MediaControlsContainer.TimeLabel_Total.Content = player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
             player.GetComponent<StateComponent>( ).Play( );
             Client cl = new Client( );
             LogInOutput outp = cl.LogIn( "", "" );
@@ -121,19 +99,6 @@ namespace Videre
             writer.WriteLine( "Data:" );
             foreach ( object key in exception.Data.Keys )
                 writer.WriteLine( $"{key}: {exception.Data[ key ]}" );
-        }
-
-        private void OnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )
-        {
-            IsPlaying = StateChangedEventArgs.State == StateComponent.PlayerState.Playing;
-            this.OnPropertyChanged( nameof( IsPlaying ) );
-
-            switch ( StateChangedEventArgs.State )
-            {
-                case StateComponent.PlayerState.Stopped:
-                    TimeSlider.Value = 0;
-                    break;
-            }
         }
 
         #region Subtitles
@@ -184,67 +149,6 @@ namespace Videre
 
         #endregion
 
-        private void PlayerOnOnPositionChanged( object Sender, OnPositionChangedEventArgs OnPositionChangedEventArgs )
-        {
-            ChangedExternally = true;
-            TimeSlider.Value = OnPositionChangedEventArgs.Progress * TimeSlider.Maximum;
-            TimeLabel_Current.Content = OnPositionChangedEventArgs.Position.ToString( @"hh\:mm\:ss" );
-        }
-
-        private void PerformTimeSlide( )
-        {
-            TimeComponent timeHandler = player.GetComponent<TimeComponent>( );
-            double progress = TimeSlider.Value / TimeSlider.Maximum;
-            timeHandler.SetPosition( progress );
-
-            SliderTimer.Stop( );
-            timeHandler.StopChangingPosition( );
-        }
-
-        private void OnPlayPauseButtonClick( object Sender, RoutedEventArgs E )
-        {
-            if ( !player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
-                return;
-
-            player.GetComponent<StateComponent>( ).ResumeOrPause( );
-        }
-
-        private void OnForwardButtonClick( object Sender, RoutedEventArgs E )
-        {
-        }
-
-        private void OnBackButtonClick( object Sender, RoutedEventArgs E )
-        {
-            TimeSlider.Value = 0;
-        }
-
-        private void OnTimeSliderValueChanged( object Sender, RoutedPropertyChangedEventArgs<double> E )
-        {
-            if ( !player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
-                return;
-
-            if ( ChangedExternally )
-            {
-                ChangedExternally = false;
-                return;
-            }
-
-            if ( !SliderTimer.IsEnabled )
-                player.GetComponent<TimeComponent>( ).StartChangingPosition( );
-
-            // Reset the timer.
-            SliderTimer.Start( );
-        }
-
-        private void OnTimeSliderDragCompleted( object Sender, DragCompletedEventArgs E )
-        {
-            if ( !SliderTimer.IsEnabled ) return;
-
-            SliderTimer.Stop( );
-
-            PerformTimeSlide( );
-        }
-
         private void OnSettingsButtonClicked( object Sender, RoutedEventArgs E )
         {
             SettingsFlyout.IsOpen = true;
@@ -278,28 +182,6 @@ namespace Videre
 
             player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( fileDialog.FileName );
             FileFlyout.IsOpen = false;
-        }
-
-        #region Property Change
-        /// <summary>
-        /// Gets called whenever a property is changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Virtual method called on a change in properties.
-        /// </summary>
-        /// <param name="PropertyName">The name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged( [CallerMemberName] string PropertyName = null )
-        {
-            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( PropertyName ) );
-        }
-        #endregion
-
-        private void VolumeSlider_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double> E )
-        {
-            MediaPlayer.Volume = E.NewValue;
         }
     }
 }

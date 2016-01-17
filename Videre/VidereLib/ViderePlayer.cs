@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Windows.Controls;
 using VidereLib.Components;
 
 namespace VidereLib
@@ -13,6 +14,11 @@ namespace VidereLib
         internal readonly WindowData windowData;
 
         private readonly Dictionary<Type, ComponentBase> components = new Dictionary<Type, ComponentBase>( );
+
+        /// <summary>
+        /// The <see cref="MediaElement"/> used to play the media.
+        /// </summary>
+        public MediaElement MediaPlayer => windowData.MediaPlayer;
 
         /// <summary>
         /// Constructor.

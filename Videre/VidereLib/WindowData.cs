@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using MahApps.Metro.Controls;
 
 namespace VidereLib
@@ -16,12 +17,12 @@ namespace VidereLib
         /// <summary>
         /// The grid containing all controls.
         /// </summary>
-        public Grid ControlsGrid { set; get; }
+        public FrameworkElement MediaControlsContainer { set; get; }
 
         /// <summary>
-        /// The grid containing the media elements, such as the actual <see cref="MediaElement"/> and the subtitles.
+        /// The element containing the media elements, such as the actual <see cref="MediaElement"/> and the subtitles.
         /// </summary>
-        public Grid MediaArea { set; get; }
+        public FrameworkElement MediaArea { set; get; }
 
         /// <summary>
         /// The actual <see cref="MediaElement"/> used for playback.
