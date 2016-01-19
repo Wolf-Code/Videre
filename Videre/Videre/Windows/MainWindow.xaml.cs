@@ -18,6 +18,7 @@ namespace Videre.Windows
     public partial class MainWindow
     {
         private ViderePlayer player;
+        private const string userAgent = "Videre";
 
         /// <summary>
         /// Constructor.
@@ -85,8 +86,22 @@ namespace Videre.Windows
 
             MediaControlsContainer.TimeLabel_Total.Content = player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
             player.GetComponent<StateComponent>( ).Play( );
-            Client cl = new Client( );
-            LogInOutput outp = cl.LogIn( "", "" );
+            if ( !File.Exists( "credentials.txt" ) )
+            {
+                Console.WriteLine( "No credentials provided." );
+                return;
+            }
+
+            string username, password;
+            using ( FileStream FS = File.OpenRead( "credentials.txt" ) )
+                using ( StreamReader reader = new StreamReader( FS ) )
+                {
+                    username = reader.ReadLine( );
+                    password = reader.ReadLine( );
+                }
+
+            Client cl = new Client( userAgent );
+            LogInOutput outp = cl.LogIn( username, password );
             cl.CheckMovieHash2( Hasher.ComputeMovieHash( MediaLoadedEventArgs.MediaFile.FullName ) );
             cl.LogOut( );
         }
@@ -169,7 +184,7 @@ namespace Videre.Windows
 
             player.GetComponent<StateComponent>( ).Stop( );
             player.GetComponent<MediaComponent>( ).LoadMedia( fileDialog.FileName );
-            Console.WriteLine( VidereSubs.OpenSubtitles.Hasher.ComputeMovieHash( fileDialog.FileName ) );
+            Console.WriteLine( Hasher.ComputeMovieHash( fileDialog.FileName ) );
         }
 
         private void OnLoadSubtitlesButtonClick( object Sender, RoutedEventArgs E )

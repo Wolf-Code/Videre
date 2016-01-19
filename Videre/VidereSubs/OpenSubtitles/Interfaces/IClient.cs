@@ -32,7 +32,7 @@ namespace VidereSubs.OpenSubtitles.Interfaces
         /// </summary>
         /// <param name="token">The token of the client.</param>
         /// <param name="movieHashes">The hashes.</param>
-        /// <returns></returns>
+        /// <returns>The output from the server.</returns>
         [XmlRpcMethod( "CheckMovieHash2" )]
         XmlRpcStruct CheckMovieHash2( string token, string[ ] movieHashes );
     }

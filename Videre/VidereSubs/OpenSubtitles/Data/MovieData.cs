@@ -1,5 +1,4 @@
-﻿
-using CookComputing.XmlRpc;
+﻿using CookComputing.XmlRpc;
 
 namespace VidereSubs.OpenSubtitles.Data
 {

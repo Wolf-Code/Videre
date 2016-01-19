@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Security;
 using System.Security.Cryptography;
 using CookComputing.XmlRpc;
 using VidereSubs.OpenSubtitles.Data;
@@ -16,12 +17,19 @@ namespace VidereSubs.OpenSubtitles
         private readonly IClient clientProxy;
         private LogInOutput login;
 
+
+        /// <summary>
+        /// The user agent to use on opensubtitles.org.
+        /// </summary>
+        public string UserAgent { private set; get; }
+
         /// <summary>
         /// Constructor.
         /// </summary>
-        public Client( )
+        public Client( string userAgent )
         {
             clientProxy = XmlRpcProxyGen.Create<IClient>( );
+            this.UserAgent = userAgent;
         }
 
         /// <summary>
@@ -29,16 +37,21 @@ namespace VidereSubs.OpenSubtitles
         /// </summary>
         /// <param name="username">The client's username.</param>
         /// <param name="password">The client's password.</param>
+        /// <param name="encrypt">Whether or not to encrypt the password before sending. If the password is provided as plain-text, set this to true. If the password has already been encrypted with MD5, set it to false.</param>
         /// <returns>The result of the login.</returns>
-        public LogInOutput LogIn( string username, string password )
+        public LogInOutput LogIn( string username, string password, bool encrypt = true )
         {
-            MD5 alg = MD5.Create( );
-            byte[ ] pwBytes = System.Text.Encoding.ASCII.GetBytes( password );
-            byte[ ] hash = alg.ComputeHash( pwBytes );
+            if ( encrypt )
+            {
+                MD5 alg = MD5.Create( );
+                byte[ ] pwBytes = System.Text.Encoding.ASCII.GetBytes( password );
+                byte[ ] hash = alg.ComputeHash( pwBytes );
 
-            string hashedPassword = Hasher.ToHexadecimal( hash );
+                password = Hasher.ToHexadecimal( hash );
 
-            XmlRpcStruct ret = clientProxy.LogIn( username, hashedPassword, "eng", "OSTestUserAgent" );
+                Console.WriteLine( password );
+            }
+            XmlRpcStruct ret = clientProxy.LogIn( username, password, "eng", this.UserAgent );
 
             this.login = new LogInOutput( ret );
 
