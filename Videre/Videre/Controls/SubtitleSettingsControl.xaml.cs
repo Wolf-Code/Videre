@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Videre.Windows;
 using VidereLib.Components;
 
 namespace Videre.Controls
@@ -22,7 +23,7 @@ namespace Videre.Controls
             if ( !E.NewValue.HasValue )
                 return;
 
-            Player.GetComponent<SubtitlesComponent>( ).SetSubtitlesOffset( TimeSpan.FromMilliseconds( E.NewValue.Value ) );
+            MainWindow.Player.GetComponent<SubtitlesComponent>( ).SetSubtitlesOffset( TimeSpan.FromMilliseconds( E.NewValue.Value ) );
         }
 
         private void PositionOffset_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )

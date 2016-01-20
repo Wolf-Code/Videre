@@ -61,9 +61,11 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-
+                
                 <Label Grid.Row="0">Offset (ms)</Label>
-                <controls:NumericUpDown x:Name="TimeOffset" Grid.Column="1" Interval="1" Speedup="True" HasDecimals="False" ValueChanged="TimeOffset_OnValueChanged"/>
+                <controls:NumericUpDown 
+                    Value="{Binding Source={x:Static properties:Settings.Default}, Path=SubtitleTimeOffset}"
+                    x:Name="TimeOffset" Grid.Column="1" Interval="1" Speedup="True" HasDecimals="False" ValueChanged="TimeOffset_OnValueChanged"/>
             </Grid>
         </GroupBox>
     </Grid>

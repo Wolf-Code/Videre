@@ -58,5 +58,17 @@ namespace Videre {
                 this["FontPosition"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public uint SubtitleTimeOffset {
+            get {
+                return ((uint)(this["SubtitleTimeOffset"]));
+            }
+            set {
+                this["SubtitleTimeOffset"] = value;
+            }
+        }
     }
 }

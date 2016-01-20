@@ -82,6 +82,13 @@ namespace Videre.Windows
 
             Client = new Client( UserAgent );
 
+            Application.Current.Exit += ( sender, args ) =>
+            {
+                Settings.Default.SubtitleTimeOffset = 0;
+                Settings.Default.Save( );
+            };
+            
+
             base.OnInitialized( e );
         }
 

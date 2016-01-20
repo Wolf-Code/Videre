@@ -11,5 +11,8 @@
     <Setting Name="FontPosition" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="SubtitleTimeOffset" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
