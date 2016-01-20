@@ -87,7 +87,6 @@ namespace Videre.Windows
                 Settings.Default.SubtitleTimeOffset = 0;
                 Settings.Default.Save( );
             };
-            
 
             base.OnInitialized( e );
         }
@@ -166,9 +165,7 @@ namespace Videre.Windows
         private void OnLoadMediaButtonClick( object Sender, RoutedEventArgs E )
         {
             OpenFileDialog fileDialog = new OpenFileDialog( );
-            bool? res = fileDialog.ShowDialog( this );
-
-            if ( !res.Value )
+            if ( !fileDialog.ShowDialog( this ).GetValueOrDefault( ) )
                 return;
 
             Player.GetComponent<StateComponent>( ).Stop( );
