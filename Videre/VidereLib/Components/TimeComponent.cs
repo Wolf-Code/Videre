@@ -53,25 +53,26 @@ namespace VidereLib.Components
             timeTimer.Tick += TimeTimerOnTick;
         }
 
-        /// <summary>
-        /// Gets the current position in the media as a <see cref="TimeSpan"/>.
-        /// </summary>
-        /// <returns>The current position in the media.</returns>
-        public TimeSpan GetPosition( )
-        {
-            return Player.windowData.MediaPlayer.Position;
-        }
-
         private void TimeTimerOnTick( object Sender, System.EventArgs Args )
         {
             if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 return;
 
-            if ( GetPosition(  ) == previousTimeSpan ) return;
+            TimeSpan currentPosition = Player.MediaPlayer.GetPosition( );
+            if ( currentPosition == previousTimeSpan ) return;
 
-            double progress = Player.windowData.MediaPlayer.Position.TotalSeconds / Player.windowData.MediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
-            OnPositionChanged?.Invoke( this, new OnPositionChangedEventArgs( GetPosition(  ), progress ) );
-            previousTimeSpan = GetPosition( );
+            double progress = currentPosition.TotalSeconds / Player.MediaPlayer.GetMediaLength( ).TotalSeconds;
+            OnPositionChanged?.Invoke( this, new OnPositionChangedEventArgs( currentPosition, progress ) );
+            previousTimeSpan = currentPosition;
+        }
+
+        /// <summary>
+        /// Gets the position in the loaded media.
+        /// </summary>
+        /// <returns>The position in the loaded media.</returns>
+        public TimeSpan GetPosition( )
+        {
+            return Player.MediaPlayer.GetPosition( );
         }
 
         /// <summary>
@@ -93,7 +94,6 @@ namespace VidereLib.Components
             TimeSpan newPositon = new TimeSpan( ( long )( duration.Ticks * Progress ) );
 
             SetPosition( newPositon );
-            this.Player.GetComponent<SubtitlesComponent>( ).CheckForSubtitles( ); 
         }
 
         /// <summary>
@@ -104,8 +104,9 @@ namespace VidereLib.Components
         {
             if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
-            
-            Player.windowData.MediaPlayer.Position = Span;
+
+            Player.MediaPlayer.SetPosition( Span );
+            this.Player.GetComponent<SubtitlesComponent>( ).CheckForSubtitles( );
         }
 
         /// <summary>

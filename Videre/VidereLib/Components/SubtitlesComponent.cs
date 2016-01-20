@@ -138,7 +138,7 @@ namespace VidereLib.Components
             if ( !HaveSubtitlesBeenLoaded )
                 return;
 
-            TimeSpan position = Player.windowData.MediaPlayer.Position;
+            TimeSpan position = Player.GetComponent<TimeComponent>( ).GetPosition( );
             TimeSpan currentPosition = position - subtitlesOffset;
             if ( !Subtitles.AnySubtitlesLeft( currentPosition ) )
                 return;

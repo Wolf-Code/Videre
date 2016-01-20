@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows;
 using VidereLib.EventArgs;
 
 namespace VidereLib.Components
@@ -13,14 +12,12 @@ namespace VidereLib.Components
         /// <summary>
         /// Returns whether or not any media has been loaded.
         /// </summary>
-        public bool HasMediaBeenLoaded => Media != null;
+        public bool HasMediaBeenLoaded => Player.MediaPlayer.IsMediaLoaded;
 
         /// <summary>
         /// The currently loaded media.
         /// </summary>
-        public FileInfo Media => lastLoadedFile;
-
-        private FileInfo lastLoadedFile;
+        public FileInfo Media => Player.MediaPlayer.Media;
 
         /// <summary>
         /// Gets called whenever media has been loaded.
@@ -50,19 +47,9 @@ namespace VidereLib.Components
         /// </summary>
         protected override void OnInitialize( )
         {
-            Player.windowData.MediaPlayer.MediaFailed += MediaPlayerOnMediaFailed;
-            Player.windowData.MediaPlayer.MediaOpened += MediaPlayerOnMediaOpened;
-        }
-
-        private void MediaPlayerOnMediaOpened( object Sender, RoutedEventArgs Args )
-        {
-            OnMediaLoaded?.Invoke( this, new OnMediaLoadedEventArgs( lastLoadedFile ) );
-        }
-
-        private void MediaPlayerOnMediaFailed( object Sender, ExceptionRoutedEventArgs ExceptionRoutedEventArgs )
-        {
-            OnMediaFailedToLoad?.Invoke( this, new OnMediaFailedToLoadEventArgs( ExceptionRoutedEventArgs.ErrorException, lastLoadedFile ) );
-            lastLoadedFile = null;
+            Player.MediaPlayer.MediaFailedToLoad += ( sender, args ) => OnMediaFailedToLoad?.Invoke( this, args );
+            Player.MediaPlayer.MediaLoaded += ( sender, args ) => OnMediaLoaded?.Invoke( this, args );
+            Player.MediaPlayer.MediaUnloaded += ( sender, args ) => OnMediaUnloaded?.Invoke( this, args );
         }
 
         /// <summary>
@@ -74,7 +61,7 @@ namespace VidereLib.Components
             if ( !HasMediaBeenLoaded )
                 throw new Exception( "Attempted to get media length while there is no media loaded." );
 
-            return Player.windowData.MediaPlayer.NaturalDuration.TimeSpan;
+            return Player.MediaPlayer.GetMediaLength( );
         }
 
         /// <summary>
@@ -88,11 +75,7 @@ namespace VidereLib.Components
 
             FileInfo info = new FileInfo( Path );
 
-            lastLoadedFile = info;
-
-            Player.windowData.MediaPlayer.Source = new Uri( info.FullName );
-            Player.windowData.MediaPlayer.Play( );
-            Player.windowData.MediaPlayer.Stop( );
+            Player.MediaPlayer.LoadMedia( info );
         }
 
         /// <summary>
@@ -100,8 +83,7 @@ namespace VidereLib.Components
         /// </summary>
         public void UnloadMedia( )
         {
-            lastLoadedFile = null;
-            OnMediaUnloaded?.Invoke( this, new OnMediaUnloadedEventArgs( ) );
+            Player.MediaPlayer.UnloadMedia( );
         }
     }
 }

@@ -171,7 +171,7 @@ namespace Videre.Controls
             if ( !IsPlayerInitialized )
                 return;
 
-            Player.MediaPlayer.Volume = E.NewValue;
+            Player.MediaPlayer.SetVolume( ( float ) E.NewValue );
 
             OnVolumeChanged?.Invoke( this, E );
         }

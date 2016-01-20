@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.EventArgs;
+using VidereLib.Implementations;
 using VidereSubs.OpenSubtitles;
 using VidereSubs.OpenSubtitles.Data;
 using VidereSubs.OpenSubtitles.Outputs;
@@ -61,7 +62,7 @@ namespace Videre.Windows
                 Application.Current.Shutdown( );
             };
 
-            Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = MediaPlayer, MediaArea = MediaArea } );
+            Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new MediaElementPlayer( MediaPlayer ), MediaArea = MediaArea } );
             this.MediaControlsContainer.Initialize( Player );
 
             SubtitlesComponent subtitlesComponent = Player.GetComponent<SubtitlesComponent>( );

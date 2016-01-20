@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls;
+using VidereLib.Players;
 
 namespace VidereLib
 {
@@ -25,8 +26,8 @@ namespace VidereLib
         public FrameworkElement MediaArea { set; get; }
 
         /// <summary>
-        /// The actual <see cref="MediaElement"/> used for playback.
+        /// The actual element used for playback.
         /// </summary>
-        public MediaElement MediaPlayer { set; get; }
+        public MediaPlayerBase MediaPlayer { set; get; }
     }
 }
