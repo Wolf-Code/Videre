@@ -71,7 +71,8 @@ namespace Videre.Windows
 
                 MessageBox.Show( "An exception has been encountered. The exact details have been saved in exception.txt. Please contact the developer and hand them this file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error );
                 Args.Handled = true;
-                Application.Current.Shutdown( );
+               
+                //Application.Current.Shutdown( );
             };
 
             base.OnInitialized( e );

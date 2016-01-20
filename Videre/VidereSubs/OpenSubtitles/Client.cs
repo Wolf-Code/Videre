@@ -125,6 +125,9 @@ namespace VidereSubs.OpenSubtitles
 
             XmlRpcStruct ret = clientProxy.SearchSubtitles( login.Token, requests, parameters );
             XmlRpcStruct[ ] data = ret[ "data" ] as XmlRpcStruct[ ];
+            if ( data == null )
+                return new SubtitleData[ 0 ];
+
             ResetTimer( );
 
             return data.Select( sub => new SubtitleData( sub ) ).ToArray( );

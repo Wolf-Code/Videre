@@ -61,8 +61,8 @@ namespace VidereLib.Components
 
         private void MediaPlayerOnMediaFailed( object Sender, ExceptionRoutedEventArgs ExceptionRoutedEventArgs )
         {
-            lastLoadedFile = null;
             OnMediaFailedToLoad?.Invoke( this, new OnMediaFailedToLoadEventArgs( ExceptionRoutedEventArgs.ErrorException, lastLoadedFile ) );
+            lastLoadedFile = null;
         }
 
         /// <summary>
@@ -89,6 +89,7 @@ namespace VidereLib.Components
             FileInfo info = new FileInfo( Path );
 
             lastLoadedFile = info;
+
             Player.windowData.MediaPlayer.Source = new Uri( info.FullName );
             Player.windowData.MediaPlayer.Play( );
             Player.windowData.MediaPlayer.Stop( );
