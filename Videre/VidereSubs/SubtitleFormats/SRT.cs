@@ -23,12 +23,12 @@ namespace VidereSubs.SubtitleFormats
         /// </summary>
         /// <param name="FilePath">The path to the subtitle file.</param>
         /// <returns>The subtitle data.</returns>
-        protected override Dictionary<TimeSpan,SubtitleData> ParseFile( string FilePath )
+        protected override Dictionary<TimeSpan,SubtitleSegment> ParseFile( string FilePath )
         {
             if ( !File.Exists( FilePath ) )
                 return null;
 
-            Dictionary<TimeSpan, SubtitleData> subtitles = new Dictionary<TimeSpan, SubtitleData>( );
+            Dictionary<TimeSpan, SubtitleSegment> subtitles = new Dictionary<TimeSpan, SubtitleSegment>( );
             CultureInfo france = new CultureInfo( "fr-Fr" );
             string[ ] Data;
             using ( FileStream FS = File.OpenRead( FilePath ) )
@@ -53,7 +53,7 @@ namespace VidereSubs.SubtitleFormats
                     X++;
                 }
 
-                subtitles.Add( Start, new SubtitleData( ID, Start, End, subs ) );
+                subtitles.Add( Start, new SubtitleSegment( ID, Start, End, subs ) );
             }
 
             return subtitles;

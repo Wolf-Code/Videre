@@ -4,14 +4,14 @@ using System.Collections.Generic;
 namespace VidereSubs
 {
     /// <summary>
-    /// Contains data about a subtitle.
+    /// Contains data about a subtitle segment.
     /// </summary>
-    public class SubtitleData
+    public class SubtitleSegment
     {
         /// <summary>
         /// The subtitle data for when there is no subtitle data.
         /// </summary>
-        public static SubtitleData Empty { private set; get; } = new SubtitleData( 0, TimeSpan.Zero, TimeSpan.Zero, new List<string>( ) );
+        public static SubtitleSegment Empty { private set; get; } = new SubtitleSegment( 0, TimeSpan.Zero, TimeSpan.Zero, new List<string>( ) );
 
         /// <summary>
         /// The subtitle's index.
@@ -40,7 +40,7 @@ namespace VidereSubs
         /// <param name="start">The start of the subtitle.</param>
         /// <param name="end">The end of the subtitle.</param>
         /// <param name="lines">The lines in the subtitle.</param>
-        public SubtitleData( int id, TimeSpan start, TimeSpan end, List<string> lines  )
+        public SubtitleSegment( int id, TimeSpan start, TimeSpan end, List<string> lines  )
         {
             Index = id;
             From = start;

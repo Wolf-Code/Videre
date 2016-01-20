@@ -68,5 +68,25 @@ namespace VidereSubs.OpenSubtitles.Data
             this.SeenCount = ulong.Parse( ( string ) output[ "SeenCount" ] );
             this.SubCount = uint.Parse( ( string ) output[ "SubCount" ] );
         }
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override string ToString( )
+        {
+            return $@"MovieHash: {MovieHash}, 
+MovieImbdID: {MovieImbdID}, 
+MovieName: {MovieName}, 
+MovieYear: {MovieYear}, 
+Type: {Type}, 
+SeriesSeason: {SeriesSeason}, 
+SeriesEpisode: {SeriesEpisode}, 
+SeenCount: {SeenCount}, 
+SubCount: {SubCount}";
+        }
     }
 }

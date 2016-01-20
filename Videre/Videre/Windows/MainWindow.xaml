@@ -85,10 +85,12 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Button Grid.Row="0" Click="OnLoadMediaButtonClick">Load Media</Button>
-                    <Button x:Name="SubtitlesButton" IsEnabled="False" Grid.Row="1" Click="OnLoadSubtitlesButtonClick">Load Subtitles</Button>
+                    <Button x:Name="LocalSubtitlesButton" IsEnabled="False" Grid.Row="1" Click="OnLoadLocalSubtitlesButtonClick">Load Subtitles</Button>
+                    <Button x:Name="OSButton" IsEnabled="False" Grid.Row="2" Click="OnLoadOSButtonClick">Load from OpenSubtitles.org</Button>
                 </Grid>
             </Controls:Flyout>
         </Controls:FlyoutsControl>

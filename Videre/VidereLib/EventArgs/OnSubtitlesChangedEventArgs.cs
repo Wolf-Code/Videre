@@ -11,15 +11,15 @@ namespace VidereLib.EventArgs
         /// <summary>
         /// The new subtitles.
         /// </summary>
-        public SubtitleData Subtitles { private set; get; }
+        public SubtitleSegment Subtitles { private set; get; }
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="subtitleData">The new subtitles.</param>
-        public OnSubtitlesChangedEventArgs( SubtitleData subtitleData )
+        /// <param name="SubtitleSegment">The new subtitles.</param>
+        public OnSubtitlesChangedEventArgs( SubtitleSegment SubtitleSegment )
         {
-            Subtitles = subtitleData;
+            Subtitles = SubtitleSegment;
         }
     }
 }

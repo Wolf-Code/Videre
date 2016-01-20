@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.Security;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Timers;
 using CookComputing.XmlRpc;
 using VidereSubs.OpenSubtitles.Data;
 using VidereSubs.OpenSubtitles.Interfaces;
@@ -16,6 +18,7 @@ namespace VidereSubs.OpenSubtitles
     {
         private readonly IClient clientProxy;
         private LogInOutput login;
+        private readonly Timer keepAliveTimer;
 
 
         /// <summary>
@@ -30,6 +33,19 @@ namespace VidereSubs.OpenSubtitles
         {
             clientProxy = XmlRpcProxyGen.Create<IClient>( );
             this.UserAgent = userAgent;
+            keepAliveTimer = new Timer( TimeSpan.FromMinutes( 10 ).TotalMilliseconds );
+            keepAliveTimer.Elapsed += KeepAliveTimerOnElapsed;
+        }
+
+        private void KeepAliveTimerOnElapsed( object Sender, ElapsedEventArgs Args )
+        {
+            clientProxy.NoOperation( this.login.Token );
+        }
+
+        private void ResetTimer( )
+        {
+            keepAliveTimer.Stop( );
+            keepAliveTimer.Start( );
         }
 
         /// <summary>
@@ -48,12 +64,11 @@ namespace VidereSubs.OpenSubtitles
                 byte[ ] hash = alg.ComputeHash( pwBytes );
 
                 password = Hasher.ToHexadecimal( hash );
-
-                Console.WriteLine( password );
             }
             XmlRpcStruct ret = clientProxy.LogIn( username, password, "eng", this.UserAgent );
 
             this.login = new LogInOutput( ret );
+            keepAliveTimer.Start( );
 
             return login;
         }
@@ -70,6 +85,7 @@ namespace VidereSubs.OpenSubtitles
             XmlRpcStruct ret = clientProxy.LogOut( login.Token );
 
             LogOutOutput output = new LogOutOutput( ret );
+            keepAliveTimer.Stop( );
 
             return output;
         }
@@ -78,27 +94,78 @@ namespace VidereSubs.OpenSubtitles
         /// Retrieves information about the movie hash.
         /// </summary>
         /// <param name="movieHashes">The hashes to check the information for.</param>
-        public void CheckMovieHash2( params string[ ] movieHashes )
+        public CheckMovieHashOutput CheckMovieHash2( params string[ ] movieHashes )
         {
             XmlRpcStruct ret = clientProxy.CheckMovieHash2( login.Token, movieHashes );
 
             CheckMovieHashOutput output = new CheckMovieHashOutput( ret );
-            foreach( KeyValuePair<string, MovieData[]> pair in output.MovieData)
-                foreach ( MovieData data in pair.Value )
-                    Console.WriteLine( data.MovieName );
+            ResetTimer( );
+
+            return output;
         }
 
+        /// <summary>
+        /// Searches for subtitle information.
+        /// </summary>
+        /// <param name="languages"></param>
+        /// <param name="movieFiles"></param>
+        /// <returns></returns>
+        public SubtitleData[ ] SearchSubtitles( string[ ] languages, params FileInfo[ ] movieFiles )
+        {
+            string requestLanguages = string.Join( ",", languages );
+            XmlRpcStruct[ ] requests = new XmlRpcStruct[ movieFiles.Length ];
+            for ( int Index = 0; Index < movieFiles.Length; Index++ )
+            {
+                FileInfo info = movieFiles[ Index ];
+                string hash = Hasher.ComputeMovieHash( info.FullName );
+                requests[ Index ] = new XmlRpcStruct { { "moviehash", hash }, { "moviesize", info.Length }, { "sublanguageid", requestLanguages } };
+            }
+
+            XmlRpcStruct parameters = new XmlRpcStruct { };
+
+            XmlRpcStruct ret = clientProxy.SearchSubtitles( login.Token, requests, parameters );
+            XmlRpcStruct[ ] data = ret[ "data" ] as XmlRpcStruct[ ];
+            ResetTimer( );
+
+            return data.Select( sub => new SubtitleData( sub ) ).ToArray( );
+        }
+
+        /// <summary>
+        /// Gets an array of allowed subtitle languages.
+        /// </summary>
+        /// <param name="language">Array of enabled subtitle languages.</param>
+        /// <returns>An array of allowed subtitle languages.</returns>
+        public SubtitleLanguage[ ] GetSubLanguages( string language = "en" )
+        {
+            XmlRpcStruct ret = clientProxy.GetSubLanguages( language );
+
+            GetSubLanguagesOutput outp = new GetSubLanguagesOutput( ret );
+            ResetTimer( );
+
+            return outp.Languages;
+        }
+
+        [Conditional( "DEBUG" )]
         private void DebugStruct( XmlRpcStruct output, int tabs = 0 )
         {
             foreach ( var key in output.Keys )
             {
                 if ( output[ key ] is XmlRpcStruct )
+                {
+                    Console.WriteLine( key + ": " );
                     DebugStruct( ( XmlRpcStruct ) output[ key ], tabs + 1 );
+                }
                 else if ( output[ key ] is XmlRpcStruct[ ] )
+                {
+                    Console.WriteLine( key + ": " );
                     foreach ( var s in ( XmlRpcStruct[ ] ) output[ key ] )
+                    {
                         DebugStruct( s, tabs + 1 );
+                        Console.WriteLine( );
+                    }
+                }
                 else
-                    Console.WriteLine( $"{new String( '\t', tabs )}{key}: {output[ key ]}" );
+                    Console.WriteLine( $"{new string( '\t', tabs )}{key}: {output[ key ]}" );
             }
         }
     }

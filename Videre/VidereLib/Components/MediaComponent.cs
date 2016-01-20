@@ -13,7 +13,12 @@ namespace VidereLib.Components
         /// <summary>
         /// Returns whether or not any media has been loaded.
         /// </summary>
-        public bool HasMediaBeenLoaded { private set; get; }
+        public bool HasMediaBeenLoaded => Media != null;
+
+        /// <summary>
+        /// The currently loaded media.
+        /// </summary>
+        public FileInfo Media => lastLoadedFile;
 
         private FileInfo lastLoadedFile;
 
@@ -51,13 +56,12 @@ namespace VidereLib.Components
 
         private void MediaPlayerOnMediaOpened( object Sender, RoutedEventArgs Args )
         {
-            HasMediaBeenLoaded = true;
             OnMediaLoaded?.Invoke( this, new OnMediaLoadedEventArgs( lastLoadedFile ) );
         }
 
         private void MediaPlayerOnMediaFailed( object Sender, ExceptionRoutedEventArgs ExceptionRoutedEventArgs )
         {
-            HasMediaBeenLoaded = false;
+            lastLoadedFile = null;
             OnMediaFailedToLoad?.Invoke( this, new OnMediaFailedToLoadEventArgs( ExceptionRoutedEventArgs.ErrorException, lastLoadedFile ) );
         }
 
@@ -95,7 +99,7 @@ namespace VidereLib.Components
         /// </summary>
         public void UnloadMedia( )
         {
-            HasMediaBeenLoaded = false;
+            lastLoadedFile = null;
             OnMediaUnloaded?.Invoke( this, new OnMediaUnloadedEventArgs( ) );
         }
     }

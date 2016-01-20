@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using MahApps.Metro.Controls;
@@ -8,7 +9,7 @@ using VidereLib;
 using VidereLib.Components;
 using VidereLib.EventArgs;
 using VidereSubs.OpenSubtitles;
-using VidereSubs.OpenSubtitles.Outputs;
+using VidereSubs.OpenSubtitles.Data;
 
 namespace Videre.Windows
 {
@@ -17,8 +18,17 @@ namespace Videre.Windows
     /// </summary>
     public partial class MainWindow
     {
-        private ViderePlayer player;
-        private const string userAgent = "Videre";
+        /// <summary>
+        /// The active <see cref="ViderePlayer"/>.
+        /// </summary>
+        public static ViderePlayer Player { private set; get; }
+        private const string userAgent = "Videre v0.1";
+
+        /// <summary>
+        /// The client which connects with opensubtitles.org.
+        /// </summary>
+        public static Client Client { private set; get; }
+        private ProgressDialogController controller;
 
         /// <summary>
         /// Constructor.
@@ -29,19 +39,22 @@ namespace Videre.Windows
         }
 
         /// <summary>
-        /// Initializes player.
+        /// Initializes Player.
         /// </summary>
         /// <param name="e"></param>
         protected override void OnInitialized( EventArgs e )
         {
-            player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = MediaPlayer, MediaArea = MediaArea } );
-            this.MediaControlsContainer.Initialize( player );
+            Client = new Client( userAgent );
+            Client.LogIn( "", "" );
 
-            SubtitlesComponent subtitlesComponent = player.GetComponent<SubtitlesComponent>( );
+            Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = MediaPlayer, MediaArea = MediaArea } );
+            this.MediaControlsContainer.Initialize( Player );
+
+            SubtitlesComponent subtitlesComponent = Player.GetComponent<SubtitlesComponent>( );
             subtitlesComponent.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
             subtitlesComponent.OnSubtitlesFailedToLoad += SubtitlesComponentOnOnSubtitlesFailedToLoad;
 
-            MediaComponent mediaComponent = player.GetComponent<MediaComponent>( );
+            MediaComponent mediaComponent = Player.GetComponent<MediaComponent>( );
             mediaComponent.OnMediaLoaded += OnOnMediaLoaded;
             mediaComponent.OnMediaUnloaded += OnOnMediaUnloaded;
             mediaComponent.OnMediaFailedToLoad += MediaComponentOnOnMediaFailedToLoad;
@@ -72,7 +85,8 @@ namespace Videre.Windows
         private void OnOnMediaUnloaded( object Sender, OnMediaUnloadedEventArgs MediaUnloadedEventArgs )
         {
             MediaControlsContainer.IsEnabled = false;
-            SubtitlesButton.IsEnabled = false;
+            LocalSubtitlesButton.IsEnabled = false;
+            OSButton.IsEnabled = false;
             MediaControlsContainer.TimeLabel_Total.Content = "--:--:--";
             MediaControlsContainer.TimeLabel_Current.Content = MediaControlsContainer.TimeLabel_Total.Content;
         }
@@ -80,30 +94,13 @@ namespace Videre.Windows
         private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
         {
             MediaControlsContainer.IsEnabled = true;
-            SubtitlesButton.IsEnabled = true;
+            LocalSubtitlesButton.IsEnabled = true;
+            OSButton.IsEnabled = true;
             FileFlyout.IsOpen = false;
             SubtitlesOffset.Value = 0;
 
-            MediaControlsContainer.TimeLabel_Total.Content = player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
-            player.GetComponent<StateComponent>( ).Play( );
-            if ( !File.Exists( "credentials.txt" ) )
-            {
-                Console.WriteLine( "No credentials provided." );
-                return;
-            }
-
-            string username, password;
-            using ( FileStream FS = File.OpenRead( "credentials.txt" ) )
-                using ( StreamReader reader = new StreamReader( FS ) )
-                {
-                    username = reader.ReadLine( );
-                    password = reader.ReadLine( );
-                }
-
-            Client cl = new Client( userAgent );
-            LogInOutput outp = cl.LogIn( username, password );
-            cl.CheckMovieHash2( Hasher.ComputeMovieHash( MediaLoadedEventArgs.MediaFile.FullName ) );
-            cl.LogOut( );
+            MediaControlsContainer.TimeLabel_Total.Content = Player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
+            Player.GetComponent<StateComponent>( ).Play( );
         }
 
         private static void WriteExceptionDetails( Exception exception, TextWriter writer )
@@ -131,7 +128,7 @@ namespace Videre.Windows
             if ( !E.NewValue.HasValue )
                 return;
 
-            player.GetComponent<SubtitlesComponent>( ).SetSubtitlesOffset( TimeSpan.FromMilliseconds( E.NewValue.Value ) );
+            Player.GetComponent<SubtitlesComponent>( ).SetSubtitlesOffset( TimeSpan.FromMilliseconds( E.NewValue.Value ) );
         }
 
         private void SubtitlesSize_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
@@ -182,12 +179,11 @@ namespace Videre.Windows
             if ( !res.Value )
                 return;
 
-            player.GetComponent<StateComponent>( ).Stop( );
-            player.GetComponent<MediaComponent>( ).LoadMedia( fileDialog.FileName );
-            Console.WriteLine( Hasher.ComputeMovieHash( fileDialog.FileName ) );
+            Player.GetComponent<StateComponent>( ).Stop( );
+            Player.GetComponent<MediaComponent>( ).LoadMedia( fileDialog.FileName );
         }
 
-        private void OnLoadSubtitlesButtonClick( object Sender, RoutedEventArgs E )
+        private void OnLoadLocalSubtitlesButtonClick( object Sender, RoutedEventArgs E )
         {
             OpenFileDialog fileDialog = new OpenFileDialog { Filter = "SubRip (*.srt)|*.srt" };
             bool? res = fileDialog.ShowDialog( this );
@@ -195,8 +191,35 @@ namespace Videre.Windows
             if ( !res.Value )
                 return;
 
-            player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( fileDialog.FileName );
+            Player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( fileDialog.FileName );
             FileFlyout.IsOpen = false;
+        }
+
+        private async void OnLoadOSButtonClick( object Sender, RoutedEventArgs E )
+        {
+            controller = await this.ShowProgressAsync( "Retrieving subtitle languages..", "Downloading subtitle languages from opensubtitles.org..." );
+            controller.SetIndeterminate( );
+
+            BackgroundWorker worker = new BackgroundWorker(  );
+            worker.DoWork += ( O, Args ) =>
+            {
+                SubtitleLanguage[ ] langs = Client.GetSubLanguages( );
+                Args.Result = langs;
+            };
+            worker.RunWorkerCompleted += WorkerOnRunWorkerCompleted;
+            worker.RunWorkerAsync( );
+        }
+
+        private async void WorkerOnRunWorkerCompleted( object Sender, RunWorkerCompletedEventArgs WorkerCompletedEventArgs )
+        {
+            SubtitleSelectionWindow subselect = new SubtitleSelectionWindow( ( SubtitleLanguage[ ] ) WorkerCompletedEventArgs.Result );
+            await controller.CloseAsync( );
+
+            if ( !subselect.ShowDialog( ).GetValueOrDefault( ) ) return;
+            if ( !subselect.HasDownloadedSubtitleFile ) return;
+
+            Player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( subselect.DownloadedFile.FullName );
+            this.FileFlyout.IsOpen = false;
         }
     }
 }

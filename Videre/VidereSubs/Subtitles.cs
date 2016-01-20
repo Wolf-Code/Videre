@@ -4,11 +4,11 @@ using System.Collections.Generic;
 namespace VidereSubs
 {
     /// <summary>
-    /// Contains all <see cref="SubtitleData"/> for a given .srt file.
+    /// Contains all <see cref="SubtitleSegment"/> for a given .srt file.
     /// </summary>
     public abstract class Subtitles
     {
-        private Dictionary<TimeSpan, SubtitleData> SubtitleDatas = new Dictionary<TimeSpan, SubtitleData>( );
+        private Dictionary<TimeSpan, SubtitleSegment> SubtitleDatas = new Dictionary<TimeSpan, SubtitleSegment>( );
         private readonly List<TimeSpan> Keys;
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace VidereSubs
         /// </summary>
         /// <param name="FilePath">The path to the subtitle file.</param>
         /// <returns>The subtitle data.</returns>
-        protected abstract Dictionary<TimeSpan, SubtitleData> ParseFile( string FilePath );
+        protected abstract Dictionary<TimeSpan, SubtitleSegment> ParseFile( string FilePath );
 
         /// <summary>
         /// Checks if there are subtitles left for a given time.
@@ -70,7 +70,7 @@ namespace VidereSubs
         /// </summary>
         /// <param name="Index">The index of the subtitle data.</param>
         /// <returns>The subtitle data.</returns>
-        public SubtitleData GetData( int Index )
+        public SubtitleSegment GetData( int Index )
         {
             if ( Index < 1 )
                 Index = 1;
@@ -83,7 +83,7 @@ namespace VidereSubs
         /// </summary>
         /// <param name="CurrentTime">The current time.</param>
         /// <returns>The subtitle data.</returns>
-        public SubtitleData GetData( TimeSpan CurrentTime )
+        public SubtitleSegment GetData( TimeSpan CurrentTime )
         {
             int Index = Keys.BinarySearch( CurrentTime );
             if ( Index < 0 )

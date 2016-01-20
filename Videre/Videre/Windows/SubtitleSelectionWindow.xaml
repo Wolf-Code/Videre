@@ -1,0 +1,67 @@
+﻿<controls:MetroWindow x:Class="Videre.Windows.SubtitleSelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Videre.Windows"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="SubtitleSelectionWindow"
+        SizeToContent="WidthAndHeight"
+        MaxHeight="600">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ListBox x:Name="LanguageList" MaxHeight="200" SelectionMode="Multiple" Grid.RowSpan="2">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding LanguageName}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Grid.Row="1" Grid.Column="1" Click="OnSearchButtonClick">Search</Button>
+        </Grid>
+
+        <Grid x:Name="SubtitlesControls" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ListView x:Name="SubsList" Visibility="Collapsed" Grid.RowSpan="2" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding SubFileName}"/>
+                        <GridViewColumn Header="Downloads" DisplayMemberBinding="{Binding DownloadsCount}"/>
+                        <GridViewColumn Header="Language" DisplayMemberBinding="{Binding LanguageName}" />
+                        <GridViewColumn Header="Date" DisplayMemberBinding="{Binding AddDate}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Button Grid.Column="1" Grid.Row="1" Click="OnCancelButtonClick">Cancel</Button>
+            <Button x:Name="DownloadButton" Grid.Column="2" Visibility="Collapsed" Grid.Row="1" Click="OnSubtitlesDownloadButtonClick">Download</Button>
+        </Grid>
+    </Grid>
+</controls:MetroWindow>

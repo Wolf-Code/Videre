@@ -35,5 +35,31 @@ namespace VidereSubs.OpenSubtitles.Interfaces
         /// <returns>The output from the server.</returns>
         [XmlRpcMethod( "CheckMovieHash2" )]
         XmlRpcStruct CheckMovieHash2( string token, string[ ] movieHashes );
+
+        /// <summary>
+        /// Retrieves subtitle information.
+        /// </summary>
+        /// <param name="token">The token of the client.</param>
+        /// <param name="subData">The data to search for.</param>
+        /// <param name="parameters">Extra parameters.</param>
+        /// <returns>The output from the server.</returns>
+        [XmlRpcMethod( "SearchSubtitles" )]
+        XmlRpcStruct SearchSubtitles( string token, XmlRpcStruct[ ] subData, XmlRpcStruct parameters );
+
+        /// <summary>
+        /// Gets all allowed subtitle languages.
+        /// </summary>
+        /// <param name="language">The language information.</param>
+        /// <returns>The output from the server.</returns>
+        [XmlRpcMethod( "GetSubLanguages" )]
+        XmlRpcStruct GetSubLanguages( string language );
+
+        /// <summary>
+        /// Notifies the server to keep the session open.
+        /// </summary>
+        /// <param name="token">The token of the client.</param>
+        /// <returns>The output from the server.</returns>
+        [XmlRpcMethod( "NoOperation" )]
+        XmlRpcStruct NoOperation( string token );
     }
 }

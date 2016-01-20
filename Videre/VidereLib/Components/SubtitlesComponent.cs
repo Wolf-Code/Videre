@@ -98,7 +98,7 @@ namespace VidereLib.Components
 
         private void StopSubtitles( )
         {
-            this.OnSubtitlesChanged?.Invoke( this, new OnSubtitlesChangedEventArgs( SubtitleData.Empty ) );
+            this.OnSubtitlesChanged?.Invoke( this, new OnSubtitlesChangedEventArgs( SubtitleSegment.Empty ) );
             this.subtitlesTimer.Stop( );
         }
 
@@ -143,8 +143,8 @@ namespace VidereLib.Components
             if ( !Subtitles.AnySubtitlesLeft( currentPosition ) )
                 return;
 
-            SubtitleData nextSubs = Subtitles.GetData( currentPosition );
-            SubtitleData subs = nextSubs != null ? Subtitles.GetData( nextSubs.Index - 1 ) : Subtitles.GetData( Subtitles.Count - 1 );
+            SubtitleSegment nextSubs = Subtitles.GetData( currentPosition );
+            SubtitleSegment subs = nextSubs != null ? Subtitles.GetData( nextSubs.Index - 1 ) : Subtitles.GetData( Subtitles.Count - 1 );
 
             // If we're in the sub interval.
             if ( currentPosition < subs.To && currentPosition >= subs.From )
