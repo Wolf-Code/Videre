@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VidereLib", "VidereLib\Vide
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VidereSubs", "VidereSubs\VidereSubs.csproj", "{F2D9B0AE-0864-44E1-8B07-0CE2A595E724}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkTester", "NetworkTester\NetworkTester.csproj", "{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{F2D9B0AE-0864-44E1-8B07-0CE2A595E724}.Release|x64.Build.0 = Release|Any CPU
 		{F2D9B0AE-0864-44E1-8B07-0CE2A595E724}.Release|x86.ActiveCfg = Release|Any CPU
 		{F2D9B0AE-0864-44E1-8B07-0CE2A595E724}.Release|x86.Build.0 = Release|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Debug|x64.Build.0 = Debug|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Debug|x86.Build.0 = Debug|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Release|x64.ActiveCfg = Release|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Release|x64.Build.0 = Release|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Release|x86.ActiveCfg = Release|Any CPU
+		{0C788C45-12B4-4BA3-BFB6-BDE072395FFE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

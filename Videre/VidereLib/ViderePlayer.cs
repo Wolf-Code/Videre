@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Windows.Threading;
 using VidereLib.Components;
 using VidereLib.Players;
 
@@ -15,6 +16,8 @@ namespace VidereLib
 
         private readonly Dictionary<Type, ComponentBase> components = new Dictionary<Type, ComponentBase>( );
 
+        public static Dispatcher MainDispatcher { private set; get; }
+
         /// <summary>
         /// The <see cref="MediaPlayerBase"/> used to play the media.
         /// </summary>
@@ -27,8 +30,12 @@ namespace VidereLib
         {
             windowData = data;
 
+            MainDispatcher = Dispatcher.CurrentDispatcher;
+
             this.LoadComponents( );
             this.InitializeComponents( );
+
+            this.GetComponent<NetworkComponent>(  ).SetUpNetworkReceiver( 13337 );
         }
 
         private void LoadComponents( )

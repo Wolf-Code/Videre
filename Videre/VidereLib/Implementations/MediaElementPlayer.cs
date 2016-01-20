@@ -46,7 +46,7 @@ namespace VidereLib.Implementations
         {
             if ( !this.IsMediaLoaded )
                 return;
-
+            
             player.Pause( );
         }
 

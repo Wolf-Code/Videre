@@ -70,5 +70,17 @@ namespace Videre {
                 this["SubtitleTimeOffset"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("13337")]
+        public ushort ListenPort {
+            get {
+                return ((ushort)(this["ListenPort"]));
+            }
+            set {
+                this["ListenPort"] = value;
+            }
+        }
     }
 }
