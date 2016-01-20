@@ -191,7 +191,7 @@ namespace Videre.Windows
             {
                 controller = await this.ShowProgressAsync( "Signing in.", "Signing into opensubtitles.org." );
                 controller.SetIndeterminate( );
-                worker.DoWork += ( s, e ) => e.Result = Client.LogIn( "", "", false );
+                worker.DoWork += ( s, e ) => e.Result = Client.LogIn( string.Empty, string.Empty, false );
                 worker.RunWorkerCompleted += async ( s, e ) =>
                 {
                     await controller.CloseAsync( );
