@@ -44,42 +44,6 @@
 
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
-            <Controls:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" Width="auto">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0">Subtitles Offset</Label>
-                    <Controls:NumericUpDown Grid.Row="1" x:Name="SubtitlesOffset" Interval="1" Speedup="True" HasDecimals="False" ValueChanged="NumericUpDown_OnValueChanged"></Controls:NumericUpDown>
-
-                    <Label Grid.Row="2">Subtitles Size</Label>
-                    <Controls:NumericUpDown 
-                        Grid.Row="3" x:Name="SubtitlesSize" 
-                        Interval="1" 
-                        Minimum="1" 
-                        Speedup="True" 
-                        HasDecimals="False" 
-                        ValueChanged="SubtitlesSize_OnValueChanged"
-                        Value="{Binding ElementName=subtitleLabel, Path=FontSize}"></Controls:NumericUpDown>
-
-                    <Label Grid.Row="4">Subtitles Position</Label>
-                    <Controls:NumericUpDown 
-                        Grid.Row="5" x:Name="SubtitlesPosition" 
-                        Interval="1" 
-                        Speedup="True" 
-                        HasDecimals="False" 
-                        Minimum="0"
-                        ValueChanged="SubtitlesPosition_OnValueChanged"
-                        Value="{Binding ElementName=subtitleLabel, Path=Margin.Bottom}"></Controls:NumericUpDown>
-                </Grid>
-            </Controls:Flyout>
-
             <Controls:Flyout x:Name="FileFlyout" Header="File" Position="Left" Width="auto">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -88,9 +52,9 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Button Grid.Row="0" Click="OnLoadMediaButtonClick">Load Media</Button>
-                    <Button x:Name="LocalSubtitlesButton" IsEnabled="False" Grid.Row="1" Click="OnLoadLocalSubtitlesButtonClick">Load Subtitles</Button>
-                    <Button x:Name="OSButton" IsEnabled="False" Grid.Row="2" Click="OnLoadOSButtonClick">Load from OpenSubtitles.org</Button>
+                    <Button Margin="10 0 10 0" Grid.Row="0" Click="OnLoadMediaButtonClick">Load Media</Button>
+                    <Button Margin="10 0 10 0" x:Name="LocalSubtitlesButton" IsEnabled="False" Grid.Row="1" Click="OnLoadLocalSubtitlesButtonClick">Load Subtitles</Button>
+                    <Button Margin="10 0 10 0" x:Name="OSButton" IsEnabled="False" Grid.Row="2" Click="OnLoadOSButtonClick">Load from OpenSubtitles.org</Button>
                 </Grid>
             </Controls:Flyout>
         </Controls:FlyoutsControl>
@@ -118,10 +82,10 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <MediaElement x:Name="MediaPlayer" ScrubbingEnabled="True" LoadedBehavior="Manual"></MediaElement>
-            <TextBlock  x:Name="subtitleLabel"
+            <MediaElement x:Name="MediaPlayer" ScrubbingEnabled="True" LoadedBehavior="Manual"/>
+            <TextBlock x:Name="subtitleLabel"
                     Foreground="White"
-                    FontSize="30"
+                    FontSize="{Binding Source={x:Static videre:Settings.Default}, Path=FontSize}"
                     TextAlignment="Center"
                     VerticalAlignment="Bottom"
                     FontFamily="Trebuchet MS"
@@ -132,8 +96,6 @@
             </TextBlock>
         </Grid>
 
-
-        <controls:MediaControls x:Name="MediaControlsContainer" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5"></controls:MediaControls>
-
+        <controls:MediaControls x:Name="MediaControlsContainer" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5"/>
     </Grid>
 </Controls:MetroWindow>

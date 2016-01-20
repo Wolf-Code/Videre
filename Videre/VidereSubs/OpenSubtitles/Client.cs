@@ -27,6 +27,11 @@ namespace VidereSubs.OpenSubtitles
         public string UserAgent { private set; get; }
 
         /// <summary>
+        /// Whether or not the client is logged in.
+        /// </summary>
+        public bool IsLoggedIn => login != null && login.LogInSuccesful;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public Client( string userAgent )

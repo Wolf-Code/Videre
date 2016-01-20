@@ -117,6 +117,11 @@ namespace VidereSubs.OpenSubtitles.Outputs
         public string StatusString { get; }
 
         /// <summary>
+        /// The status string without the code in front of it.
+        /// </summary>
+        public string StatusStringWithoutCode => StatusString.Substring( 4 );
+
+        /// <summary>
         /// The amount of seconds it took to process this request.
         /// </summary>
         public double Seconds { private set; get; }

@@ -1,0 +1,70 @@
+﻿<local:VidereControl x:Class="Videre.Controls.SubtitleSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Videre.Controls"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:properties="clr-namespace:Videre"
+             mc:Ignorable="d" MinWidth="300"
+             x:Name="SubSettings">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="Display">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Column="0" Grid.Row="0">Size</Label>
+                <controls:NumericUpDown 
+                    Grid.Column="1"
+                        Grid.Row="0" x:Name="SubSize" 
+                        Interval="1" 
+                        Minimum="1" 
+                        Speedup="True" 
+                        HasDecimals="False" 
+                        ValueChanged="SubSize_OnValueChanged"
+                        Value="{Binding Source={x:Static properties:Settings.Default}, Path=FontSize}"/>
+
+                <Label Grid.Column="0" Grid.Row="1">Position</Label>
+                <controls:NumericUpDown 
+                    Grid.Column="1"
+                        Grid.Row="1" x:Name="PositionOffset" 
+                        Interval="1" 
+                        Speedup="True" 
+                        HasDecimals="False" 
+                        Minimum="0"
+                        ValueChanged="PositionOffset_OnValueChanged"
+                        Value="{Binding Source={x:Static properties:Settings.Default}, Path=FontPosition}"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Timing" Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0">Offset (ms)</Label>
+                <controls:NumericUpDown x:Name="TimeOffset" Grid.Column="1" Interval="1" Speedup="True" HasDecimals="False" ValueChanged="TimeOffset_OnValueChanged"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</local:VidereControl>

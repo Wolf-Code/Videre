@@ -10,6 +10,7 @@ using VidereLib.Components;
 using VidereLib.EventArgs;
 using VidereSubs.OpenSubtitles;
 using VidereSubs.OpenSubtitles.Data;
+using VidereSubs.OpenSubtitles.Outputs;
 
 namespace Videre.Windows
 {
@@ -22,7 +23,11 @@ namespace Videre.Windows
         /// The active <see cref="ViderePlayer"/>.
         /// </summary>
         public static ViderePlayer Player { private set; get; }
-        private const string userAgent = "Videre v0.1";
+
+        /// <summary>
+        /// The videre user agent.
+        /// </summary>
+        public const string UserAgent = "Videre v0.1";
 
         /// <summary>
         /// The client which connects with opensubtitles.org.
@@ -44,8 +49,17 @@ namespace Videre.Windows
         /// <param name="e"></param>
         protected override void OnInitialized( EventArgs e )
         {
-            Client = new Client( userAgent );
-            Client.LogIn( "", "" );
+            Application.Current.DispatcherUnhandledException += ( Sender, Args ) =>
+            {
+                using ( FileStream FS = File.Create( "exception.txt" ) )
+                using ( TextWriter Writer = new StreamWriter( FS ) )
+                    WriteExceptionDetails( Args.Exception, Writer );
+
+                MessageBox.Show( "An exception has been encountered. The exact details have been saved in exception.txt. Please contact the developer and hand them this file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error );
+                Args.Handled = true;
+
+                Application.Current.Shutdown( );
+            };
 
             Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = MediaPlayer, MediaArea = MediaArea } );
             this.MediaControlsContainer.Initialize( Player );
@@ -62,18 +76,11 @@ namespace Videre.Windows
             WindowButtonCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
             RightWindowCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
             LeftWindowCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
+            
+            Settings.Default.PropertyChanged += ( Sender, Args ) => subtitleLabel.Margin = new Thickness( 0, 0, 0, Settings.Default.FontPosition );
+            subtitleLabel.Margin = new Thickness( 0, 0, 0, Settings.Default.FontPosition );
 
-            Application.Current.DispatcherUnhandledException += ( Sender, Args ) =>
-            {
-                using ( FileStream FS = File.Create( "exception.txt" ) )
-                    using ( TextWriter Writer = new StreamWriter( FS ) )
-                        WriteExceptionDetails( Args.Exception, Writer );
-
-                MessageBox.Show( "An exception has been encountered. The exact details have been saved in exception.txt. Please contact the developer and hand them this file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error );
-                Args.Handled = true;
-               
-                //Application.Current.Shutdown( );
-            };
+            Client = new Client( UserAgent );
 
             base.OnInitialized( e );
         }
@@ -98,7 +105,6 @@ namespace Videre.Windows
             LocalSubtitlesButton.IsEnabled = true;
             OSButton.IsEnabled = true;
             FileFlyout.IsOpen = false;
-            SubtitlesOffset.Value = 0;
 
             MediaControlsContainer.TimeLabel_Total.Content = Player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
             Player.GetComponent<StateComponent>( ).Play( );
@@ -115,31 +121,7 @@ namespace Videre.Windows
         }
 
         #region Subtitles
-        
-        private void SubtitlesPosition_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
-        {
-            if ( !E.NewValue.HasValue )
-                return;
-
-            subtitleLabel.Margin = new Thickness( 0, 0, 0, E.NewValue.Value );
-        }
-
-        private void NumericUpDown_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
-        {
-            if ( !E.NewValue.HasValue )
-                return;
-
-            Player.GetComponent<SubtitlesComponent>( ).SetSubtitlesOffset( TimeSpan.FromMilliseconds( E.NewValue.Value ) );
-        }
-
-        private void SubtitlesSize_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
-        {
-            if ( !E.NewValue.HasValue )
-                return;
-
-            subtitleLabel.FontSize = E.NewValue.Value;
-        }
-
+       
         private void PlayerOnOnSubtitlesChanged( object Sender, OnSubtitlesChangedEventArgs SubtitlesChangedEventArgs )
         {
             subtitleLabel.Inlines.Clear( );
@@ -164,7 +146,9 @@ namespace Videre.Windows
 
         private void OnSettingsButtonClicked( object Sender, RoutedEventArgs E )
         {
-            SettingsFlyout.IsOpen = true;
+            SettingsWindow settings = new SettingsWindow( );
+
+            settings.ShowDialog( );
         }
 
         private void OnFileButtonClicked( object Sender, RoutedEventArgs E )
@@ -198,10 +182,30 @@ namespace Videre.Windows
 
         private async void OnLoadOSButtonClick( object Sender, RoutedEventArgs E )
         {
+            BackgroundWorker worker = new BackgroundWorker( );
+            if ( !Client.IsLoggedIn )
+            {
+                controller = await this.ShowProgressAsync( "Signing in.", "Signing into opensubtitles.org." );
+                controller.SetIndeterminate( );
+                worker.DoWork += ( s, e ) => e.Result = Client.LogIn( "", "", false );
+                worker.RunWorkerCompleted += async ( s, e ) =>
+                {
+                    await controller.CloseAsync( );
+
+                    LogInOutput result = e.Result as LogInOutput;
+                    if ( Client.IsLoggedIn )
+                        OnLoadOSButtonClick( Sender, E );
+                    else
+                        await this.ShowMessageAsync( "Signing in failed", $"Unable to sign in to opensubtitles.org. Please try again later. (Message: {result.StatusStringWithoutCode})" );
+                };
+                worker.RunWorkerAsync( );
+
+                return;
+            }
+
             controller = await this.ShowProgressAsync( "Retrieving subtitle languages..", "Downloading subtitle languages from opensubtitles.org..." );
             controller.SetIndeterminate( );
-
-            BackgroundWorker worker = new BackgroundWorker(  );
+            
             worker.DoWork += ( O, Args ) =>
             {
                 SubtitleLanguage[ ] langs = Client.GetSubLanguages( );

@@ -62,16 +62,39 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\SubtitleSettingsControl.xaml.cs">
+      <DependentUpon>SubtitleSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\OpenSubtitlesSettingsControl.xaml.cs">
+      <DependentUpon>OpenSubtitlesSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\VidereControl.cs" />
     <Compile Include="Controls\MediaControls.xaml.cs">
       <DependentUpon>MediaControls.xaml</DependentUpon>
     </Compile>
     <Compile Include="FocusVisualTreeChanger.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SubtitleSelectionWindow.xaml.cs">
       <DependentUpon>SubtitleSelectionWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\MediaControls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SubtitleSettingsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\OpenSubtitlesSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -90,6 +113,10 @@
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\SubtitleSelectionWindow.xaml">
       <SubType>Designer</SubType>
@@ -121,6 +148,10 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>

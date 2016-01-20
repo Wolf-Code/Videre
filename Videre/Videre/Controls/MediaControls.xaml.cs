@@ -59,7 +59,7 @@ namespace Videre.Controls
             set
             {
                 m_IsPlaying = value;
-                this.OnPropertyChanged( "IsPlaying" );
+                this.OnPropertyChanged( nameof( IsPlaying ) );
             }
             get { return m_IsPlaying; }
         }
