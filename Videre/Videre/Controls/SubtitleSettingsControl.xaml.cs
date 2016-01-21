@@ -6,7 +6,7 @@ using VidereLib.Components;
 namespace Videre.Controls
 {
     /// <summary>
-    /// Interaction logic for OpenSubtitlesSettingsControl.xaml
+    /// Interaction logic for SubtitleSettingsControl.xaml
     /// </summary>
     public partial class SubtitleSettingsControl
     {

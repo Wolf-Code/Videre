@@ -6,7 +6,7 @@
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:controls1="clr-namespace:Videre.Controls"
         mc:Ignorable="d"
-        Title="SettingsWindow"
+        Title="Settings"
         SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,6 +23,9 @@
             </TabItem>
             <TabItem Header="Subtitles">
                 <controls1:SubtitleSettingsControl/>
+            </TabItem>
+            <TabItem Header="Connection">
+                <controls1:ConnectionSettingsControl/>
             </TabItem>
         </TabControl>
     </Grid>

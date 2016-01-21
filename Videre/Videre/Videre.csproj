@@ -67,6 +67,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\ConnectionSettingsControl.xaml.cs">
+      <DependentUpon>ConnectionSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SubtitleSettingsControl.xaml.cs">
       <DependentUpon>SubtitleSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -94,6 +97,10 @@
     <Page Include="Controls\MediaControls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ConnectionSettingsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\SubtitleSettingsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
