@@ -116,6 +116,7 @@
     <Compile Include="Windows\SubtitleSelectionWindow.xaml.cs">
       <DependentUpon>SubtitleSelectionWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\VidereWindow.cs" />
     <Page Include="Controls\ConnectionSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

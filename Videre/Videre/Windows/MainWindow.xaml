@@ -1,4 +1,4 @@
-﻿<Controls:MetroWindow 
+﻿<windows:VidereWindow
         x:Class="Videre.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,6 +7,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:videre="clr-namespace:Videre"
         xmlns:controls="clr-namespace:Videre.Controls"
+        xmlns:windows="clr-namespace:Videre.Windows"
         mc:Ignorable="d"
         Title="Videre" Height="350" Width="525" x:Name="VideoWindow" videre:FocusVisualTreeChanger.IsChanged="True">
 
@@ -98,4 +99,4 @@
 
         <controls:MediaControls x:Name="MediaControlsContainer" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5"/>
     </Grid>
-</Controls:MetroWindow>
+</windows:VidereWindow>
