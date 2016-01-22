@@ -16,6 +16,9 @@ namespace VidereLib
 
         private readonly Dictionary<Type, ComponentBase> components = new Dictionary<Type, ComponentBase>( );
 
+        /// <summary>
+        /// The dispatcher to dispatch to the main thread.
+        /// </summary>
         public static Dispatcher MainDispatcher { private set; get; }
 
         /// <summary>
@@ -34,8 +37,6 @@ namespace VidereLib
 
             this.LoadComponents( );
             this.InitializeComponents( );
-
-            this.GetComponent<NetworkComponent>(  ).SetUpNetworkReceiver( 13337 );
         }
 
         private void LoadComponents( )

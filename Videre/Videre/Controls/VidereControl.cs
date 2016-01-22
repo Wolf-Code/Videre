@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Videre.Windows;
 using VidereLib;
 
 namespace Videre.Controls
@@ -11,7 +12,7 @@ namespace Videre.Controls
         /// <summary>
         /// The videre player.
         /// </summary>
-        protected ViderePlayer Player { private set; get; }
+        protected ViderePlayer Player => MainWindow.Player;
 
         /// <summary>
         /// Whether or not the player has been initialized yet.
@@ -19,22 +20,11 @@ namespace Videre.Controls
         public bool IsPlayerInitialized => Player != null;
 
         /// <summary>
-        /// The initialization method, which saves the player.
+        /// Gets called whenever the player has been initialized.
         /// </summary>
-        /// <param name="player">The videre player.</param>
-        public void Initialize( ViderePlayer player )
+        public virtual void OnPlayerInitialized( )
         {
-            this.Player = player;
-
-            this.OnInitializedPlayer( );
-        }
-
-        /// <summary>
-        /// Gets called after the element is initialized with a <see cref="ViderePlayer"/>.
-        /// </summary>
-        protected virtual void OnInitializedPlayer( )
-        {
-
+            
         }
     }
 }

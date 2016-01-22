@@ -76,16 +76,17 @@ namespace Videre.Controls
         }
 
         /// <summary>
-        /// Gets called after the element is initialized with a <see cref="ViderePlayer"/>.
+        /// Gets called whenever the player has been initialized.
         /// </summary>
-        protected override void OnInitializedPlayer( )
+        public override void OnPlayerInitialized( )
         {
             Player.GetComponent<TimeComponent>( ).OnPositionChanged += OnOnPositionChanged;
-            Player.GetComponent<StateComponent>(  ).OnStateChanged += OnOnStateChanged;
+            Player.GetComponent<StateComponent>( ).OnStateChanged += OnOnStateChanged;
 
             InputComponent inputComponent = Player.GetComponent<InputComponent>( );
             inputComponent.OnShowControls += ( Sender, Args ) => this.Visibility = Visibility.Visible;
             inputComponent.OnHideControls += ( Sender, Args ) => this.Visibility = Visibility.Collapsed;
+            Console.WriteLine("player init");
         }
 
         private void OnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )

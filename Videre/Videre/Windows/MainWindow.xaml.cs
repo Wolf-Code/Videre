@@ -5,6 +5,7 @@ using System.Windows;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
+using Videre.Controls;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.EventArgs;
@@ -63,7 +64,9 @@ namespace Videre.Windows
             };
 
             Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new MediaElementPlayer( MediaPlayer ), MediaArea = MediaArea } );
-            this.MediaControlsContainer.Initialize( Player );
+            this.LoopAndInitVidereChildren( this );
+
+            Player.GetComponent<NetworkComponent>( ).SetUpNetworkReceiver( Settings.Default.ListenPort );
 
             SubtitlesComponent subtitlesComponent = Player.GetComponent<SubtitlesComponent>( );
             subtitlesComponent.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
@@ -90,6 +93,17 @@ namespace Videre.Windows
             };
 
             base.OnInitialized( e );
+        }
+
+        private void LoopAndInitVidereChildren( DependencyObject parent )
+        {
+            foreach ( var child in parent.GetChildObjects( ) )
+            {
+                if ( child.GetType( ).IsSubclassOf( typeof ( VidereControl ) ) )
+                    ( ( VidereControl ) child ).OnPlayerInitialized( );
+
+                LoopAndInitVidereChildren( child );
+            }
         }
 
         private async void MediaComponentOnOnMediaFailedToLoad( object Sender, OnMediaFailedToLoadEventArgs MediaFailedToLoadEventArgs )

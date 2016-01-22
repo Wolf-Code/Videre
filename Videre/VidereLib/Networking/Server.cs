@@ -6,6 +6,9 @@ using VidereLib.EventArgs;
 
 namespace VidereLib.Networking
 {
+    /// <summary>
+    /// A TPC server class.
+    /// </summary>
     public class Server
     {
         private readonly TcpListener server;
@@ -52,27 +55,30 @@ namespace VidereLib.Networking
             this.StartListening( );
         }
 
+        /// <summary>
+        /// Stops the server.
+        /// </summary>
+        public void Stop( )
+        {
+            this.server.Stop( );
+        }
+
+        private void AcceptTcpClientCallback( IAsyncResult result )
+        {
+            TcpListener srv = ( TcpListener ) result.AsyncState;
+            if ( srv?.Server == null || !srv.Server.IsBound )
+                return;
+
+            TcpClient cl = srv.EndAcceptTcpClient( result );
+            this.Client = cl;
+            Console.WriteLine( "Client!" );
+            OnClientConnected?.Invoke( this, new OnClientConnectedEventArgs( cl ) );
+        }
+
         private void StartListening( )
         {
             this.server.Start( );
-
-            BackgroundWorker worker = new BackgroundWorker( );
-            worker.DoWork += WorkerOnDoWork;
-            worker.RunWorkerCompleted += ( Sender, Args ) =>
-            {
-                TcpClient cl = Args.Result as TcpClient;
-                this.Client = cl;
-                Console.WriteLine( "Client!" );
-                OnClientConnected?.Invoke( this, new OnClientConnectedEventArgs( cl ) );
-            };
-
-            worker.RunWorkerAsync( );
-        }
-
-        private void WorkerOnDoWork( object Sender, DoWorkEventArgs WorkEventArgs )
-        {
-            TcpClient cl = this.server.AcceptTcpClient( );
-            WorkEventArgs.Result = cl;
+            this.server.BeginAcceptTcpClient( AcceptTcpClientCallback, this.server );
         }
     }
 }

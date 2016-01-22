@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using System.Windows;
+using VidereLib.Attributes;
 
 namespace NetworkTester
 {
@@ -17,12 +18,12 @@ namespace NetworkTester
 
         private void OnPlayClick( object Sender, RoutedEventArgs E )
         {
-            client.GetStream( ).Write( new byte[ ] { 0 }, 0, 1 );
+            client.GetStream( ).Write( new [ ] { ( byte ) NetworkRequestAttribute.RequestIdentifier.Play }, 0, 1 );
         }
 
         private void OnPauseClick( object Sender, RoutedEventArgs E )
         {
-            client.GetStream( ).Write( new byte[ ] { 1 }, 0, 1 );
+            client.GetStream( ).Write( new[ ] { ( byte )NetworkRequestAttribute.RequestIdentifier.Pause }, 0, 1 );
         }
 
         private void ConnectClick( object Sender, RoutedEventArgs E )

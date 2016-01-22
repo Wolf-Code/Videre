@@ -4,8 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Videre.Controls"
-             mc:Ignorable="d" MinWidth="300"
-             x:Name="SubSettings">
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:properties="clr-namespace:Videre"
+             mc:Ignorable="d" MinWidth="300">
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -14,9 +16,43 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
-        <GroupBox Header="QR Code">
+        
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="QR Code">
             <Image x:Name="QRImage" Stretch="Uniform" MaxWidth="300"/>
         </GroupBox>
+        
+        <GroupBox Grid.Row="1" Grid.Column="0" Header="Connection">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0">Listen Port</Label>
+                <controls:NumericUpDown 
+                    Grid.Row="0"
+                    Value="{Binding Source={x:Static properties:Settings.Default}, Path=ListenPort}"
+                    Minimum="1024"
+                    Maximum="65535"
+                    x:Name="TimeOffset" Grid.Column="1" Interval="1" Speedup="True" HasDecimals="False" ValueChanged="OnPortChanged"/>
+
+                <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Grid.Row="0" Grid.Column="1" Click="OnRegenerateQRClick">Regenerate QR Code</Button>
+                </Grid>
+            </Grid>
+        </GroupBox>
     </Grid>
+
 </local:VidereControl>
