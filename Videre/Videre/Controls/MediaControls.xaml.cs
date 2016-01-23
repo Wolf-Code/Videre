@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
 using Videre.Properties;
-using VidereLib;
 using VidereLib.Components;
 using VidereLib.EventArgs;
 

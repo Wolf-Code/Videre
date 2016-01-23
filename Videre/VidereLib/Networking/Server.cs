@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using VidereLib.EventArgs;
@@ -69,10 +68,17 @@ namespace VidereLib.Networking
             if ( srv?.Server == null || !srv.Server.IsBound )
                 return;
 
-            TcpClient cl = srv.EndAcceptTcpClient( result );
-            this.Client = cl;
-            Console.WriteLine( "Client!" );
-            OnClientConnected?.Invoke( this, new OnClientConnectedEventArgs( cl ) );
+            try
+            {
+                TcpClient cl = srv.EndAcceptTcpClient( result );
+                this.Client = cl;
+                Console.WriteLine( "Client!" );
+                OnClientConnected?.Invoke( this, new OnClientConnectedEventArgs( cl ) );
+            }
+            catch ( ObjectDisposedException )
+            {
+                // Object disposed exception, this is fine as it's happening because we're closing the socket.
+            }
         }
 
         private void StartListening( )

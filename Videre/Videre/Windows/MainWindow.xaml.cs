@@ -53,8 +53,8 @@ namespace Videre.Windows
             Application.Current.DispatcherUnhandledException += ( Sender, Args ) =>
             {
                 using ( FileStream FS = File.Create( "exception.txt" ) )
-                using ( TextWriter Writer = new StreamWriter( FS ) )
-                    WriteExceptionDetails( Args.Exception, Writer );
+                    using ( TextWriter Writer = new StreamWriter( FS ) )
+                        WriteExceptionDetails( Args.Exception, Writer );
 
                 MessageBox.Show( "An exception has been encountered. The exact details have been saved in exception.txt. Please contact the developer and hand them this file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error );
                 Args.Handled = true;

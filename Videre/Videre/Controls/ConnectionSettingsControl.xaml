@@ -30,27 +30,19 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0">Listen Port</Label>
+                <Label Grid.Row="0">IP Address</Label>
+                <Label x:Name="IPLabel" Grid.Row="0" Grid.Column="1" HorizontalContentAlignment="Right"/>
+                
+                <Label Grid.Column="0" Grid.Row="1">Listen Port</Label>
                 <controls:NumericUpDown 
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Value="{Binding Source={x:Static properties:Settings.Default}, Path=ListenPort}"
                     Minimum="1024"
                     Maximum="65535"
                     x:Name="TimeOffset" Grid.Column="1" Interval="1" Speedup="True" HasDecimals="False" ValueChanged="OnPortChanged"/>
-
-                <Grid Grid.Row="1" Grid.ColumnSpan="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Button Grid.Row="0" Grid.Column="1" Click="OnRegenerateQRClick">Regenerate QR Code</Button>
-                </Grid>
             </Grid>
         </GroupBox>
     </Grid>
