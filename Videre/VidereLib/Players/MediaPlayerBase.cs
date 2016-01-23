@@ -33,7 +33,7 @@ namespace VidereLib.Players
         /// <summary>
         /// The loaded media.
         /// </summary>
-        public FileInfo Media { protected set; get; }
+        public FileInfo Media { private set; get; }
 
         /// <summary>
         /// Calls the <see cref="MediaLoaded"/> event.
@@ -41,6 +41,7 @@ namespace VidereLib.Players
         /// <param name="args">The event args.</param>
         protected virtual void OnMediaLoaded( OnMediaLoadedEventArgs args )
         {
+            Media = args.MediaFile;
             MediaLoaded?.Invoke( this, args );
         }
 
@@ -50,6 +51,7 @@ namespace VidereLib.Players
         /// <param name="args">The event args.</param>
         protected virtual void OnMediaUnloaded( OnMediaUnloadedEventArgs args )
         {
+            Media = null;
             MediaUnloaded?.Invoke( this, args );
         }
 
@@ -59,6 +61,7 @@ namespace VidereLib.Players
         /// <param name="args">The event args.</param>
         protected virtual void OnMediaFailedToLoad( OnMediaFailedToLoadEventArgs args )
         {
+            Media = null;
             MediaFailedToLoad?.Invoke( this, args );
         }
 

@@ -21,11 +21,7 @@ namespace VidereLib.Implementations
         {
             this.player = element;
             this.player.MediaOpened += ( Sender, Args ) => OnMediaLoaded( new OnMediaLoadedEventArgs( Media ) );
-            this.player.MediaFailed += ( Sender, Args ) =>
-            {
-                OnMediaFailedToLoad( new OnMediaFailedToLoadEventArgs( Args.ErrorException, Media ) );
-                Media = null;
-            };
+            this.player.MediaFailed += ( Sender, Args ) => OnMediaFailedToLoad( new OnMediaFailedToLoadEventArgs( Args.ErrorException, Media ) );
         }
 
         /// <summary>
@@ -76,8 +72,6 @@ namespace VidereLib.Implementations
         /// <param name="file">The media file.</param>
         public override void LoadMedia( FileInfo file )
         {
-            Media = file;
-
             player.Source = new Uri( file.FullName );
             player.Play( );
             player.Stop( );
@@ -92,7 +86,6 @@ namespace VidereLib.Implementations
             player.Stop( );
 
             OnMediaUnloaded( new OnMediaUnloadedEventArgs( ) );
-            Media = null;
         }
 
         /// <summary>
