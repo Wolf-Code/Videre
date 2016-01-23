@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using VidereSubs.Attributes;
 
 namespace VidereSubs.SubtitleFormats
 {
     /// <summary>
     /// The .SRT file format.
     /// </summary>
+    [SubtitleLoader( "srt" )]
     public class SRT : Subtitles
     {
         /// <summary>
@@ -23,7 +25,7 @@ namespace VidereSubs.SubtitleFormats
         /// </summary>
         /// <param name="FilePath">The path to the subtitle file.</param>
         /// <returns>The subtitle data.</returns>
-        protected override Dictionary<TimeSpan,SubtitleSegment> ParseFile( string FilePath )
+        protected override Dictionary<TimeSpan, SubtitleSegment> ParseFile( string FilePath )
         {
             if ( !File.Exists( FilePath ) )
                 return null;

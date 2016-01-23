@@ -123,7 +123,7 @@ namespace VidereLib.Components
             if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "Unable to load subtitles before any media has been loaded." );
 
-            Subtitles = new SRT( filePath );
+            Subtitles = Subtitles.LoadSubtitlesFile( filePath );
             if ( Subtitles.SubtitlesParsedSuccesfully )
                 this.CheckForSubtitles( );
             else

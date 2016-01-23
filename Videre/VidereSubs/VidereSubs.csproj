@@ -60,6 +60,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\SubtitleLoaderAttribute.cs" />
     <Compile Include="OpenSubtitles\Client.cs" />
     <Compile Include="OpenSubtitles\Data\MovieData.cs" />
     <Compile Include="OpenSubtitles\Data\SubtitleLanguage.cs" />

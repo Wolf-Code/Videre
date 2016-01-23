@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using VidereSubs.Attributes;
 
 namespace VidereSubs
 {
@@ -10,6 +13,8 @@ namespace VidereSubs
     {
         private Dictionary<TimeSpan, SubtitleSegment> SubtitleDatas = new Dictionary<TimeSpan, SubtitleSegment>( );
         private readonly List<TimeSpan> Keys;
+
+        private static readonly Dictionary<string, Type> SubtitleLoaders = new Dictionary<string, Type>( ); 
 
         /// <summary>
         /// The amount of subtitles loaded.
@@ -29,6 +34,26 @@ namespace VidereSubs
         {
             this.LoadSubtitles( FilePath );
             Keys = new List<TimeSpan>( SubtitleDatas.Keys );
+        }
+
+        static Subtitles( )
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly( );
+            foreach ( Type t in assembly.GetTypes( ) )
+            {
+                foreach (  var info in t.GetCustomAttributes(true))
+                {
+                    SubtitleLoaderAttribute attribute = info as SubtitleLoaderAttribute;
+                    if ( attribute == null )
+                        continue;
+
+                    foreach( string extension in attribute.Extensions)
+                        if ( !SubtitleLoaders.ContainsKey( extension ) )
+                            SubtitleLoaders.Add( extension, t );
+                        else
+                            throw new Exception( "Attempting to add two handlers for the same subtitle extension." );
+                }
+            }
         }
 
         private void LoadSubtitles( string filePath )
@@ -90,6 +115,22 @@ namespace VidereSubs
                 Index = ~Index;
 
             return SubtitleDatas[ Keys[ Index ] ];
+        }
+
+        /// <summary>
+        /// Loads the correct <see cref="Subtitles"/> based on the file extension.
+        /// </summary>
+        /// <param name="FilePath">The path to the subtitles file.</param>
+        /// <returns>The <see cref="Subtitles"/> specific to this subtitle file extension.</returns>
+        public static Subtitles LoadSubtitlesFile( string FilePath )
+        {
+            FileInfo file = new FileInfo( FilePath );
+            string extension = file.Extension.Substring( 1 );
+
+            if ( !SubtitleLoaders.ContainsKey( extension ) )
+                return null;
+
+            return ( Subtitles ) Activator.CreateInstance( SubtitleLoaders[ extension ], FilePath );
         }
     }
 }

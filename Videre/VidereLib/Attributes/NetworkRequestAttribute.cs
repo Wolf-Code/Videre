@@ -5,6 +5,7 @@ namespace VidereLib.Attributes
     /// <summary>
     /// The attribute for handling network requests.
     /// </summary>
+    [AttributeUsage( AttributeTargets.Method )]
     public class NetworkRequestAttribute : Attribute
     {
         /// <summary>
