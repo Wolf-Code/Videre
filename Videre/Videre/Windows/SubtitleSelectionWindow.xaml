@@ -59,7 +59,7 @@
                 </ListView.View>
             </ListView>
 
-            <Button Grid.Column="1" Grid.Row="1" Click="OnCancelButtonClick">Cancel</Button>
+            <Button Grid.Column="1" Grid.Row="1" Click="OnCancelButtonClick" IsCancel="True">Cancel</Button>
             <Button Grid.Row="1" Grid.Column="2" Click="OnSearchButtonClick">Search</Button>
             <Button x:Name="DownloadButton" Grid.Column="3" Visibility="Collapsed" Grid.Row="1" Click="OnSubtitlesDownloadButtonClick">Download</Button>
         </Grid>

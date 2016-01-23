@@ -35,7 +35,6 @@ namespace Videre.Windows
         /// The client which connects with opensubtitles.org.
         /// </summary>
         public static Client Client { private set; get; }
-        private ProgressDialogController controller;
 
         /// <summary>
         /// Constructor.
@@ -109,7 +108,8 @@ namespace Videre.Windows
                     break;
 
                 case Key.Space:
-                    Player.GetComponent<StateComponent>( ).ResumeOrPause( );
+                    if ( Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+                        Player.GetComponent<StateComponent>( ).ResumeOrPause( );
                     break;
             }
         }
@@ -122,16 +122,11 @@ namespace Videre.Windows
         private void OnOnMediaUnloaded( object Sender, OnMediaUnloadedEventArgs MediaUnloadedEventArgs )
         {
             MediaControlsContainer.IsEnabled = false;
-            LocalSubtitlesButton.IsEnabled = false;
-            OSButton.IsEnabled = false;
         }
 
         private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
         {
             MediaControlsContainer.IsEnabled = true;
-            LocalSubtitlesButton.IsEnabled = true;
-            OSButton.IsEnabled = true;
-            FileFlyout.IsOpen = false;
 
             Player.GetComponent<StateComponent>( ).Play( );
         }
@@ -179,76 +174,8 @@ namespace Videre.Windows
 
         private void OnFileButtonClicked( object Sender, RoutedEventArgs E )
         {
-            FileFlyout.IsOpen = true;
-        }
-
-        private void OnLoadMediaButtonClick( object Sender, RoutedEventArgs E )
-        {
-            OpenFileDialog fileDialog = new OpenFileDialog( );
-            if ( !fileDialog.ShowDialog( this ).GetValueOrDefault( ) )
-                return;
-
-            Player.GetComponent<StateComponent>( ).Stop( );
-            Player.GetComponent<MediaComponent>( ).LoadMedia( fileDialog.FileName );
-        }
-
-        private void OnLoadLocalSubtitlesButtonClick( object Sender, RoutedEventArgs E )
-        {
-            OpenFileDialog fileDialog = new OpenFileDialog { Filter = "SubRip (*.srt)|*.srt" };
-            bool? res = fileDialog.ShowDialog( this );
-
-            if ( !res.Value )
-                return;
-
-            Player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( fileDialog.FileName );
-            FileFlyout.IsOpen = false;
-        }
-
-        private async void OnLoadOSButtonClick( object Sender, RoutedEventArgs E )
-        {
-            BackgroundWorker worker = new BackgroundWorker( );
-            if ( !Client.IsLoggedIn )
-            {
-                controller = await this.ShowProgressAsync( "Signing in.", "Signing into opensubtitles.org." );
-                controller.SetIndeterminate( );
-                worker.DoWork += ( s, e ) => e.Result = Client.LogIn( string.Empty, string.Empty, false );
-                worker.RunWorkerCompleted += async ( s, e ) =>
-                {
-                    await controller.CloseAsync( );
-
-                    LogInOutput result = e.Result as LogInOutput;
-                    if ( Client.IsLoggedIn )
-                        OnLoadOSButtonClick( Sender, E );
-                    else
-                        await this.ShowMessageAsync( "Signing in failed", $"Unable to sign in to opensubtitles.org. Please try again later. (Message: {result.StatusStringWithoutCode})" );
-                };
-                worker.RunWorkerAsync( );
-
-                return;
-            }
-
-            controller = await this.ShowProgressAsync( "Retrieving subtitle languages", "Downloading subtitle languages from opensubtitles.org..." );
-            controller.SetIndeterminate( );
-            
-            worker.DoWork += ( O, Args ) =>
-            {
-                SubtitleLanguage[ ] langs = Client.GetSubLanguages( );
-                Args.Result = langs;
-            };
-            worker.RunWorkerCompleted += WorkerOnRunWorkerCompleted;
-            worker.RunWorkerAsync( );
-        }
-
-        private async void WorkerOnRunWorkerCompleted( object Sender, RunWorkerCompletedEventArgs WorkerCompletedEventArgs )
-        {
-            SubtitleSelectionWindow subselect = new SubtitleSelectionWindow( ( SubtitleLanguage[ ] ) WorkerCompletedEventArgs.Result );
-            await controller.CloseAsync( );
-
-            if ( !subselect.ShowDialog( ).GetValueOrDefault( ) ) return;
-            if ( !subselect.HasDownloadedSubtitleFile ) return;
-
-            Player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( subselect.DownloadedFile.FullName );
-            this.FileFlyout.IsOpen = false;
+            FileOpenWindow window = new FileOpenWindow( );
+            window.ShowDialog( );
         }
     }
 }

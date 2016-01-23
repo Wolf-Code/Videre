@@ -43,24 +43,6 @@
         </Controls:WindowCommands>
     </Controls:MetroWindow.LeftWindowCommands>
 
-    <Controls:MetroWindow.Flyouts>
-        <Controls:FlyoutsControl>
-            <Controls:Flyout x:Name="FileFlyout" Header="File" Position="Left" Width="auto">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Button Margin="10 0 10 0" Grid.Row="0" Click="OnLoadMediaButtonClick">Load Media</Button>
-                    <Button Margin="10 0 10 0" x:Name="LocalSubtitlesButton" IsEnabled="False" Grid.Row="1" Click="OnLoadLocalSubtitlesButtonClick">Load Subtitles</Button>
-                    <Button Margin="10 0 10 0" x:Name="OSButton" IsEnabled="False" Grid.Row="2" Click="OnLoadOSButtonClick">Load from OpenSubtitles.org</Button>
-                </Grid>
-            </Controls:Flyout>
-        </Controls:FlyoutsControl>
-    </Controls:MetroWindow.Flyouts>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
