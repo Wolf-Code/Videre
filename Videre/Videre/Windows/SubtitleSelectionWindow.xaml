@@ -34,12 +34,12 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Button Grid.Row="1" Grid.Column="1" Click="OnSearchButtonClick">Search</Button>
         </Grid>
 
         <Grid x:Name="SubtitlesControls" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -48,7 +48,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <ListView x:Name="SubsList" Visibility="Collapsed" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
+            <ListView x:Name="SubsList" HorizontalContentAlignment="Stretch" Visibility="Collapsed" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding SubFileName}"/>
@@ -60,7 +60,8 @@
             </ListView>
 
             <Button Grid.Column="1" Grid.Row="1" Click="OnCancelButtonClick">Cancel</Button>
-            <Button x:Name="DownloadButton" Grid.Column="2" Visibility="Collapsed" Grid.Row="1" Click="OnSubtitlesDownloadButtonClick">Download</Button>
+            <Button Grid.Row="1" Grid.Column="2" Click="OnSearchButtonClick">Search</Button>
+            <Button x:Name="DownloadButton" Grid.Column="3" Visibility="Collapsed" Grid.Row="1" Click="OnSubtitlesDownloadButtonClick">Download</Button>
         </Grid>
     </Grid>
 </controls:MetroWindow>
