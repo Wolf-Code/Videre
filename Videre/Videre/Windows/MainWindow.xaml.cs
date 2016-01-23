@@ -1,18 +1,14 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using Microsoft.Win32;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.EventArgs;
 using VidereLib.Implementations;
 using VidereSubs.OpenSubtitles;
-using VidereSubs.OpenSubtitles.Data;
-using VidereSubs.OpenSubtitles.Outputs;
 
 namespace Videre.Windows
 {

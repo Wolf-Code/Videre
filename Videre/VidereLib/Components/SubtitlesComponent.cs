@@ -3,7 +3,6 @@ using System.IO;
 using System.Windows.Threading;
 using VidereLib.EventArgs;
 using VidereSubs;
-using VidereSubs.SubtitleFormats;
 
 namespace VidereLib.Components
 {
