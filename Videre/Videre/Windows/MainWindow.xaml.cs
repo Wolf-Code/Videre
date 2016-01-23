@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
@@ -90,7 +91,27 @@ namespace Videre.Windows
                 Settings.Default.Save( );
             };
 
+            KeyDown += OnKeyDown;
+
             base.OnInitialized( e );
+        }
+
+        private void OnKeyDown( object Sender, KeyEventArgs KeyEventArgs )
+        {
+            if ( KeyEventArgs.IsRepeat )
+                return;
+
+            switch ( KeyEventArgs.Key )
+            {
+                case Key.Escape:
+                    if ( Player.GetComponent<ScreenComponent>( ).IsFullScreen )
+                        Player.GetComponent<ScreenComponent>( ).SetFullScreen( false );
+                    break;
+
+                case Key.Space:
+                    Player.GetComponent<StateComponent>( ).ResumeOrPause( );
+                    break;
+            }
         }
 
         private async void MediaComponentOnOnMediaFailedToLoad( object Sender, OnMediaFailedToLoadEventArgs MediaFailedToLoadEventArgs )
