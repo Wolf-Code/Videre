@@ -12,6 +12,7 @@ namespace VidereLib.Implementations
     public class MediaElementPlayer : MediaPlayerBase
     {
         private readonly MediaElement player;
+        private FileInfo lastLoaded;
 
         /// <summary>
         /// Constructor.
@@ -20,7 +21,7 @@ namespace VidereLib.Implementations
         public MediaElementPlayer( MediaElement element )
         {
             this.player = element;
-            this.player.MediaOpened += ( Sender, Args ) => OnMediaLoaded( new OnMediaLoadedEventArgs( Media ) );
+            this.player.MediaOpened += ( Sender, Args ) => OnMediaLoaded( new OnMediaLoadedEventArgs( lastLoaded ) );
             this.player.MediaFailed += ( Sender, Args ) => OnMediaFailedToLoad( new OnMediaFailedToLoadEventArgs( Args.ErrorException, Media ) );
         }
 
@@ -72,6 +73,7 @@ namespace VidereLib.Implementations
         /// <param name="file">The media file.</param>
         public override void LoadMedia( FileInfo file )
         {
+            lastLoaded = file;
             player.Source = new Uri( file.FullName );
             player.Play( );
             player.Stop( );
