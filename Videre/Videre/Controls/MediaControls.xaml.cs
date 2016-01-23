@@ -82,10 +82,24 @@ namespace Videre.Controls
             Player.GetComponent<TimeComponent>( ).OnPositionChanged += OnOnPositionChanged;
             Player.GetComponent<StateComponent>( ).OnStateChanged += OnOnStateChanged;
 
+            MediaComponent media = Player.GetComponent<MediaComponent>( );
+            media.OnMediaLoaded += MediaOnOnMediaLoaded;
+            media.OnMediaUnloaded += MediaOnOnMediaUnloaded;
+
             InputComponent inputComponent = Player.GetComponent<InputComponent>( );
             inputComponent.OnShowControls += ( Sender, Args ) => this.Visibility = Visibility.Visible;
             inputComponent.OnHideControls += ( Sender, Args ) => this.Visibility = Visibility.Collapsed;
-            Console.WriteLine("player init");
+        }
+
+        private void MediaOnOnMediaUnloaded( object Sender, OnMediaUnloadedEventArgs MediaUnloadedEventArgs )
+        {
+            this.TimeLabel_Total.Content = "--:--:--";
+            this.TimeLabel_Current.Content = this.TimeLabel_Total.Content;
+        }
+
+        private void MediaOnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
+        {
+            this.TimeLabel_Total.Content = Player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
         }
 
         private void OnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )

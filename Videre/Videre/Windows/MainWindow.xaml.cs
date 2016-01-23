@@ -124,8 +124,6 @@ namespace Videre.Windows
             MediaControlsContainer.IsEnabled = false;
             LocalSubtitlesButton.IsEnabled = false;
             OSButton.IsEnabled = false;
-            MediaControlsContainer.TimeLabel_Total.Content = "--:--:--";
-            MediaControlsContainer.TimeLabel_Current.Content = MediaControlsContainer.TimeLabel_Total.Content;
         }
 
         private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
@@ -135,7 +133,6 @@ namespace Videre.Windows
             OSButton.IsEnabled = true;
             FileFlyout.IsOpen = false;
 
-            MediaControlsContainer.TimeLabel_Total.Content = Player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
             Player.GetComponent<StateComponent>( ).Play( );
         }
 
@@ -230,7 +227,7 @@ namespace Videre.Windows
                 return;
             }
 
-            controller = await this.ShowProgressAsync( "Retrieving subtitle languages..", "Downloading subtitle languages from opensubtitles.org..." );
+            controller = await this.ShowProgressAsync( "Retrieving subtitle languages", "Downloading subtitle languages from opensubtitles.org..." );
             controller.SetIndeterminate( );
             
             worker.DoWork += ( O, Args ) =>
