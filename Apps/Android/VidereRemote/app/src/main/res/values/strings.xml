@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Videre Remote</string>
+    <string name="title_activity_main">Videre Remote</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <string name="nav_item_connector">Connector</string>
+    <string name="nav_item_info">Information</string>
+    <string name="nav_item_remote">Remote</string>
+
+    <!-- navigation drawer item labels  -->
+    <string-array name="nav_drawer_labels">
+        <item>@string/nav_item_connector</item>
+        <item>@string/nav_item_info</item>
+        <item>@string/nav_item_remote</item>
+    </string-array>
 </resources>
