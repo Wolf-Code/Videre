@@ -32,7 +32,8 @@
                 Grid.Column="1" 
                 Height="20" 
                 ValueChanged="m_OnTimeSliderValueChanged"
-                Thumb.DragCompleted="m_OnTimeSliderDragCompleted"/>
+                Thumb.DragCompleted="m_OnTimeSliderDragCompleted"
+                IsMoveToPointEnabled="True"/>
             <Label x:Name="TimeLabel_Current" Grid.Column="0" Grid.Row="0" Content="--:--:--"/>
             <Label x:Name="TimeLabel_Total" Grid.Column="2" Grid.Row="0" Content="--:--:--"/>
         </Grid>
@@ -83,7 +84,16 @@
                     </Rectangle.Fill>
                 </Rectangle>
             </Button>
-            <Slider x:Name="VolumeSlider" VerticalAlignment="Center" Margin="0 0 5 0" Grid.Row="0" Grid.Column="4" Orientation="Horizontal" Value="1" Minimum="0" Maximum="1" ValueChanged="m_VolumeSlider_OnValueChanged"/>
+            <Slider x:Name="VolumeSlider" 
+                    VerticalAlignment="Center" 
+                    Margin="0 0 5 0" 
+                    Grid.Row="0" 
+                    Grid.Column="4" 
+                    Orientation="Horizontal" 
+                    Value="1"
+                    Minimum="0"
+                    Maximum="1" 
+                    ValueChanged="m_VolumeSlider_OnValueChanged"/>
         </Grid>
     </Grid>
 </local:VidereControl>
