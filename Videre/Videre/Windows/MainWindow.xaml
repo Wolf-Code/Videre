@@ -66,17 +66,7 @@
             </Grid.RowDefinitions>
 
             <MediaElement x:Name="MediaPlayer" ScrubbingEnabled="True" LoadedBehavior="Manual"/>
-            <TextBlock x:Name="subtitleLabel"
-                    Foreground="White"
-                    FontSize="{Binding Source={x:Static videre:Settings.Default}, Path=FontSize}"
-                    TextAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    FontFamily="Trebuchet MS"
-                    TextWrapping="WrapWithOverflow">
-                <TextBlock.Effect>
-                    <DropShadowEffect Color="Black" Direction="90" RenderingBias="Performance" ShadowDepth="0"/>
-                </TextBlock.Effect>
-            </TextBlock>
+            <controls:SubtitleAreaControl/>
         </Grid>
 
         <controls:MediaControls x:Name="MediaControlsContainer" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5"/>

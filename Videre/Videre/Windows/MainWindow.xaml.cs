@@ -63,7 +63,6 @@ namespace Videre.Windows
             Player.GetComponent<NetworkComponent>( ).SetUpNetworkReceiver( Settings.Default.ListenPort );
 
             SubtitlesComponent subtitlesComponent = Player.GetComponent<SubtitlesComponent>( );
-            subtitlesComponent.OnSubtitlesChanged += PlayerOnOnSubtitlesChanged;
             subtitlesComponent.OnSubtitlesFailedToLoad += SubtitlesComponentOnOnSubtitlesFailedToLoad;
 
             MediaComponent mediaComponent = Player.GetComponent<MediaComponent>( );
@@ -74,9 +73,6 @@ namespace Videre.Windows
             WindowButtonCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
             RightWindowCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
             LeftWindowCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
-            
-            Settings.Default.PropertyChanged += ( Sender, Args ) => subtitleLabel.Margin = new Thickness( 0, 0, 0, Settings.Default.FontPosition );
-            subtitleLabel.Margin = new Thickness( 0, 0, 0, Settings.Default.FontPosition );
 
             Client = new Client( UserAgent );
 
@@ -91,7 +87,7 @@ namespace Videre.Windows
             base.OnInitialized( e );
         }
 
-        private void OnKeyDown( object Sender, KeyEventArgs KeyEventArgs )
+        private static void OnKeyDown( object Sender, KeyEventArgs KeyEventArgs )
         {
             if ( KeyEventArgs.IsRepeat )
                 return;
@@ -138,21 +134,6 @@ namespace Videre.Windows
         }
 
         #region Subtitles
-       
-        private void PlayerOnOnSubtitlesChanged( object Sender, OnSubtitlesChangedEventArgs SubtitlesChangedEventArgs )
-        {
-            subtitleLabel.Inlines.Clear( );
-            if ( SubtitlesChangedEventArgs.Subtitles.Lines.Count <= 0 )
-                return;
-
-            for ( int X = 0; X < SubtitlesChangedEventArgs.Subtitles.Lines.Count; X++ )
-            {
-                subtitleLabel.Inlines.Add( SubtitlesChangedEventArgs.Subtitles.Lines[ X ] );
-
-                if ( X < SubtitlesChangedEventArgs.Subtitles.Lines.Count - 1 )
-                    subtitleLabel.Inlines.Add( Environment.NewLine );
-            }
-        }
 
         private async void SubtitlesComponentOnOnSubtitlesFailedToLoad( object Sender, OnSubtitlesFailedToLoadEventArgs SubtitlesFailedToLoadEventArgs )
         {
@@ -161,17 +142,7 @@ namespace Videre.Windows
 
         #endregion
 
-        private void OnSettingsButtonClicked( object Sender, RoutedEventArgs E )
-        {
-            SettingsWindow settings = new SettingsWindow( );
-
-            settings.ShowDialog( );
-        }
-
-        private void OnFileButtonClicked( object Sender, RoutedEventArgs E )
-        {
-            FileOpenWindow window = new FileOpenWindow( );
-            window.ShowDialog( );
-        }
+        private void OnSettingsButtonClicked( object Sender, RoutedEventArgs E ) => new SettingsWindow( ).ShowDialog( );
+        private void OnFileButtonClicked( object Sender, RoutedEventArgs E ) => new FileOpenWindow( ).ShowDialog( );
     }
 }

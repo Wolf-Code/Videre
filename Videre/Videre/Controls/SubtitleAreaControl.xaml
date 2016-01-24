@@ -1,0 +1,20 @@
+﻿<local:VidereControl x:Class="Videre.Controls.SubtitleAreaControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Videre.Controls"
+             xmlns:videre="clr-namespace:Videre"
+             mc:Ignorable="d">
+    <TextBlock x:Name="SubsTextBlock"
+                    Foreground="White"
+                    FontSize="{Binding Source={x:Static videre:Settings.Default}, Path=FontSize}"
+                    TextAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    FontFamily="Trebuchet MS"
+                    TextWrapping="WrapWithOverflow">
+        <TextBlock.Effect>
+            <DropShadowEffect Color="Black" Direction="90" RenderingBias="Performance" ShadowDepth="0"/>
+        </TextBlock.Effect>
+    </TextBlock>
+</local:VidereControl>
