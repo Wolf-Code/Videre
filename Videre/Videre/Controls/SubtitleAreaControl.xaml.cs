@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Documents;
 using VidereLib.Components;
 using VidereLib.EventArgs;
 
@@ -35,13 +37,82 @@ namespace Videre.Controls
             if ( OnSubtitlesChangedEventArgs.Subtitles.Lines.Count <= 0 )
                 return;
 
-            for ( int X = 0; X < OnSubtitlesChangedEventArgs.Subtitles.Lines.Count; X++ )
-            {
-                SubsTextBlock.Inlines.Add( OnSubtitlesChangedEventArgs.Subtitles.Lines[ X ] );
+            List<Inline> inlines = ConvertLinesToRuns( OnSubtitlesChangedEventArgs.Subtitles.Lines );
+            foreach ( Inline inline in inlines )
+                SubsTextBlock.Inlines.Add( inline );
+        }
 
-                if ( X < OnSubtitlesChangedEventArgs.Subtitles.Lines.Count - 1 )
-                    SubsTextBlock.Inlines.Add( Environment.NewLine );
+        private Inline GetInlineWithStyling( string line, System.Drawing.FontStyle style )
+        {
+            Inline styledText = new Run( line );
+            if ( style.HasFlag( System.Drawing.FontStyle.Bold ) )
+                styledText = new Bold( styledText );
+
+            if ( style.HasFlag( System.Drawing.FontStyle.Italic ) )
+                styledText = new Italic( styledText );
+
+            if ( style.HasFlag( System.Drawing.FontStyle.Underline ) )
+                styledText = new Underline( styledText );
+
+            return styledText;
+        }
+
+        private List<Inline> ConvertLinesToRuns( List<string> lines )
+        {
+            System.Drawing.FontStyle currentStyle = System.Drawing.FontStyle.Regular;
+            List<Inline> inlines = new List<Inline>( );
+            for ( int X = 0; X < lines.Count; ++X )
+            {
+                string line = lines[ X ];
+
+                string currentText = string.Empty;
+                for ( int q = 0; q < line.Length; q++ )
+                {
+                    if ( line[ q ] == '<' )
+                    {
+                        inlines.Add( GetInlineWithStyling( currentText, currentStyle ) );
+                        currentText = string.Empty;
+                        string contents = string.Empty;
+                        while ( line[ ++q ] != '>' )
+                            contents += line[ q ];
+
+                        string[ ] separated = contents.Split( new[ ] { ' ' }, StringSplitOptions.RemoveEmptyEntries );
+                        switch ( separated[ 0 ] )
+                        {
+                            case "i":
+                                currentStyle |= System.Drawing.FontStyle.Italic;
+                                break;
+
+                            case "/i":
+                                currentStyle &= ~System.Drawing.FontStyle.Italic;
+                                break;
+
+                            case "b":
+                                currentStyle |= System.Drawing.FontStyle.Bold;
+                                break;
+
+                            case "/b":
+                                currentStyle &= ~System.Drawing.FontStyle.Bold;
+                                break;
+
+                            case "u":
+                                currentStyle |= System.Drawing.FontStyle.Underline;
+                                break;
+
+                            case "/u":
+                                currentStyle &= ~System.Drawing.FontStyle.Underline;
+                                break;
+                        }
+
+                        continue;
+                    }
+                    currentText += line[ q ];
+                }
+
+                inlines.Add( GetInlineWithStyling( currentText + Environment.NewLine, currentStyle ) );
             }
+
+            return inlines;
         }
     }
 }
