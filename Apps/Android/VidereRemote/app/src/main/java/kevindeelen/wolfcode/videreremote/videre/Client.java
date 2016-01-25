@@ -16,6 +16,11 @@ public class Client
 
     }
 
+    public Socket getSocket ( )
+    {
+        return client;
+    }
+
     public void Connect ( String ip, int port ) throws IOException
     {
         InetAddress serverIP = InetAddress.getByName( ip );

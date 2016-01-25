@@ -9,8 +9,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
+
+import java.io.IOException;
 
 import kevindeelen.wolfcode.videreremote.R;
+import kevindeelen.wolfcode.videreremote.videre.VidereConnection;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener
 {
@@ -65,6 +69,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
             // set the toolbar title
             getSupportActionBar( ).setTitle( title );
+        }
+    }
+
+    public void OnConnectClick ( View view )
+    {
+        try
+        {
+            VidereConnection.Connect( ( (EditText) findViewById( R.id.listenIP ) ).getText( ).toString( ), Integer.parseInt( ( (EditText) findViewById( R.id.listenPort ) ).getText( ).toString( ) ) );
+        } catch ( IOException e )
+        {
+            e.printStackTrace( );
         }
     }
 }
