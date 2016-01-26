@@ -1,0 +1,33 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="layout.AboutFragment">
+
+	<!-- TODO: Update blank fragment layout -->
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:text="@string/hello_blank_fragment"/>
+<!--
+	<div>Icon made by
+
+		<a
+			href="http://www.freepik.com"
+			title="Freepik">Freepik
+		</a>
+		from
+
+		<a
+			href="http://www.flaticon.com"
+			title="Flaticon">www.flaticon.com
+		</a>
+		is licensed under
+
+		<a
+			href="http://creativecommons.org/licenses/by/3.0/"
+			title="Creative Commons BY 3.0">CC BY 3.0
+		</a>
+	</div>-->
+
+</FrameLayout>
