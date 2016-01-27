@@ -87,8 +87,8 @@ public class EnterConnectionFragment extends Fragment
 			@Override
 			public boolean onMenuItemClick( MenuItem item )
 			{
-				Snackbar.make( getActivity().findViewById( R.id.coordinatorLayout ), "*todo: open qr code scanner*",
-				               Snackbar.LENGTH_SHORT ).show( );
+				Snackbar.make( getActivity( ).findViewById( R.id.coordinatorLayout ),
+				               "*todo: open qr code scanner*", Snackbar.LENGTH_SHORT ).show( );
 				return false;
 			}
 		} );
