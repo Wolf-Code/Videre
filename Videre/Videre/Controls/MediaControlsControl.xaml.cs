@@ -128,6 +128,9 @@ namespace Videre.Controls
 
         private void OnOnPositionChanged( object Sender, OnPositionChangedEventArgs PositionChangedEventArgs )
         {
+            if ( double.IsNaN( PositionChangedEventArgs.Progress ) )
+                return;
+
             changedExternally = true;
             this.TimeSlider.Value = PositionChangedEventArgs.Progress * this.TimeSlider.Maximum;
             this.TimeLabel_Current.Content = PositionChangedEventArgs.Position.ToString( TimeFormat );
