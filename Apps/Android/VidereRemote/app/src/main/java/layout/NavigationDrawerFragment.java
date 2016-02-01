@@ -16,7 +16,6 @@ import kevindeelen.wolfcode.videreremote.R;
  */
 public class NavigationDrawerFragment extends Fragment
 {
-
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerLayout drawerLayout;
 
