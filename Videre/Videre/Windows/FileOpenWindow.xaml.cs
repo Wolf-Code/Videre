@@ -105,7 +105,7 @@ namespace Videre.Windows
 
         private async void WorkerOnRunWorkerCompleted( object Sender, RunWorkerCompletedEventArgs WorkerCompletedEventArgs )
         {
-            SubtitleSelectionWindow subselect = new SubtitleSelectionWindow( ( SubtitleLanguage[ ] )WorkerCompletedEventArgs.Result );
+            SubtitleSelectionWindow subselect = new SubtitleSelectionWindow( ( SubtitleLanguage[ ] ) WorkerCompletedEventArgs.Result );
             await controller.CloseAsync( );
 
             if ( !subselect.ShowDialog( ).GetValueOrDefault( ) ) return;
@@ -133,7 +133,7 @@ namespace Videre.Windows
             string VideoCombinedCommaSeparated = "*." + string.Join( ", *.", MainWindow.Player.MediaPlayer.VideoFileExtensions );
             string VideoCombinedSemiColonSeparated = "*." + string.Join( ";*.", MainWindow.Player.MediaPlayer.VideoFileExtensions );
             VideoFilter += $"({VideoCombinedCommaSeparated})|{VideoCombinedSemiColonSeparated}";
-            
+
             string AudioFilter = "Audio Files ";
             string AudioCombinedCommaSeparated = "*." + string.Join( ", *.", MainWindow.Player.MediaPlayer.AudioFileExtensions );
             string AudioCombinedSemiColonSeparated = "*." + string.Join( ";*.", MainWindow.Player.MediaPlayer.AudioFileExtensions );

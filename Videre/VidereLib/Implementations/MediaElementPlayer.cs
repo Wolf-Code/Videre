@@ -126,5 +126,14 @@ namespace VidereLib.Implementations
         {
             player.Position = time;
         }
+
+        /// <summary>
+        /// Gets the currently loaded media's aspect ratio.
+        /// </summary>
+        /// <returns>The aspect ratio of the currently loaded media.</returns>
+        public override float GetAspectRatio( )
+        {
+            return player.NaturalVideoWidth / ( float ) player.NaturalVideoWidth;
+        }
     }
 }

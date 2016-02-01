@@ -59,7 +59,7 @@ namespace Videre.Windows
                 Application.Current.Shutdown( );
             };
 
-            Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new MediaElementPlayer( MediaPlayer ), MediaArea = MediaArea } );
+            Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new MediaElementPlayer( this.MediaArea.MediaPlayer ), MediaArea = MediaArea } );
 
             Player.GetComponent<NetworkComponent>( ).SetUpNetworkReceiver( Settings.Default.ListenPort );
 
@@ -145,5 +145,15 @@ namespace Videre.Windows
 
         private void OnSettingsButtonClicked( object Sender, RoutedEventArgs E ) => new SettingsWindow( ).ShowDialog( );
         private void OnFileButtonClicked( object Sender, RoutedEventArgs E ) => new FileOpenWindow( ).ShowDialog( );
+
+        private void Cmd_TogglePlayPause( object Sender, ExecutedRoutedEventArgs E )
+        {
+            Player.GetComponent<StateComponent>( ).ResumeOrPause( );
+        }
+
+        private void CanCmd_TogglePlayPause( object Sender, CanExecuteRoutedEventArgs E )
+        {
+            E.CanExecute = Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded;
+        }
     }
 }

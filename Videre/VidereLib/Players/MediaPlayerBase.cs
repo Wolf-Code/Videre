@@ -123,5 +123,11 @@ namespace VidereLib.Players
         /// </summary>
         /// <param name="time">The time to move to.</param>
         public abstract void SetPosition( TimeSpan time );
+
+        /// <summary>
+        /// Gets the currently loaded media's aspect ratio.
+        /// </summary>
+        /// <returns>The aspect ratio of the currently loaded media.</returns>
+        public abstract float GetAspectRatio( );
     }
 }

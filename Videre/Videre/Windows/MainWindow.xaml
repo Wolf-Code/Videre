@@ -11,6 +11,10 @@
         mc:Ignorable="d"
         Title="Videre" Height="350" Width="525" x:Name="VideoWindow" videre:FocusVisualTreeChanger.IsChanged="True">
 
+    <Window.CommandBindings>
+        <CommandBinding Command="TogglePlayPause" Executed="Cmd_TogglePlayPause" CanExecute="CanCmd_TogglePlayPause" />
+    </Window.CommandBindings>
+    
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <Button x:Name="SettingsButton" Click="OnSettingsButtonClicked">
@@ -45,30 +49,15 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        
+        <controls:MediaControl x:Name="MediaArea" Grid.Column="0" Grid.Row="0"/>
 
-        <Grid x:Name="MediaArea" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" Background="Black">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <MediaElement x:Name="MediaPlayer" ScrubbingEnabled="True" LoadedBehavior="Manual"/>
-            <controls:SubtitleAreaControl/>
-        </Grid>
-
-        <controls:MediaControls x:Name="MediaControlsContainer" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5"/>
+        <controls:MediaControls x:Name="MediaControlsContainer" Grid.Column="0" Grid.Row="1"/>
     </Grid>
 </windows:VidereWindow>

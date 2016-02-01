@@ -92,6 +92,9 @@
     <Compile Include="Controls\ConnectionSettingsControl.xaml.cs">
       <DependentUpon>ConnectionSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MediaControl.xaml.cs">
+      <DependentUpon>MediaControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SubtitleAreaControl.xaml.cs">
       <DependentUpon>SubtitleAreaControl.xaml</DependentUpon>
     </Compile>
@@ -105,8 +108,8 @@
       <DependentUpon>TimeShowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\VidereControl.cs" />
-    <Compile Include="Controls\MediaControls.xaml.cs">
-      <DependentUpon>MediaControls.xaml</DependentUpon>
+    <Compile Include="Controls\MediaControlsControl.xaml.cs">
+      <DependentUpon>MediaControlsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="FocusVisualTreeChanger.cs" />
     <Compile Include="Properties\Annotations.cs" />
@@ -130,7 +133,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MediaControls.xaml">
+    <Page Include="Controls\MediaControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MediaControlsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
