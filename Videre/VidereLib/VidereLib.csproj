@@ -93,6 +93,8 @@
     <Compile Include="Components\StateComponent.cs" />
     <Compile Include="Components\SubtitlesComponent.cs" />
     <Compile Include="Components\TimeComponent.cs" />
+    <Compile Include="Data\AudioInfo.cs" />
+    <Compile Include="Data\VideoInfo.cs" />
     <Compile Include="Data\VidereMedia.cs" />
     <Compile Include="EventArgs\OnClientConnectedEventArgs.cs" />
     <Compile Include="EventArgs\OnFullscreenChangedEventArgs.cs" />

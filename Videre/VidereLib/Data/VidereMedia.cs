@@ -24,6 +24,26 @@ namespace VidereLib.Data
         public string Name { set; get; }
 
         /// <summary>
+        /// The <see cref="VideoInfo"/> of the media.
+        /// </summary>
+        public VideoInfo Video { set; get; }
+
+        /// <summary>
+        /// Indicates if the media has video.
+        /// </summary>
+        public bool HasVideo => Video != null;
+
+        /// <summary>
+        /// The <see cref="AudioInfo"/> of the media.
+        /// </summary>
+        public AudioInfo Audio { set; get; }
+
+        /// <summary>
+        /// Indicates if the media has audio.
+        /// </summary>
+        public bool HasAudio => Audio != null;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="file">The <see cref="FileInfo"/> of the media.</param>
