@@ -69,11 +69,8 @@ namespace VidereLib.Implementations
         /// <summary>
         /// Stops the currently loaded media and unloads it.
         /// </summary>
-        public override void Stop( )
+        protected override void OnStop( )
         {
-            if ( !this.IsMediaLoaded )
-                return;
-
             player.Stop( );
         }
 

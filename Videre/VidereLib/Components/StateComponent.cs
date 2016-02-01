@@ -74,7 +74,7 @@ namespace VidereLib.Components
             if ( CurrentState == PlayerState.Stopped )
                 return;
 
-            Pause( );
+            Player.MediaPlayer.Stop( );
             Player.GetComponent<MediaComponent>( ).UnloadMedia( );
             this.CurrentState = PlayerState.Stopped;
         }

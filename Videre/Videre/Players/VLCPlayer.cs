@@ -59,7 +59,7 @@ namespace Videre.Players
                 Duration = lastMedia.Duration,
                 Name = mediaFile.Name
             };
-
+            Console.WriteLine(lastMedia.GetMeta( MetaDataType.Title ));
             xZune.Vlc.MediaTrack vid = lastMedia.GetTracks( ).FirstOrDefault( O => O.Type == TrackType.Video );
             if ( vid?.VideoTrack != null )
             {
@@ -115,9 +115,9 @@ namespace Videre.Players
         /// <summary>
         /// Stops the currently loaded media and unloads it.
         /// </summary>
-        public override void Stop( )
+        protected override void OnStop( )
         {
-            this.player.Stop( );
+            this.player.BeginStop( );
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Videre.Players
         /// </summary>
         public override void UnloadMedia( )
         {
-            lastMedia = null;
+            OnMediaUnloaded( new OnMediaUnloadedEventArgs( ) );
         }
 
         /// <summary>

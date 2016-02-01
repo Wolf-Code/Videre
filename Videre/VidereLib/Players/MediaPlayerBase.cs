@@ -88,7 +88,19 @@ namespace VidereLib.Players
         /// <summary>
         /// Stops the currently loaded media and unloads it.
         /// </summary>
-        public abstract void Stop( );
+        public void Stop( )
+        {
+            if ( !IsMediaLoaded )
+                return;
+
+            OnStop( );
+            Media = null;
+        }
+        
+        /// <summary>
+        /// Called whenever the player is stopped.
+        /// </summary>
+        protected abstract void OnStop( );
 
         /// <summary>
         /// Sets the media player's volume.

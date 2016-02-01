@@ -26,7 +26,18 @@ namespace VidereLib.Components
         /// <param name="player">The <see cref="ViderePlayer"/>.</param>
         public TimeComponent( ViderePlayer player ) : base( player )
         {
-            player.GetComponent<StateComponent>(  ).OnStateChanged += OnOnStateChanged;
+            
+        }
+
+        /// <summary>
+        /// Creates the timing timer.
+        /// </summary>
+        protected override void OnInitialize( )
+        {
+            timeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 100 ) };
+            timeTimer.Tick += TimeTimerOnTick;
+
+            Player.GetComponent<StateComponent>( ).OnStateChanged += OnOnStateChanged;
         }
 
         private void OnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )
@@ -42,15 +53,6 @@ namespace VidereLib.Components
                     timeTimer.Start( );
                     break;
             }
-        }
-
-        /// <summary>
-        /// Creates the timing timer.
-        /// </summary>
-        protected override void OnInitialize( )
-        {
-            timeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 100 ) };
-            timeTimer.Tick += TimeTimerOnTick;
         }
 
         private void TimeTimerOnTick( object Sender, System.EventArgs Args )
