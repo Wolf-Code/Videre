@@ -53,8 +53,9 @@ namespace Videre.Windows
                         WriteExceptionDetails( Args.Exception, Writer );
 
                 MessageBox.Show( "An exception has been encountered. The exact details have been saved in exception.txt. Please contact the developer and hand them this file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error );
+#if !DEBUG
                 Args.Handled = true;
-
+#endif
                 Application.Current.Shutdown( );
             };
 

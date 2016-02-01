@@ -56,9 +56,7 @@ namespace VidereLib.Components
 
                     if ( attribute == null )
                         continue;
-
-                    Console.WriteLine( info.Name );
-
+                    
                     if ( !hooks.ContainsKey( attribute.Identifier ) )
                         hooks.Add( attribute.Identifier, new List<MethodInfo>( ) );
 
@@ -127,7 +125,6 @@ namespace VidereLib.Components
                             {
                                 byte cmd = reader.ReadByte( );
                                 NetworkRequestAttribute.RequestIdentifier id = ( NetworkRequestAttribute.RequestIdentifier ) cmd;
-                                Console.WriteLine( id );
 
                                 if ( !hooks.ContainsKey( id ) )
                                     continue;

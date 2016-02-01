@@ -106,6 +106,8 @@ namespace VidereLib.Components
                 throw new Exception( "No media loaded." );
 
             Player.MediaPlayer.SetPosition( Span );
+            double progress = Span.TotalSeconds / Player.MediaPlayer.GetMediaLength( ).TotalSeconds;
+            OnPositionChanged?.Invoke( this, new OnPositionChangedEventArgs( Span, progress ) );
             this.Player.GetComponent<SubtitlesComponent>( ).CheckForSubtitles( );
         }
 
