@@ -2,7 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Threading;
 using Videre.Properties;
 using VidereLib.Components;
@@ -15,6 +17,7 @@ namespace Videre.Controls
     /// </summary>
     public partial class MediaControls : INotifyPropertyChanged
     {
+        private const string TimeFormat = @"hh\:mm\:ss";
         private readonly DispatcherTimer SliderTimer;
         private bool changedExternally;
 
@@ -72,6 +75,8 @@ namespace Videre.Controls
 
             SliderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 250 ) };
             SliderTimer.Tick += ( sender, args ) => PerformTimeSlide( );
+
+            TimeShower.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -99,7 +104,7 @@ namespace Videre.Controls
 
         private void MediaOnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
         {
-            this.TimeLabel_Total.Content = Player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( @"hh\:mm\:ss" );
+            this.TimeLabel_Total.Content = Player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( TimeFormat );
         }
 
         private void OnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )
@@ -114,7 +119,7 @@ namespace Videre.Controls
         {
             changedExternally = true;
             this.TimeSlider.Value = PositionChangedEventArgs.Progress * this.TimeSlider.Maximum;
-            this.TimeLabel_Current.Content = PositionChangedEventArgs.Position.ToString( @"hh\:mm\:ss" );
+            this.TimeLabel_Current.Content = PositionChangedEventArgs.Position.ToString( TimeFormat );
         }
 
         private void PerformTimeSlide( )
@@ -190,7 +195,14 @@ namespace Videre.Controls
             OnVolumeChanged?.Invoke( this, E );
         }
 
+        private void ResizeTimeShower( )
+        {
+            TimeShower.Width = this.ActualWidth / 7;
+            TimeShower.SetPointerWidth( TimeShower.ActualWidth / 10 );
+        }
+
         #region Property Change
+
         /// <summary>
         /// Gets called whenever a property is changed.
         /// </summary>
@@ -205,6 +217,45 @@ namespace Videre.Controls
         {
             PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( PropertyName ) );
         }
+
         #endregion
+
+        private void TimeSlider_OnMouseMove( object Sender, MouseEventArgs E )
+        {
+            ResizeTimeShower( );
+
+            // Getting the progress and finding the offset from the top left corner of the slider, relative to the canvas containing the notifier.
+            double Progress = E.GetPosition( TimeSlider ).X / TimeSlider.ActualWidth;
+            double ExtraOffset = Progress * TimeSlider.ActualWidth;
+
+            Point translated = TimeSlider.TranslatePoint( new Point( 0, 0 ), PopupContainer );
+
+            // The half width of the popup.
+            double halfWidth = TimeShower.ActualWidth / 2;
+            double OffsetFromBorder = translated.X + ExtraOffset - halfWidth;
+
+            double MaxRight = this.ActualWidth - TimeShower.ActualWidth;
+            double PointerOffset = 0;
+            if ( OffsetFromBorder < 0 )
+                PointerOffset = OffsetFromBorder;
+            else if ( OffsetFromBorder > MaxRight )
+                PointerOffset = OffsetFromBorder - MaxRight;
+
+            TimeShower.TimeLabel.Content = TimeSpan.FromTicks( ( long ) ( Player.MediaPlayer.GetMediaLength( ).Ticks * Progress ) ).ToString( TimeFormat );
+            Canvas.SetLeft( TimeShower.Pointer, halfWidth + PointerOffset );
+            Canvas.SetLeft( TimeShower, Math.Min( Math.Max( 0, OffsetFromBorder ), MaxRight ) );
+            Canvas.SetTop( TimeShower, translated.Y - TimeShower.ActualHeight - TimeShower.Pointer.ActualHeight );
+        }
+
+        private void TimeSlider_OnMouseEnter( object Sender, MouseEventArgs E )
+        {
+            TimeShower.Visibility = Visibility.Visible;
+            ResizeTimeShower( );
+        }
+
+        private void TimeSlider_OnMouseLeave( object Sender, MouseEventArgs E )
+        {
+            TimeShower.Visibility = Visibility.Hidden;
+        }
     }
 }

@@ -23,6 +23,16 @@ namespace VidereLib.Implementations
             this.player = element;
             this.player.MediaOpened += ( Sender, Args ) => OnMediaLoaded( new OnMediaLoadedEventArgs( lastLoaded ) );
             this.player.MediaFailed += ( Sender, Args ) => OnMediaFailedToLoad( new OnMediaFailedToLoadEventArgs( Args.ErrorException, Media ) );
+
+            VideoFileExtensions = new[ ]
+            {
+                "mp4", "mkv", "avi"
+            };
+
+            AudioFileExtensions = new[ ]
+            {
+                "mp3", "wav"
+            };
         }
 
         /// <summary>

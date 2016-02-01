@@ -24,6 +24,15 @@ namespace VidereLib.Players
         /// </summary>
         public event EventHandler<OnMediaUnloadedEventArgs> MediaUnloaded;
 
+        /// <summary>
+        /// The supported video file extensions.
+        /// </summary>
+        public string[ ] VideoFileExtensions { protected set; get; }
+
+        /// <summary>
+        /// The supported audio file extensions.
+        /// </summary>
+        public string[ ] AudioFileExtensions { protected set; get; }
 
         /// <summary>
         /// Indicates if any media has been loaded.

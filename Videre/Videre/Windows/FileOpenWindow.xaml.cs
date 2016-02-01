@@ -128,6 +128,20 @@ namespace Videre.Windows
         private void MediaButton_OnClick( object Sender, RoutedEventArgs E )
         {
             OpenFileDialog fileDialog = new OpenFileDialog( );
+
+            string VideoFilter = "Video Files ";
+            string VideoCombinedCommaSeparated = "*." + string.Join( ", *.", MainWindow.Player.MediaPlayer.VideoFileExtensions );
+            string VideoCombinedSemiColonSeparated = "*." + string.Join( ";*.", MainWindow.Player.MediaPlayer.VideoFileExtensions );
+            VideoFilter += $"({VideoCombinedCommaSeparated})|{VideoCombinedSemiColonSeparated}";
+            
+            string AudioFilter = "Audio Files ";
+            string AudioCombinedCommaSeparated = "*." + string.Join( ", *.", MainWindow.Player.MediaPlayer.AudioFileExtensions );
+            string AudioCombinedSemiColonSeparated = "*." + string.Join( ";*.", MainWindow.Player.MediaPlayer.AudioFileExtensions );
+            AudioFilter += $"({AudioCombinedCommaSeparated})|{AudioCombinedSemiColonSeparated}";
+
+            string Filter = $"Media Files ({VideoCombinedCommaSeparated}, {AudioCombinedCommaSeparated})|{VideoCombinedSemiColonSeparated};{AudioCombinedSemiColonSeparated}|{VideoFilter}|{AudioFilter}|All Files (*.*)|*.*";
+            fileDialog.Filter = Filter;
+
             if ( !fileDialog.ShowDialog( this ).GetValueOrDefault( ) )
                 return;
 
