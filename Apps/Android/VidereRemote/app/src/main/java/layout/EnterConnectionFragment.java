@@ -12,7 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
@@ -71,6 +73,16 @@ public class EnterConnectionFragment extends Fragment
 		NumberPicker portEntry = ( NumberPicker ) root.findViewById( R.id.listenPortEntry );
 		portEntry.setMinValue( 1024 );
 		portEntry.setMaxValue( 65535 );
+
+		Button connectButton = ( Button)root.findViewById( R.id.connectButton );
+		connectButton.setOnClickListener( new OnClickListener( ) {
+			@Override
+			public void onClick( View v )
+			{
+				Snackbar.make( getActivity( ).findViewById( R.id.mainLayout ),
+				               "*todo: connect*", Snackbar.LENGTH_SHORT ).show( );
+			}
+		} );
 
 		return root;
 	}

@@ -11,4 +11,5 @@
 	<string name="listenPort">Port</string>
 	<string name="descriptionListenIP">The IP address on which Videre is running</string>
 	<string name="descriptionListenPort">The port on which Videre is running</string>
+	<string name="button_connect">Connect</string>
 </resources>
