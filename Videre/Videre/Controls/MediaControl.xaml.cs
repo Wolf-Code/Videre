@@ -17,7 +17,7 @@ namespace Videre.Controls
 
         private void MediaPlayer_OnMouseRightButtonDown( object Sender, MouseButtonEventArgs E )
         {
-            MediaPlayer.ContextMenu.IsOpen = true;
+            //MediaPlayer.ContextMenu.IsOpen = true;
         }
     }
 }

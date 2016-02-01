@@ -62,8 +62,8 @@ namespace Videre.Players
                 return null;
 
             return AssemblyName.GetAssemblyName( currentAssembly.Location ).ProcessorArchitecture == ProcessorArchitecture.X86 ? 
-                new DirectoryInfo( Path.Combine( currentDirectory, @"D:\Folders\Documents\Github\Videre\lib\x86" ) ) : 
-                new DirectoryInfo( Path.Combine( currentDirectory, @"D:\Folders\Documents\Github\Videre\lib\x64" ) );
+                new DirectoryInfo( Path.Combine( currentDirectory, @"Content\lib\x86" ) ) : 
+                new DirectoryInfo( Path.Combine( currentDirectory, @"Content\lib\x64" ) );
         }
 
         public override void Play( )
