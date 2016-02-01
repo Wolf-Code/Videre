@@ -116,7 +116,7 @@ namespace Videre.Windows
             BackgroundWorker worker = new BackgroundWorker( );
             worker.DoWork += ( O, Args ) =>
             {
-                SubtitleData[ ] subs = MainWindow.Client.SearchSubtitles( Args.Argument as string[ ], MainWindow.Player.GetComponent<MediaComponent>( ).Media );
+                SubtitleData[ ] subs = MainWindow.Client.SearchSubtitles( Args.Argument as string[ ], MainWindow.Player.GetComponent<MediaComponent>( ).Media.File );
                 Args.Result = subs;
             };
             worker.RunWorkerCompleted += async ( O, Args ) =>

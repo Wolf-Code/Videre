@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using VidereLib.Data;
 using VidereLib.EventArgs;
 
 namespace VidereLib.Components
@@ -17,7 +18,7 @@ namespace VidereLib.Components
         /// <summary>
         /// The currently loaded media.
         /// </summary>
-        public FileInfo Media => Player.MediaPlayer.Media;
+        public VidereMedia Media => Player.MediaPlayer.Media;
 
         /// <summary>
         /// Gets called whenever media has been loaded.

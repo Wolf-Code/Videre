@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Controls;
+using VidereLib.Data;
 using VidereLib.EventArgs;
 using VidereLib.Players;
 
@@ -21,7 +22,15 @@ namespace VidereLib.Implementations
         public MediaElementPlayer( MediaElement element )
         {
             this.player = element;
-            this.player.MediaOpened += ( Sender, Args ) => OnMediaLoaded( new OnMediaLoadedEventArgs( lastLoaded ) );
+            this.player.MediaOpened += ( Sender, Args ) =>
+            {
+                VidereMedia media = new VidereMedia( lastLoaded )
+                {
+                    Duration = this.player.NaturalDuration.TimeSpan,
+                    Name = lastLoaded.Name
+                };
+                OnMediaLoaded( new OnMediaLoadedEventArgs( media ) );
+            };
             this.player.MediaFailed += ( Sender, Args ) => OnMediaFailedToLoad( new OnMediaFailedToLoadEventArgs( Args.ErrorException, Media ) );
 
             VideoFileExtensions = new[ ]

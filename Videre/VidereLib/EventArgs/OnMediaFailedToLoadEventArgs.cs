@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using VidereLib.Data;
 
 namespace VidereLib.EventArgs
 {
@@ -11,7 +11,7 @@ namespace VidereLib.EventArgs
         /// <summary>
         /// The media file that failed to load.
         /// </summary>
-        public FileInfo MediaFile { private set; get; }
+        public VidereMedia MediaFile { private set; get; }
 
         /// <summary>
         /// The exception.
@@ -22,8 +22,8 @@ namespace VidereLib.EventArgs
         /// Constructor.
         /// </summary>
         /// <param name="exception">The exception.</param>
-        /// <param name="file">The <see cref="FileInfo"/> of the media that failed to load.</param>
-        public OnMediaFailedToLoadEventArgs( Exception exception, FileInfo file )
+        /// <param name="file">The <see cref="VidereMedia"/> of the media that failed to load.</param>
+        public OnMediaFailedToLoadEventArgs( Exception exception, VidereMedia file )
         {
             this.Exception = exception;
             this.MediaFile = file;

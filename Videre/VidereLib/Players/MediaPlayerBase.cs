@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using VidereLib.Data;
 using VidereLib.EventArgs;
 
 namespace VidereLib.Players
@@ -37,12 +38,12 @@ namespace VidereLib.Players
         /// <summary>
         /// Indicates if any media has been loaded.
         /// </summary>
-        public bool IsMediaLoaded => Media != null && Media.Exists;
+        public bool IsMediaLoaded => Media != null && Media.File.Exists;
 
         /// <summary>
         /// The loaded media.
         /// </summary>
-        public FileInfo Media { private set; get; }
+        public VidereMedia Media { private set; get; }
 
         /// <summary>
         /// Calls the <see cref="MediaLoaded"/> event.

@@ -58,8 +58,8 @@ namespace VidereLib.Components
 
         private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
         {
-            string mediaName = Path.GetFileNameWithoutExtension( MediaLoadedEventArgs.MediaFile.FullName );
-            string subtitlesPath = Path.Combine( MediaLoadedEventArgs.MediaFile.DirectoryName, mediaName + ".srt" );
+            string mediaName = Path.GetFileNameWithoutExtension( MediaLoadedEventArgs.MediaFile.File.FullName );
+            string subtitlesPath = Path.Combine( MediaLoadedEventArgs.MediaFile.File.DirectoryName, mediaName + ".srt" );
 
             FileInfo subtitlesInfo = new FileInfo( subtitlesPath );
             if ( subtitlesInfo.Exists )

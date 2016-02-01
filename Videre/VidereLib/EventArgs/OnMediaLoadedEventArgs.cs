@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using VidereLib.Data;
 
 namespace VidereLib.EventArgs
 {
@@ -10,15 +11,15 @@ namespace VidereLib.EventArgs
         /// <summary>
         /// The media file that has been loaded.
         /// </summary>
-        public FileInfo MediaFile { private set; get; }
+        public VidereMedia MediaFile { private set; get; }
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="file">The <see cref="FileInfo"/> of the loaded media.</param>
-        public OnMediaLoadedEventArgs( FileInfo file )
+        /// <param name="media">The <see cref="VidereMedia"/> of the loaded media.</param>
+        public OnMediaLoadedEventArgs( VidereMedia media )
         {
-            this.MediaFile = file;
+            this.MediaFile = media;
         }
     }
 }
