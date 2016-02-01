@@ -14,7 +14,7 @@
     <Window.CommandBindings>
         <CommandBinding Command="TogglePlayPause" Executed="Cmd_TogglePlayPause" CanExecute="CanCmd_TogglePlayPause" />
     </Window.CommandBindings>
-    
+
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <Button x:Name="SettingsButton" Click="OnSettingsButtonClicked">
@@ -31,33 +31,20 @@
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
 
-    <Controls:MetroWindow.LeftWindowCommands>
-        <Controls:WindowCommands>
-            <Button x:Name="FileButton" Click="OnFileButtonClicked">
-                <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20"
-                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill"
-                         Visual="{StaticResource appbar_cabinet_files}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                </StackPanel>
-            </Button>
-        </Controls:WindowCommands>
-    </Controls:MetroWindow.LeftWindowCommands>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <controls:MediaControl x:Name="MediaArea" Grid.Column="0" Grid.Row="0"/>
+        <controls:VidereToolBarControl x:Name="ToolBar" Grid.Row="0"/>
 
-        <controls:MediaControls x:Name="MediaControlsContainer" Grid.Column="0" Grid.Row="1"/>
+        <controls:MediaControl x:Name="MediaArea" Grid.Column="0" Grid.Row="1"/>
+
+        <controls:MediaControls x:Name="MediaControlsContainer" Grid.Column="0" Grid.Row="2"/>
     </Grid>
 </windows:VidereWindow>

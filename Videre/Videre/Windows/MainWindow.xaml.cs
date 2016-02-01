@@ -85,6 +85,10 @@ namespace Videre.Windows
 
             KeyDown += OnKeyDown;
 
+            string[ ] cmdArgs = Environment.GetCommandLineArgs( );
+            if ( cmdArgs.Length > 1 )
+                Player.GetComponent<MediaComponent>( ).LoadMedia( cmdArgs[ 1 ] );
+
             base.OnInitialized( e );
         }
 
@@ -144,7 +148,6 @@ namespace Videre.Windows
         #endregion
 
         private void OnSettingsButtonClicked( object Sender, RoutedEventArgs E ) => new SettingsWindow( ).ShowDialog( );
-        private void OnFileButtonClicked( object Sender, RoutedEventArgs E ) => new FileOpenWindow( ).ShowDialog( );
 
         private void Cmd_TogglePlayPause( object Sender, ExecutedRoutedEventArgs E )
         {

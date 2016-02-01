@@ -122,6 +122,9 @@
     <Compile Include="Controls\MediaControlsControl.xaml.cs">
       <DependentUpon>MediaControlsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\VidereToolBarControl.xaml.cs">
+      <DependentUpon>VidereToolBarControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FocusVisualTreeChanger.cs" />
     <Compile Include="Players\VLCPlayer.cs" />
     <Compile Include="Properties\Annotations.cs" />
@@ -130,9 +133,6 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\FileOpenWindow.xaml.cs">
-      <DependentUpon>FileOpenWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
@@ -169,7 +169,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\FileOpenWindow.xaml">
+    <Page Include="Controls\VidereToolBarControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
