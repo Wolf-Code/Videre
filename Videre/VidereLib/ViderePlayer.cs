@@ -32,8 +32,9 @@ namespace VidereLib
         public ViderePlayer( WindowData data )
         {
             windowData = data;
+            data.Window.Closing += ( Sender, Args ) => data.MediaPlayer.Dispose( );
 
-            MainDispatcher = Dispatcher.CurrentDispatcher;
+            MainDispatcher = data.Window.Dispatcher;
 
             this.LoadComponents( );
             this.InitializeComponents( );

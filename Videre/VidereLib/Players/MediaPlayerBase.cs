@@ -8,7 +8,7 @@ namespace VidereLib.Players
     /// <summary>
     /// The interface for a media player.
     /// </summary>
-    public abstract class MediaPlayerBase
+    public abstract class MediaPlayerBase : IDisposable
     {
         /// <summary>
         /// The event that is called whenever media failed to load.
@@ -130,5 +130,11 @@ namespace VidereLib.Players
         /// </summary>
         /// <returns>The aspect ratio of the currently loaded media.</returns>
         public abstract float GetAspectRatio( );
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <filterpriority>2</filterpriority>
+        public abstract void Dispose( );
     }
 }

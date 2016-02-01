@@ -4,10 +4,10 @@ using System.Windows;
 using System.Windows.Input;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Videre.Players;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.EventArgs;
-using VidereLib.Implementations;
 using VidereSubs.OpenSubtitles;
 
 namespace Videre.Windows
@@ -59,7 +59,7 @@ namespace Videre.Windows
                 Application.Current.Shutdown( );
             };
 
-            Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new MediaElementPlayer( this.MediaArea.MediaPlayer ), MediaArea = MediaArea } );
+            Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new VLCPlayer(MediaArea.MediaPlayer), MediaArea = MediaArea } );
 
             Player.GetComponent<NetworkComponent>( ).SetUpNetworkReceiver( Settings.Default.ListenPort );
 

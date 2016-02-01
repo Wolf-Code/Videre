@@ -77,6 +77,17 @@ namespace Videre.Controls
             SliderTimer.Tick += ( sender, args ) => PerformTimeSlide( );
 
             TimeShower.Visibility = Visibility.Hidden;
+
+            TimeSlider.ApplyTemplate( );
+
+            Thumb thumb = ( ( Track ) TimeSlider.Template.FindName( "PART_Track", TimeSlider ) ).Thumb;
+            thumb.MouseEnter += ( sender, e ) =>
+            {
+                if ( e.LeftButton != MouseButtonState.Pressed || e.MouseDevice.Captured != null ) return;
+
+                MouseButtonEventArgs args = new MouseButtonEventArgs( e.MouseDevice, e.Timestamp, MouseButton.Left ) { RoutedEvent = MouseLeftButtonDownEvent };
+                ( ( Thumb ) sender ).RaiseEvent( args );
+            };
         }
 
         /// <summary>
@@ -104,7 +115,7 @@ namespace Videre.Controls
 
         private void MediaOnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
         {
-            this.TimeLabel_Total.Content = Player.GetComponent<MediaComponent>( ).GetMediaLength( ).ToString( TimeFormat );
+            this.TimeLabel_Total.Content = MediaLoadedEventArgs.MediaFile.Duration.ToString( TimeFormat );
         }
 
         private void OnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )
@@ -201,25 +212,6 @@ namespace Videre.Controls
             TimeShower.SetPointerWidth( TimeShower.ActualWidth / 10 );
         }
 
-        #region Property Change
-
-        /// <summary>
-        /// Gets called whenever a property is changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Virtual method called on a change in properties.
-        /// </summary>
-        /// <param name="PropertyName">The name of the property.</param>
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged( [CallerMemberName] string PropertyName = null )
-        {
-            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( PropertyName ) );
-        }
-
-        #endregion
-
         private void TimeSlider_OnMouseMove( object Sender, MouseEventArgs E )
         {
             ResizeTimeShower( );
@@ -241,7 +233,9 @@ namespace Videre.Controls
             else if ( OffsetFromBorder > MaxRight )
                 PointerOffset = OffsetFromBorder - MaxRight;
 
-            TimeShower.TimeLabel.Content = TimeSpan.FromTicks( ( long ) ( Player.MediaPlayer.GetMediaLength( ).Ticks * Progress ) ).ToString( TimeFormat );
+            TimeSpan hoverTime = TimeSpan.FromTicks( ( long ) ( Player.MediaPlayer.GetMediaLength( ).Ticks * Progress ) );
+            TimeShower.TimeLabel.Content = hoverTime.ToString( TimeFormat );
+
             Canvas.SetLeft( TimeShower.Pointer, halfWidth + PointerOffset );
             Canvas.SetLeft( TimeShower, Math.Min( Math.Max( 0, OffsetFromBorder ), MaxRight ) );
             Canvas.SetTop( TimeShower, translated.Y - TimeShower.ActualHeight - TimeShower.Pointer.ActualHeight );
@@ -257,5 +251,24 @@ namespace Videre.Controls
         {
             TimeShower.Visibility = Visibility.Hidden;
         }
+
+        #region Property Change
+
+        /// <summary>
+        /// Gets called whenever a property is changed.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Virtual method called on a change in properties.
+        /// </summary>
+        /// <param name="PropertyName">The name of the property.</param>
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged( [CallerMemberName] string PropertyName = null )
+        {
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( PropertyName ) );
+        }
+
+        #endregion
     }
 }

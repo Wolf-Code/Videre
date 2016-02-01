@@ -63,7 +63,6 @@ namespace Videre.Windows
         private void SetButtonStates( )
         {
             bool loaded = MainWindow.Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded;
-
             OSSubsButton.IsEnabled = loaded;
             LocalSubsButton.IsEnabled = loaded;
         }

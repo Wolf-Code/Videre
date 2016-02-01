@@ -1,5 +1,4 @@
-﻿using System.IO;
-using VidereLib.Data;
+﻿using VidereLib.Data;
 
 namespace VidereLib.EventArgs
 {
