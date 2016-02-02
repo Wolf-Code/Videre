@@ -103,7 +103,6 @@ namespace Videre.Controls
 
         private async void OnOSClick( object Sender, RoutedEventArgs E )
         {
-            Player.GetComponent<ScreenComponent>( ).SetFullScreen( false );
             BackgroundWorker worker = new BackgroundWorker( );
             if ( !MainWindow.Client.IsLoggedIn )
             {

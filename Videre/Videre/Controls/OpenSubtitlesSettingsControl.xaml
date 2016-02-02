@@ -32,7 +32,11 @@
                 </Grid.RowDefinitions>
                 
                 <Label Grid.Row="0" ToolTip="Your username on opensubtitles.org. Leave empty if you wish to login anonymously.">Username</Label>
-                <TextBox Text="{Binding Source={x:Static properties:Settings.Default}, Path=OSUsername}" Grid.Row="0" Grid.Column="1" x:Name="Username"/>
+                <TextBox 
+                    Text="{Binding Source={x:Static properties:Settings.Default}, Path=OSUsername}" 
+                    Grid.Row="0" 
+                    Grid.Column="1" 
+                    x:Name="Username"/>
                 <Label Grid.Row="1" Grid.Column="0" ToolTip="Your password on opensubtitles.org. Leave empty if you wish to login anonymously.">Password</Label>
                 <PasswordBox Grid.Column="1" Grid.Row="1" x:Name="Password"/>
 
