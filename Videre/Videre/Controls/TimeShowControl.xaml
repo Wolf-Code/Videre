@@ -12,7 +12,7 @@
         </Grid.RowDefinitions>
 
         <Viewbox Grid.Column="0" Grid.Row="0">
-            <Label Name="TimeLabel" Foreground="Black" Background="White">01:14:23</Label>
+            <Label Name="TimeLabel" Foreground="Black" Background="White"/>
         </Viewbox>
 
         <Canvas Grid.Row="1">

@@ -105,6 +105,7 @@
     <Compile Include="EventArgs\OnMediaLoadedEventArgs.cs" />
     <Compile Include="EventArgs\OnPositionChangedEventArgs.cs" />
     <Compile Include="EventArgs\OnStateChangedEventArgs.cs" />
+    <Compile Include="EventArgs\OnSubtitlesLoadedEventArgs.cs" />
     <Compile Include="EventArgs\OnSubtitlesFailedToLoadEventArgs.cs" />
     <Compile Include="EventArgs\OnSubtitlesChangedEventArgs.cs" />
     <Compile Include="Implementations\MediaElementPlayer.cs" />

@@ -1,9 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using Videre.Windows;
 using VidereLib.Components;
+using VidereLib.EventArgs;
 using VidereSubs.OpenSubtitles.Data;
 using VidereSubs.OpenSubtitles.Outputs;
 
@@ -39,11 +42,29 @@ namespace Videre.Controls
             {
                 OpenLocalSubs.IsEnabled = false;
                 OpenOSSubs.IsEnabled = false;
+                EnableSubs.IsEnabled = false;
+                EnableSubs.IsChecked = false;
             };
 
             InputComponent inputComponent = Player.GetComponent<InputComponent>( );
             inputComponent.OnShowControls += ( Sender, Args ) => this.Visibility = Visibility.Visible;
             inputComponent.OnHideControls += ( Sender, Args ) => this.Visibility = Visibility.Collapsed;
+
+            SubtitlesComponent subs = MainWindow.Player.GetComponent<SubtitlesComponent>( );
+            subs.OnSubtitlesFailedToLoad += SubsOnOnSubtitlesFailedToLoad;
+            subs.OnSubtitlesLoaded += SubsOnOnSubtitlesLoaded;
+        }
+
+        private void SubsOnOnSubtitlesLoaded( object Sender, OnSubtitlesLoadedEventArgs SubtitlesLoadedEventArgs )
+        {
+            EnableSubs.IsEnabled = true;
+            EnableSubs.IsChecked = true;
+        }
+
+        private void SubsOnOnSubtitlesFailedToLoad( object Sender, OnSubtitlesFailedToLoadEventArgs OnSubtitlesFailedToLoadEventArgs )
+        {
+            EnableSubs.IsChecked = false;
+            EnableSubs.IsEnabled = false;
         }
 
         private void OnOpenMediaClick( object Sender, RoutedEventArgs E )
@@ -98,7 +119,7 @@ namespace Videre.Controls
                     if ( MainWindow.Client.IsLoggedIn )
                         OnOSClick( Sender, E );
                     else
-                        await ( ( MainWindow )Window.GetWindow( this ) ).ShowMessageAsync( "Signing in failed", $"Unable to sign in to opensubtitles.org. Please try again later. (Message: {result.StatusStringWithoutCode})" );
+                        await ( ( MainWindow )Window.GetWindow( this ) ).ShowMessageAsync( "Signing in failed", $"Unable to sign in to opensubtitles.org. Please try again later. (Status: {result.Status}, {result.StatusStringWithoutCode})" );
                 };
                 worker.RunWorkerAsync( );
 
@@ -120,12 +141,23 @@ namespace Videre.Controls
         private async void WorkerOnRunWorkerCompleted( object Sender, RunWorkerCompletedEventArgs WorkerCompletedEventArgs )
         {
             SubtitleSelectionWindow subselect = new SubtitleSelectionWindow( ( SubtitleLanguage[ ] )WorkerCompletedEventArgs.Result );
-            await controller.CloseAsync( );
+            Task waitOnClose = controller.CloseAsync( );
 
             if ( !subselect.ShowDialog( ).GetValueOrDefault( ) ) return;
             if ( !subselect.HasDownloadedSubtitleFile ) return;
 
+            await waitOnClose;
             MainWindow.Player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( subselect.DownloadedFile.FullName );
+        }
+
+        private void OnEnableSubtitlesChecked( object Sender, RoutedEventArgs E )
+        {
+            MainWindow.Player.GetComponent<SubtitlesComponent>( ).Enable( );
+        }
+
+        private void OnEnableSubtitlesUnchecked( object Sender, RoutedEventArgs E )
+        {
+            MainWindow.Player.GetComponent<SubtitlesComponent>( ).Disable( );
         }
     }
 }

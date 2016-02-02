@@ -9,7 +9,7 @@
         xmlns:controls="clr-namespace:Videre.Controls"
         xmlns:windows="clr-namespace:Videre.Windows"
         mc:Ignorable="d"
-        Title="Videre" Height="350" Width="525" x:Name="VideoWindow" videre:FocusVisualTreeChanger.IsChanged="True">
+        Title="Videre" Height="350" MinHeight="350" Width="525" MinWidth="525" x:Name="VideoWindow" videre:FocusVisualTreeChanger.IsChanged="True">
 
     <Window.CommandBindings>
         <CommandBinding Command="TogglePlayPause" Executed="Cmd_TogglePlayPause" CanExecute="CanCmd_TogglePlayPause" />

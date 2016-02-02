@@ -19,7 +19,12 @@ namespace VidereLib.Components
         /// <summary>
         /// Gets called whenever subtitles failed to load.
         /// </summary>
-        public event EventHandler<OnSubtitlesFailedToLoadEventArgs> OnSubtitlesFailedToLoad; 
+        public event EventHandler<OnSubtitlesFailedToLoadEventArgs> OnSubtitlesFailedToLoad;
+
+        /// <summary>
+        /// Gets called whenever subtitles have been loaded.
+        /// </summary>
+        public event EventHandler<OnSubtitlesLoadedEventArgs> OnSubtitlesLoaded; 
 
         /// <summary>
         /// The subtitles data currently loaded.
@@ -28,6 +33,8 @@ namespace VidereLib.Components
         private TimeSpan subtitlesOffset;
 
         private DispatcherTimer subtitlesTimer;
+
+        private bool enabled = false;
 
         /// <summary>
         /// Returns whether or not subtitles have been loaded.
@@ -122,19 +129,25 @@ namespace VidereLib.Components
             if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "Unable to load subtitles before any media has been loaded." );
 
+            FileInfo file = new FileInfo( filePath );
             Subtitles = Subtitles.LoadSubtitlesFile( filePath );
+            enabled = Subtitles.SubtitlesParsedSuccesfully;
+
             if ( Subtitles.SubtitlesParsedSuccesfully )
+            {
+                OnSubtitlesLoaded?.Invoke( this, new OnSubtitlesLoadedEventArgs( file ) );
                 this.CheckForSubtitles( );
+            }
             else
             {
                 Subtitles = null;
-                OnSubtitlesFailedToLoad?.Invoke( this, new OnSubtitlesFailedToLoadEventArgs( new FileInfo( filePath ) ) );
+                OnSubtitlesFailedToLoad?.Invoke( this, new OnSubtitlesFailedToLoadEventArgs( file ) );
             }
         }
 
         internal void CheckForSubtitles( )
         {
-            if ( !HaveSubtitlesBeenLoaded )
+            if ( !HaveSubtitlesBeenLoaded || !enabled )
                 return;
 
             TimeSpan position = Player.GetComponent<TimeComponent>( ).GetPosition( );
@@ -167,6 +180,24 @@ namespace VidereLib.Components
             }
 
             subtitlesTimer.Start( );
+        }
+
+        /// <summary>
+        /// Enables the subtitles.
+        /// </summary>
+        public void Enable( )
+        {
+            enabled = true;
+            CheckForSubtitles( );
+        }
+
+        /// <summary>
+        /// Disables the subtitles.
+        /// </summary>
+        public void Disable( )
+        {
+            enabled = false;
+            this.StopSubtitles( );
         }
     }
 }

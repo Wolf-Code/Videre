@@ -47,11 +47,15 @@ namespace VidereLib.Components
         /// <param name="fullScreen">True for fullscreen, false otherwise.</param>
         public void SetFullScreen( bool fullScreen = true )
         {
+            if ( fullScreen == IsFullScreen )
+                return;
+
             if ( fullScreen && !IsFullScreen )
             {
                 oldBounds = new Rectangle( ( int ) Player.windowData.Window.Left, ( int ) Player.windowData.Window.Top, ( int ) Player.windowData.Window.Width, ( int ) Player.windowData.Window.Height );
                 oldState = Player.windowData.Window.WindowState;
             }
+
             Player.windowData.Window.Height = fullScreen ? SystemParameters.PrimaryScreenHeight : oldBounds.Height;
             Player.windowData.Window.Width = fullScreen ? SystemParameters.PrimaryScreenWidth : oldBounds.Width;
             Player.windowData.Window.Topmost = fullScreen;
