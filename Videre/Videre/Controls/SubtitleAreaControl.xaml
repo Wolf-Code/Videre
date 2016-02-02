@@ -12,7 +12,7 @@
                     TextAlignment="Center"
                     VerticalAlignment="Bottom"
                     FontFamily="Trebuchet MS"
-                    TextWrapping="WrapWithOverflow">
+                    TextWrapping="Wrap">
         <TextBlock.Effect>
             <DropShadowEffect Color="Black" Direction="90" RenderingBias="Performance" ShadowDepth="0"/>
         </TextBlock.Effect>

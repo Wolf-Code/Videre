@@ -138,6 +138,16 @@ namespace Videre.Controls
             OnFlyoutOpen( );
         }
 
+        private void OnFlyoutOpen( )
+        {
+
+        }
+
+        private void OnFlyoutClose( )
+        {
+
+        }
+
         private async Task<LogInOutput> SignInClient( )
         {
             return await Task.Run( ( ) => MainWindow.Client.LogIn( string.Empty, string.Empty, false ) );
@@ -146,11 +156,6 @@ namespace Videre.Controls
         private async Task<SubtitleLanguage[ ]> GetSubtitleLanguages( )
         {
             return await Task.Run( ( ) => MainWindow.Client.GetSubLanguages( ) );
-        }
-        
-        private void OnFlyoutOpen( )
-        {
-
         }
 
         private async void DownloadSelectedLanguageSubtitles( )
@@ -177,11 +182,6 @@ namespace Videre.Controls
             Scroller.ScrollToBottom( );
 
             await controller.CloseAsync( );
-        }
-
-        private void OnFlyoutClose( )
-        {
-            
         }
 
         private void DownloadSubsLanguagesButton_OnClick( object Sender, RoutedEventArgs E )

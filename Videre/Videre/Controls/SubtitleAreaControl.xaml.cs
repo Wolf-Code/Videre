@@ -36,7 +36,7 @@ namespace Videre.Controls
             SubsTextBlock.Inlines.Clear( );
             if ( OnSubtitlesChangedEventArgs.Subtitles.Lines.Count <= 0 )
                 return;
-
+            
             List<Inline> inlines = ConvertLinesToRuns( OnSubtitlesChangedEventArgs.Subtitles.Lines );
             foreach ( Inline inline in inlines )
                 SubsTextBlock.Inlines.Add( inline );
@@ -109,7 +109,10 @@ namespace Videre.Controls
                     currentText += line[ q ];
                 }
 
-                inlines.Add( GetInlineWithStyling( currentText + Environment.NewLine, currentStyle ) );
+                if ( X < lines.Count - 1 )
+                    currentText += Environment.NewLine;
+
+                inlines.Add( GetInlineWithStyling( currentText, currentStyle ) );
             }
 
             return inlines;

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using Videre.Windows;
 using VidereLib.Components;
@@ -53,10 +54,12 @@ namespace Videre.Controls
             EnableSubs.IsChecked = true;
         }
 
-        private void SubsOnOnSubtitlesFailedToLoad( object Sender, OnSubtitlesFailedToLoadEventArgs OnSubtitlesFailedToLoadEventArgs )
+        private async void SubsOnOnSubtitlesFailedToLoad( object Sender, OnSubtitlesFailedToLoadEventArgs OnSubtitlesFailedToLoadEventArgs )
         {
             EnableSubs.IsChecked = false;
             EnableSubs.IsEnabled = false;
+
+            await ( ( MainWindow ) Window.GetWindow( this ) ).ShowMessageAsync( "Failed to load subtitles", $"Subtitles file {OnSubtitlesFailedToLoadEventArgs.Subtitles.Name} could not be loaded." );
         }
 
         private void OnOpenMediaClick( object Sender, RoutedEventArgs E )

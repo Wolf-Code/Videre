@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows; 
+using System.Windows;
+using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Videre.Properties;
 using Videre.Windows;
@@ -40,8 +41,7 @@ namespace Videre.Controls
 
         private async void OnConnectClick( object Sender, RoutedEventArgs E )
         {
-            var task = SettingsWindow.ActiveWindow.ShowWorkingMessage( "Signing in.", "Attempting to sign in with the new credentials." );
-            ProgressDialogController controller = await task;
+            ProgressDialogController controller = await ( ( MetroWindow ) Window.GetWindow( this ) ).ShowProgressAsync( "Signing in.", "Attempting to sign in with the new credentials." );
             controller.SetIndeterminate( );
 
             Settings.Default.OSUsername = Username.Text;

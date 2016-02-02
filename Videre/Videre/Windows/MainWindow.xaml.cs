@@ -65,9 +65,6 @@ namespace Videre.Windows
 
             Player.GetComponent<NetworkComponent>( ).SetUpNetworkReceiver( Settings.Default.ListenPort );
 
-            SubtitlesComponent subtitlesComponent = Player.GetComponent<SubtitlesComponent>( );
-            subtitlesComponent.OnSubtitlesFailedToLoad += SubtitlesComponentOnOnSubtitlesFailedToLoad;
-
             MediaComponent mediaComponent = Player.GetComponent<MediaComponent>( );
             mediaComponent.OnMediaLoaded += OnOnMediaLoaded;
             mediaComponent.OnMediaUnloaded += OnOnMediaUnloaded;
@@ -140,15 +137,6 @@ namespace Videre.Windows
             foreach ( object key in exception.Data.Keys )
                 writer.WriteLine( $"{key}: {exception.Data[ key ]}" );
         }
-
-        #region Subtitles
-
-        private async void SubtitlesComponentOnOnSubtitlesFailedToLoad( object Sender, OnSubtitlesFailedToLoadEventArgs SubtitlesFailedToLoadEventArgs )
-        {
-            await this.ShowMessageAsync( "Failed to load subtitles", $"Unable to load {SubtitlesFailedToLoadEventArgs.Subtitles.Name}." );
-        }
-
-        #endregion
 
         private void Cmd_TogglePlayPause( object Sender, ExecutedRoutedEventArgs E )
         {
