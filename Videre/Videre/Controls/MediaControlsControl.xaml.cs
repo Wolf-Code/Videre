@@ -53,6 +53,8 @@ namespace Videre.Controls
         /// </summary>
         public event RoutedPropertyChangedEventHandler<double> OnVolumeChanged;
 
+        private Thumb thumb;
+
         /// <summary>
         /// Whether or not the player is actually playing a video.
         /// </summary>
@@ -80,7 +82,7 @@ namespace Videre.Controls
 
             TimeSlider.ApplyTemplate( );
 
-            Thumb thumb = ( ( Track ) TimeSlider.Template.FindName( "PART_Track", TimeSlider ) ).Thumb;
+            thumb = ( ( Track ) TimeSlider.Template.FindName( "PART_Track", TimeSlider ) ).Thumb;
             thumb.MouseEnter += ( sender, e ) =>
             {
                 if ( e.LeftButton != MouseButtonState.Pressed || e.MouseDevice.Captured != null ) return;
@@ -220,16 +222,19 @@ namespace Videre.Controls
             ResizeTimeShower( );
 
             // Getting the progress and finding the offset from the top left corner of the slider, relative to the canvas containing the notifier.
-            double Progress = E.GetPosition( TimeSlider ).X / TimeSlider.ActualWidth;
-            double ExtraOffset = Progress * TimeSlider.ActualWidth;
+            double mouseFromLeftEdge = E.GetPosition( TimeSlider ).X;
+
+            double barWidth = TimeSlider.ActualWidth - thumb.ActualWidth;
+            double mousePos = Math.Min( Math.Max( E.GetPosition( TimeSlider ).X - thumb.ActualWidth / 2, 0 ), barWidth );
+            double Progress = mousePos / barWidth;
 
             Point translated = TimeSlider.TranslatePoint( new Point( 0, 0 ), PopupContainer );
 
             // The half width of the popup.
             double halfWidth = TimeShower.ActualWidth / 2;
-            double OffsetFromBorder = translated.X + ExtraOffset - halfWidth;
+            double OffsetFromBorder = translated.X + mouseFromLeftEdge - halfWidth;
 
-            double MaxRight = this.ActualWidth - TimeShower.ActualWidth;
+            double MaxRight = this.ActualWidth - TimeShower.ActualWidth + thumb.ActualWidth / 2;
             double PointerOffset = 0;
             if ( OffsetFromBorder < 0 )
                 PointerOffset = OffsetFromBorder;
