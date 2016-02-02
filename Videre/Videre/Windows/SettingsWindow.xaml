@@ -18,6 +18,9 @@
         </Grid.RowDefinitions>
 
         <TabControl Grid.Column="0" Grid.Row="0" TabStripPlacement="Left">
+            <TabItem Header="Videre">
+                <controls1:VidereSettingsControl/>
+            </TabItem>
             <TabItem Header="OpenSubtitles.org">
                 <controls1:OpenSubtitlesSettingsControl/>
             </TabItem>

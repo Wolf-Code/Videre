@@ -82,5 +82,29 @@ namespace Videre {
                 this["ListenPort"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BaseLight")]
+        public string VidereTheme {
+            get {
+                return ((string)(this["VidereTheme"]));
+            }
+            set {
+                this["VidereTheme"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Sienna")]
+        public string VidereAccent {
+            get {
+                return ((string)(this["VidereAccent"]));
+            }
+            set {
+                this["VidereAccent"] = value;
+            }
+        }
     }
 }

@@ -17,5 +17,11 @@
     <Setting Name="ListenPort" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">13337</Value>
     </Setting>
+    <Setting Name="VidereTheme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BaseLight</Value>
+    </Setting>
+    <Setting Name="VidereAccent" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Sienna</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

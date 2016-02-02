@@ -17,6 +17,7 @@
                     <MenuItem Header="Open Local Subtitles" Click="OnOpenLocalSubsClick" x:Name="OpenLocalSubs" IsEnabled="False"/>
                     <MenuItem Header="Open From OpenSubtitles.org" Click="OnOSClick" x:Name="OpenOSSubs" IsEnabled="False"/>
                 </MenuItem>
+                <MenuItem Header="Settings" Click="OnSettingsClick"/>
             </Menu>
         </ToolBar>
     </ToolBarTray>

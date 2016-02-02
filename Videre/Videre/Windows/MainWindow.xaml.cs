@@ -148,8 +148,6 @@ namespace Videre.Windows
 
         #endregion
 
-        private void OnSettingsButtonClicked( object Sender, RoutedEventArgs E ) => new SettingsWindow( ).ShowDialog( );
-
         private void Cmd_TogglePlayPause( object Sender, ExecutedRoutedEventArgs E )
         {
             Player.GetComponent<StateComponent>( ).ResumeOrPause( );

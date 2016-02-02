@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
@@ -119,14 +118,14 @@ namespace Videre.Controls
                     if ( MainWindow.Client.IsLoggedIn )
                         OnOSClick( Sender, E );
                     else
-                        await ( ( MainWindow )Window.GetWindow( this ) ).ShowMessageAsync( "Signing in failed", $"Unable to sign in to opensubtitles.org. Please try again later. (Status: {result.Status}, {result.StatusStringWithoutCode})" );
+                        await ( ( MainWindow ) Window.GetWindow( this ) ).ShowMessageAsync( "Signing in failed", $"Unable to sign in to opensubtitles.org. Please try again later. (Status: {result.Status}, {result.StatusStringWithoutCode})" );
                 };
                 worker.RunWorkerAsync( );
 
                 return;
             }
 
-            controller = await ( ( MainWindow )Window.GetWindow( this ) ).ShowProgressAsync( "Retrieving subtitle languages", "Downloading subtitle languages from opensubtitles.org..." );
+            controller = await ( ( MainWindow ) Window.GetWindow( this ) ).ShowProgressAsync( "Retrieving subtitle languages", "Downloading subtitle languages from opensubtitles.org..." );
             controller.SetIndeterminate( );
 
             worker.DoWork += ( O, Args ) =>
@@ -140,7 +139,7 @@ namespace Videre.Controls
 
         private async void WorkerOnRunWorkerCompleted( object Sender, RunWorkerCompletedEventArgs WorkerCompletedEventArgs )
         {
-            SubtitleSelectionWindow subselect = new SubtitleSelectionWindow( ( SubtitleLanguage[ ] )WorkerCompletedEventArgs.Result );
+            SubtitleSelectionWindow subselect = new SubtitleSelectionWindow( ( SubtitleLanguage[ ] ) WorkerCompletedEventArgs.Result );
             Task waitOnClose = controller.CloseAsync( );
 
             if ( !subselect.ShowDialog( ).GetValueOrDefault( ) ) return;
@@ -150,14 +149,10 @@ namespace Videre.Controls
             MainWindow.Player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( subselect.DownloadedFile.FullName );
         }
 
-        private void OnEnableSubtitlesChecked( object Sender, RoutedEventArgs E )
-        {
-            MainWindow.Player.GetComponent<SubtitlesComponent>( ).Enable( );
-        }
+        private void OnEnableSubtitlesChecked( object Sender, RoutedEventArgs E ) => MainWindow.Player.GetComponent<SubtitlesComponent>( ).Enable( );
 
-        private void OnEnableSubtitlesUnchecked( object Sender, RoutedEventArgs E )
-        {
-            MainWindow.Player.GetComponent<SubtitlesComponent>( ).Disable( );
-        }
+        private void OnEnableSubtitlesUnchecked( object Sender, RoutedEventArgs E ) => MainWindow.Player.GetComponent<SubtitlesComponent>( ).Disable( );
+
+        private void OnSettingsClick( object Sender, RoutedEventArgs E ) => new SettingsWindow( ).ShowDialog( );
     }
 }

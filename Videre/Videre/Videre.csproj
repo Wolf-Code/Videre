@@ -133,6 +133,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\VidereSettingsControl.xaml.cs">
+      <DependentUpon>VidereSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ConnectionSettingsControl.xaml.cs">
       <DependentUpon>ConnectionSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -174,6 +177,10 @@
       <DependentUpon>SubtitleSelectionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\VidereWindow.cs" />
+    <Page Include="Controls\VidereSettingsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ConnectionSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
