@@ -59,14 +59,5 @@ namespace Videre.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string button_pause {
-            get {
-                return ResourceManager.GetString("button_pause", resourceCulture);
-            }
-        }
     }
 }
