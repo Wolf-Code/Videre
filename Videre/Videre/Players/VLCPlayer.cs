@@ -57,9 +57,9 @@ namespace Videre.Players
             VidereMedia media = new VidereMedia( mediaFile )
             {
                 Duration = lastMedia.Duration,
-                Name = mediaFile.Name
+                Name = lastMedia.GetMeta( MetaDataType.Title )
             };
-            Console.WriteLine(lastMedia.GetMeta( MetaDataType.Title ));
+
             xZune.Vlc.MediaTrack vid = lastMedia.GetTracks( ).FirstOrDefault( O => O.Type == TrackType.Video );
             if ( vid?.VideoTrack != null )
             {
