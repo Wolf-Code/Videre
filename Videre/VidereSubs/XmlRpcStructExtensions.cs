@@ -3,7 +3,7 @@ using CookComputing.XmlRpc;
 
 namespace VidereSubs
 {
-    static class XmlRpcStructExtensions
+    internal static class XmlRpcStructExtensions
     {
         /// <summary>
         /// Retrieves data from the <see cref="XmlRpcStruct"/> as a string.

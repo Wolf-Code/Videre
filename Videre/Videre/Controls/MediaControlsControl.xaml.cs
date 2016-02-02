@@ -53,7 +53,7 @@ namespace Videre.Controls
         /// </summary>
         public event RoutedPropertyChangedEventHandler<double> OnVolumeChanged;
 
-        private Thumb thumb;
+        private readonly Thumb thumb;
 
         /// <summary>
         /// Whether or not the player is actually playing a video.

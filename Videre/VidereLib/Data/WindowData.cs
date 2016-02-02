@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using MahApps.Metro.Controls;
 using VidereLib.Players;
 
-namespace VidereLib
+namespace VidereLib.Data
 {
     /// <summary>
     /// Contains the window data to be used by the <see cref="ViderePlayer"/>.

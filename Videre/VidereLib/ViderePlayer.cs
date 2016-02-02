@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Threading;
 using VidereLib.Components;
+using VidereLib.Data;
 using VidereLib.Players;
 
 namespace VidereLib

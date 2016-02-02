@@ -7,6 +7,7 @@ using MahApps.Metro.Controls.Dialogs;
 using Videre.Players;
 using VidereLib;
 using VidereLib.Components;
+using VidereLib.Data;
 using VidereLib.EventArgs;
 using VidereSubs.OpenSubtitles;
 
