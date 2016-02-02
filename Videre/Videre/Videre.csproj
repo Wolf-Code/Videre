@@ -133,6 +133,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\OpenSubtitlesControl.xaml.cs">
+      <DependentUpon>OpenSubtitlesControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\VidereSettingsControl.xaml.cs">
       <DependentUpon>VidereSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -173,10 +176,11 @@
     <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\SubtitleSelectionWindow.xaml.cs">
-      <DependentUpon>SubtitleSelectionWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\VidereWindow.cs" />
+    <Page Include="Controls\OpenSubtitlesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\VidereSettingsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -230,10 +234,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\SettingsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\SubtitleSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

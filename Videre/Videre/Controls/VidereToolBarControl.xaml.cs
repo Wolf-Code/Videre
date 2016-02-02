@@ -1,13 +1,8 @@
-﻿using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Windows;
-using MahApps.Metro.Controls.Dialogs;
+﻿using System.Windows;
 using Microsoft.Win32;
 using Videre.Windows;
 using VidereLib.Components;
 using VidereLib.EventArgs;
-using VidereSubs.OpenSubtitles.Data;
-using VidereSubs.OpenSubtitles.Outputs;
 
 namespace Videre.Controls
 {
@@ -16,8 +11,6 @@ namespace Videre.Controls
     /// </summary>
     public partial class VidereToolBarControl
     {
-        private ProgressDialogController controller;
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -101,51 +94,10 @@ namespace Videre.Controls
             MainWindow.Player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( fileDialog.FileName );
         }
 
-        private async void OnOSClick( object Sender, RoutedEventArgs E )
+        private void OnOSClick( object Sender, RoutedEventArgs E )
         {
-            BackgroundWorker worker = new BackgroundWorker( );
-            if ( !MainWindow.Client.IsLoggedIn )
-            {
-                controller = await ( ( MainWindow ) Window.GetWindow( this ) ).ShowProgressAsync( "Signing in.", "Signing into opensubtitles.org." );
-                controller.SetIndeterminate( );
-                worker.DoWork += ( s, e ) => e.Result = MainWindow.Client.LogIn( string.Empty, string.Empty, false );
-                worker.RunWorkerCompleted += async ( s, e ) =>
-                {
-                    await controller.CloseAsync( );
-
-                    LogInOutput result = e.Result as LogInOutput;
-                    if ( MainWindow.Client.IsLoggedIn )
-                        OnOSClick( Sender, E );
-                    else
-                        await ( ( MainWindow ) Window.GetWindow( this ) ).ShowMessageAsync( "Signing in failed", $"Unable to sign in to opensubtitles.org. Please try again later. (Status: {result.Status}, {result.StatusStringWithoutCode})" );
-                };
-                worker.RunWorkerAsync( );
-
-                return;
-            }
-
-            controller = await ( ( MainWindow ) Window.GetWindow( this ) ).ShowProgressAsync( "Retrieving subtitle languages", "Downloading subtitle languages from opensubtitles.org..." );
-            controller.SetIndeterminate( );
-
-            worker.DoWork += ( O, Args ) =>
-            {
-                SubtitleLanguage[ ] langs = MainWindow.Client.GetSubLanguages( );
-                Args.Result = langs;
-            };
-            worker.RunWorkerCompleted += WorkerOnRunWorkerCompleted;
-            worker.RunWorkerAsync( );
-        }
-
-        private async void WorkerOnRunWorkerCompleted( object Sender, RunWorkerCompletedEventArgs WorkerCompletedEventArgs )
-        {
-            SubtitleSelectionWindow subselect = new SubtitleSelectionWindow( ( SubtitleLanguage[ ] ) WorkerCompletedEventArgs.Result );
-            Task waitOnClose = controller.CloseAsync( );
-
-            if ( !subselect.ShowDialog( ).GetValueOrDefault( ) ) return;
-            if ( !subselect.HasDownloadedSubtitleFile ) return;
-
-            await waitOnClose;
-            MainWindow.Player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( subselect.DownloadedFile.FullName );
+            MainWindow window = ( MainWindow ) Window.GetWindow( this );
+            window.OSFlyout.IsOpen = true;
         }
 
         private void OnEnableSubtitlesChecked( object Sender, RoutedEventArgs E ) => MainWindow.Player.GetComponent<SubtitlesComponent>( ).Enable( );

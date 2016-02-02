@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Videre.Controls;
 using Videre.Players;
 using VidereLib;
 using VidereLib.Components;
@@ -91,6 +92,7 @@ namespace Videre.Windows
                 Player.GetComponent<MediaComponent>( ).LoadMedia( cmdArgs[ 1 ] );
 
             base.OnInitialized( e );
+            ( this.OSFlyout.Content as OpenSubtitlesControl ).InitWindow( this );
         }
 
         private static void OnKeyDown( object Sender, KeyEventArgs KeyEventArgs )
