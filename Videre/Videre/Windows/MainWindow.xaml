@@ -18,7 +18,7 @@
 
     <windows:VidereWindow.Flyouts>
         <controls1:FlyoutsControl>
-            <controls1:Flyout Position="Left" x:Name="OSFlyout" Header="OpenSubtitles.org">
+            <controls1:Flyout Theme="Adapt" Position="Left" x:Name="OSFlyout" Header="OpenSubtitles.org">
                 <controls:OpenSubtitlesControl/>
             </controls1:Flyout>
         </controls1:FlyoutsControl>
