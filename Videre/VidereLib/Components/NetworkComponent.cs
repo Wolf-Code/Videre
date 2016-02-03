@@ -108,6 +108,9 @@ namespace VidereLib.Components
         /// </summary>
         public void ShutdownServer( )
         {
+            if ( server == null )
+                return;
+
             server.Stop( );
             server = null;
         }
