@@ -28,7 +28,7 @@ namespace Videre.Players
         public VLCPlayer( VlcPlayer control )
         {
             this.player = control;
-            this.player.Initialize( GetLibDirectory( ).FullName );
+            this.player.Initialize( GetLibDirectory( ).FullName, "--no-osd" );
             this.player.VlcMediaPlayer.MediaChanged += PlayerOnMediaChanged;
 
             VideoFileExtensions = new[ ]
@@ -81,6 +81,7 @@ namespace Videre.Players
                     Rate = audTrack.Rate
                 };
             }
+
             await ViderePlayer.MainDispatcher.InvokeAsync( ( ) => OnMediaLoaded( new OnMediaLoadedEventArgs( media ) ) );
         }
 

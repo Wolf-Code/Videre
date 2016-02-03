@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              x:Name="MediaControl"
              IsEnabled="False">
-    <Grid Name="GridContainer" ClipToBounds="False">
+    <Grid Name="GridContainer" ClipToBounds="False" Height="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
