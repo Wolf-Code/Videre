@@ -43,6 +43,7 @@
                     Minimum="1024"
                     Maximum="65535"
                     x:Name="TimeOffset" Grid.Column="1" Interval="1" Speedup="True" HasDecimals="False" ValueChanged="OnPortChanged"/>
+                <Button Grid.Column="1" Grid.Row="2" x:Name="ServerStartButton" Click="ServerStartButton_OnClick">Start Server</Button>
             </Grid>
         </GroupBox>
     </Grid>

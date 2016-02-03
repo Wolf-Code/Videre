@@ -69,5 +69,13 @@ namespace Videre.Controls
             comp.SetUpNetworkReceiver( Settings.Default.ListenPort );
             SetQRCodeImage( );
         }
+
+        private void ServerStartButton_OnClick( object Sender, RoutedEventArgs E )
+        {
+            NetworkComponent comp = MainWindow.Player.GetComponent<NetworkComponent>( );
+
+            comp.ShutdownServer( );
+            comp.SetUpNetworkReceiver( Settings.Default.ListenPort );
+        }
     }
 }
