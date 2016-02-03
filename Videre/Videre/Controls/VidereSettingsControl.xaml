@@ -12,6 +12,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <GroupBox Grid.Row="0" Grid.Column="0" Header="Style">
@@ -23,7 +24,6 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Label Grid.Column="0" Grid.Row="0">Theme Base</Label>
@@ -31,6 +31,21 @@
 
                 <Label Grid.Column="0" Grid.Row="1">Accent</Label>
                 <ComboBox x:Name="AccentComboBox" Grid.Column="1" Grid.Row="1" SelectionChanged="AccentComboBox_OnSelectionChanged"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="1" Grid.Column="0" Header="File Associations">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" TextWrapping="Wrap">The following button adds file associations to Videre. That means it will be added to the Open With menu for all files it is capable of opening.</TextBlock>
+                <Button Grid.Column="0" Grid.Row="1" Click="ButtonBase_OnClick">Set File Associations</Button>
             </Grid>
         </GroupBox>
     </Grid>

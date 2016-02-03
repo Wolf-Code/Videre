@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro;
 
@@ -47,6 +51,33 @@ namespace Videre.Controls
         {
             Settings.Default.VidereTheme = E.AddedItems[ 0 ].ToString( );
             Settings.Default.Save( );
+        }
+
+        private void SetFileAssociations( )
+        {
+            Process process = new Process( );
+
+            Dictionary<string, string> procArgs = new Dictionary<string, string>
+            {
+                { "-executable", '\"' + System.Windows.Forms.Application.ExecutablePath + '\"' },
+                { "-icon", '\"' + System.Windows.Forms.Application.StartupPath + "\\Videre.ico\"" },
+                { "-progID", Settings.Default.ProgID },
+                { "-videoExtensions", '\"' + string.Join( " ", Player.MediaPlayer.VideoFileExtensions ) + '\"' },
+                { "-audioExtensions", '\"' + string.Join( " ", Player.MediaPlayer.AudioFileExtensions ) + '\"' }
+            };
+            string arguments = procArgs.Aggregate( string.Empty, ( Current, pair ) => Current + pair.Key + " " + pair.Value + " " ).Trim( );
+
+            process.StartInfo.FileName = "VidereFileAssociator.exe";
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+            process.Start( );
+        }
+
+        private void ButtonBase_OnClick( object Sender, RoutedEventArgs E )
+        {
+            SetFileAssociations( );
         }
     }
 }

@@ -106,5 +106,14 @@ namespace Videre {
                 this["VidereAccent"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Videre.VideoPlayer")]
+        public string ProgID {
+            get {
+                return ((string)(this["ProgID"]));
+            }
+        }
     }
 }

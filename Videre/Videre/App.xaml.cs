@@ -22,6 +22,7 @@ namespace Videre
                 if ( Args.PropertyName == "VidereTheme" || Args.PropertyName == "VidereAccent" )
                     UpdateTheme( );
             };
+
             base.OnStartup( e );
         }
 

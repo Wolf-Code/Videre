@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using MahApps.Metro.Controls;
@@ -61,7 +63,7 @@ namespace Videre.Windows
                 Application.Current.Shutdown( );
             };
 
-            Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new VLCPlayer(MediaArea.MediaPlayer), MediaArea = MediaArea } );
+            Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new VLCPlayer( MediaArea.MediaPlayer ), MediaArea = MediaArea } );
 
             Player.GetComponent<NetworkComponent>( ).SetUpNetworkReceiver( Settings.Default.ListenPort );
 
