@@ -7,7 +7,8 @@
         xmlns:windows="clr-namespace:Videre.Windows"
         mc:Ignorable="d"
         Title="Settings"
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        GlowBrush="{DynamicResource AccentColorBrush}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
