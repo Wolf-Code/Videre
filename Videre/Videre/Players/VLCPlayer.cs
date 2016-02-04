@@ -28,7 +28,7 @@ namespace Videre.Players
         public VLCPlayer( VlcPlayer control )
         {
             this.player = control;
-            this.player.Initialize( GetLibDirectory( ).FullName, "--no-osd" );
+            this.player.Initialize( GetLibDirectory( ).FullName, "--no-osd", "--no-sub-autodetect-file" );
             this.player.VlcMediaPlayer.MediaChanged += PlayerOnMediaChanged;
 
             VideoFileExtensions = new[ ]
@@ -195,7 +195,8 @@ namespace Videre.Players
         /// <filterpriority>2</filterpriority>
         public override void Dispose( )
         {
-            this.player.Dispose( );
+            this.player.BeginStop( ( ) => this.player.Dispose( ) );
+
         }
     }
 }

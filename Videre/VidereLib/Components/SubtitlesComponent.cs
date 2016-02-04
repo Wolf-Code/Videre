@@ -24,7 +24,12 @@ namespace VidereLib.Components
         /// <summary>
         /// Gets called whenever subtitles have been loaded.
         /// </summary>
-        public event EventHandler<OnSubtitlesLoadedEventArgs> OnSubtitlesLoaded; 
+        public event EventHandler<OnSubtitlesLoadedEventArgs> OnSubtitlesLoaded;
+
+        /// <summary>
+        /// Gets called whenever subtitles have been loaded.
+        /// </summary>
+        public event EventHandler<OnSubtitlesUnloadedEventArgs> OnSubtitlesUnloaded;
 
         /// <summary>
         /// The subtitles data currently loaded.
@@ -34,7 +39,7 @@ namespace VidereLib.Components
 
         private DispatcherTimer subtitlesTimer;
 
-        private bool enabled = false;
+        private bool enabled;
 
         /// <summary>
         /// Returns whether or not subtitles have been loaded.
@@ -75,8 +80,7 @@ namespace VidereLib.Components
 
         private void OnOnMediaUnloaded( object Sender, OnMediaUnloadedEventArgs MediaUnloadedEventArgs )
         {
-            this.StopSubtitles( );
-            this.Subtitles = null;
+            this.UnloadSubtitles( );
         }
 
         private void StateHandlerOnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )
@@ -95,6 +99,16 @@ namespace VidereLib.Components
                     this.StopSubtitles( );
                     break;
             }
+        }
+
+        /// <summary>
+        /// Unloads the currently loaded subtitles.
+        /// </summary>
+        public void UnloadSubtitles( )
+        {
+            this.StopSubtitles( );
+            this.OnSubtitlesUnloaded?.Invoke( this, new OnSubtitlesUnloadedEventArgs( this.Subtitles ) );
+            this.Subtitles = null;
         }
 
         internal void SubtitlesTimerOnTick( object Sender, System.EventArgs Args )
@@ -128,6 +142,9 @@ namespace VidereLib.Components
         {
             if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "Unable to load subtitles before any media has been loaded." );
+
+            if ( HaveSubtitlesBeenLoaded )
+                this.UnloadSubtitles( );
 
             FileInfo file = new FileInfo( filePath );
             Subtitles = Subtitles.LoadSubtitlesFile( filePath );

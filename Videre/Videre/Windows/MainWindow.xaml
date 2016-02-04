@@ -19,7 +19,6 @@
         <CommandBinding Command="TogglePlayPause" Executed="Cmd_TogglePlayPause" CanExecute="CanCmd_TogglePlayPause" />
     </Window.CommandBindings>
 
-
     <windows:VidereWindow.Flyouts>
         <controls1:FlyoutsControl>
             <controls1:Flyout Theme="Adapt" Position="Left" x:Name="OSFlyout" Header="OpenSubtitles.org">
