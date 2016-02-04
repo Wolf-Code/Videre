@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NetworkTester.Properties
+namespace VidereNetworkTester.Properties
 {
 
 

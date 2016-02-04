@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NetworkTester.Properties
+namespace VidereNetworkTester.Properties
 {
 
 
@@ -44,7 +44,7 @@ namespace NetworkTester.Properties
             {
                 if ( ( resourceMan == null ) )
                 {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager( "NetworkTester.Properties.Resources", typeof( Resources ).Assembly );
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager( "VidereNetworkTester.Properties.Resources", typeof( Resources ).Assembly );
                     resourceMan = temp;
                 }
                 return resourceMan;
