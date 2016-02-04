@@ -62,9 +62,9 @@ namespace Videre {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public uint SubtitleTimeOffset {
+        public int SubtitleTimeOffset {
             get {
-                return ((uint)(this["SubtitleTimeOffset"]));
+                return ((int)(this["SubtitleTimeOffset"]));
             }
             set {
                 this["SubtitleTimeOffset"] = value;

@@ -11,7 +11,7 @@
     <Setting Name="FontPosition" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="SubtitleTimeOffset" Type="System.UInt32" Scope="User">
+    <Setting Name="SubtitleTimeOffset" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="ListenPort" Type="System.UInt16" Scope="User">
