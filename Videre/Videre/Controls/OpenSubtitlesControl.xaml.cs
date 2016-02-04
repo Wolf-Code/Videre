@@ -46,18 +46,23 @@ namespace Videre.Controls
         /// <summary>
         /// Initializes the control with a <see cref="MainWindow"/>. Necessary, as the <see cref="Window.GetWindow"/> method is unable to find a window for flyout controls.
         /// </summary>
-        /// <param name="window">The <see cref="MainWindow"/>.</param>
-        public void InitWindow( MainWindow window )
+        /// <param name="mainWindow">The <see cref="MainWindow"/>.</param>
+        public void InitWindow( MainWindow mainWindow )
         {
-            this.window = window;
+            this.window = mainWindow;
             flyout = window.OSFlyout;
             flyout.IsOpenChanged += OsFlyoutOnIsOpenChanged;
 
             downloader = new WebClient( );
-            downloader.DownloadProgressChanged += DownloaderOnDownloadProgressChanged;
+            downloader.DownloadProgressChanged += ( Sender, Args ) => controller.SetProgress( Args.BytesReceived );;
             downloader.DownloadFileCompleted += DownloaderOnDownloadFileCompleted;
 
-            LanguageList.SelectionChanged += LanguageListOnSelectionChanged;
+            LanguageList.SelectionChanged += ( Sender, Args ) =>
+            {
+                bool HasSelection = LanguageList.SelectedItems.Count > 0;
+
+                DownloadSubsLanguagesButton.IsEnabled = HasSelection;
+            };
 
             window.SizeChanged += ( Sender, Args ) =>
             {
@@ -66,13 +71,6 @@ namespace Videre.Controls
 
                 this.Width = Args.NewSize.Width * 0.8;
             };
-        }
-
-        private void LanguageListOnSelectionChanged( object Sender, SelectionChangedEventArgs SelectionChangedEventArgs )
-        {
-            bool HasSelection = LanguageList.SelectedItems.Count > 0;
-
-            DownloadSubsLanguagesButton.IsEnabled = HasSelection;
         }
 
         private async void DownloaderOnDownloadFileCompleted( object Sender, AsyncCompletedEventArgs E )
@@ -89,11 +87,6 @@ namespace Videre.Controls
             await controller.CloseAsync( );
 
             flyout.IsOpen = false;
-        }
-
-        private void DownloaderOnDownloadProgressChanged( object Sender, DownloadProgressChangedEventArgs E )
-        {
-            controller.SetProgress( E.BytesReceived );
         }
 
         private void OsFlyoutOnIsOpenChanged( object Sender, RoutedEventArgs Args )
@@ -184,6 +177,8 @@ namespace Videre.Controls
             await controller.CloseAsync( );
         }
 
+        #region UI
+
         private void DownloadSubsLanguagesButton_OnClick( object Sender, RoutedEventArgs E )
         {
             DownloadSelectedLanguageSubtitles( );
@@ -214,5 +209,7 @@ namespace Videre.Controls
                 downloader.DownloadFileAsync( new Uri( data.SubDownloadLink ), tempFile );
             }
         }
+
+        #endregion
     }
 }
