@@ -5,7 +5,7 @@ A simple, yet effective video player.
 Using WPF instead of Windows Forms allows for easy styling and a more unique look, rather than yet another WinForms program.
 
 ## Support
-As Videre uses the VLC libraries via [xZune.VLC](https://github.com/higankanshi/xZune.Vlc) to open media files, it supports as many files as VLC does. Which is a lot.
+As Videre uses the VLC libraries via [xZune.VLC](https://github.com/higankanshi/xZune.Vlc) to open media files, it supports as many file formats as VLC does. Which is a lot.
 
 ## Subtitles
 Although Videre currently only supports the SubRip (*.srt) file format for subtitle files, it also has built-in support for OpenSubtitles.org.
