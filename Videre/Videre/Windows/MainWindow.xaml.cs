@@ -82,12 +82,31 @@ namespace Videre.Windows
 
             KeyDown += OnKeyDown;
 
+            StateComponent stateComponent = Player.GetComponent<StateComponent>( );
+            ScreenComponent screenComponent = Player.GetComponent<ScreenComponent>( );
+
+            stateComponent.OnStateChanged += ( Sender, Args ) =>
+            {
+                switch ( Args.State )
+                {
+                    case StateComponent.PlayerState.Playing:
+                        screenComponent.DisableSleeping( );
+                        break;
+
+                    case StateComponent.PlayerState.Paused:
+                    case StateComponent.PlayerState.Stopped:
+                        screenComponent.EnableSleeping( );
+                        break;
+                }
+            };
+
             string[ ] cmdArgs = Environment.GetCommandLineArgs( );
             if ( cmdArgs.Length > 1 )
                 Player.GetComponent<MediaComponent>( ).LoadMedia( cmdArgs[ 1 ] );
 
             base.OnInitialized( e );
-            ( this.OSFlyout.Content as OpenSubtitlesControl ).InitWindow( this );
+
+            ( ( OpenSubtitlesControl ) this.OSFlyout.Content ).InitWindow( this );
         }
 
         private static void OnKeyDown( object Sender, KeyEventArgs KeyEventArgs )
