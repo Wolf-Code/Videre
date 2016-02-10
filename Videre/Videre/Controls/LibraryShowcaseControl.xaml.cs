@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using VidereLib.Components;
@@ -35,14 +36,25 @@ namespace Videre.Controls
             await this.Player.GetComponent<MediaComponent>( ).RetrieveMediaInformation( media.ToArray(  ) );
 
             media.Sort( ( A, B ) => String.Compare( A.Name, B.Name, StringComparison.Ordinal ) );
+
+            controller.SetTitle( "Retrieving movie posters" );
+            controller.SetMessage( "Retrieving movie posters from TheMovieDB.org." );
+            Dictionary<string, string> imgs = await this.Player.GetComponent<TheMovieDBComponent>( ).GetMoviePosters( media.ToArray( ) );
+
             foreach ( VidereMedia item in media )
             {
                 LibraryMediaControl control = new LibraryMediaControl
                 {
                     Title = { Text = item.Name },
-                    Rating = { Text = "Rating" },
-                    //Image = { Source = new BitmapImage( new Uri( @"D:\Folders\Pictures\dickbutt.jpg" ) ) }
+                    Rating = { Text = item.IMDBID },
+                    ToolTip = item.File.Name,
                 };
+
+                if ( item.IMDBID != null && imgs.ContainsKey( item.IMDBID ) )
+                {
+                    BitmapImage img = new BitmapImage( new Uri( imgs[ item.IMDBID ] ) );
+                    control.Image.Source = img;
+                }
 
                 MediaList.Items.Add( control );
             }

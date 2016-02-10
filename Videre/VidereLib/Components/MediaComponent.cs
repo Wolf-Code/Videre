@@ -116,10 +116,10 @@ namespace VidereLib.Components
         }
 
         /// <summary>
-        /// Gets the IMDB IDs for <see cref="VidereMedia"/>.
+        /// Gets information about a for <see cref="VidereMedia"/>.
         /// </summary>
-        /// <param name="medias">The <see cref="VidereMedia"/> for which we want the IMDB ID.</param>
-        /// <returns>The IMDB ID.</returns>
+        /// <param name="medias">The <see cref="VidereMedia"/> for which we want the information.</param>
+        /// <returns>A <see cref="Task"/>.</returns>
         public async Task RetrieveMediaInformation( params VidereMedia[ ] medias )
         {
             string[ ] hashes = new string[ medias.Length ];

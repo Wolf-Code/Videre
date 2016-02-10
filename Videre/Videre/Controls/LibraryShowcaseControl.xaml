@@ -20,7 +20,7 @@
             <ItemsControl Name="MediaList" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel ItemWidth="300" ItemHeight="250" Orientation="Horizontal"/>
+                        <WrapPanel ItemWidth="180" ItemHeight="250" Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
