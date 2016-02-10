@@ -44,12 +44,18 @@ namespace VidereLib.Data
         public bool HasAudio => Audio != null;
 
         /// <summary>
+        /// The IMDB ID.
+        /// </summary>
+        public string IMDBID { set; get; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="file">The <see cref="FileInfo"/> of the media.</param>
         public VidereMedia( FileInfo file )
         {
             this.File = file;
+            this.Name = file.Name;
         }
     }
 }

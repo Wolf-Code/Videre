@@ -52,13 +52,24 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Gma.QrCodeNet.Encoding, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QrCode.Net.0.4.0.0\lib\net45\Gma.QrCodeNet.Encoding.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Hasseware.Net.TMDb, Version=1.2.6.0, Culture=neutral, PublicKeyToken=4d204bf90cffca75, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hasseware.TheMovieDB.1.2.6.0\lib\net45\Hasseware.Net.TMDb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -92,6 +103,7 @@
     <Compile Include="Components\ScreenComponent.cs" />
     <Compile Include="Components\StateComponent.cs" />
     <Compile Include="Components\SubtitlesComponent.cs" />
+    <Compile Include="Components\TheMovieDBComponent.cs" />
     <Compile Include="Components\TimeComponent.cs" />
     <Compile Include="Data\AudioInfo.cs" />
     <Compile Include="Data\VideoInfo.cs" />

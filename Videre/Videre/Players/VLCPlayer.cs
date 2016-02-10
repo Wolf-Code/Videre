@@ -196,7 +196,6 @@ namespace Videre.Players
         public override void Dispose( )
         {
             this.player.BeginStop( ( ) => this.player.Dispose( ) );
-
         }
     }
 }

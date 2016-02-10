@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -30,11 +31,6 @@ namespace Videre.Windows
         public const string UserAgent = "Videre v0.1";
 
         /// <summary>
-        /// The client which connects with opensubtitles.org.
-        /// </summary>
-        public static Client Client { private set; get; }
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         public MainWindow( )
@@ -63,16 +59,19 @@ namespace Videre.Windows
 
             Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new VLCPlayer( MediaArea.MediaPlayer ), MediaArea = MediaArea } );
 
+            Settings.Default.MediaFolders = new List<string> { @"D:\Folders\Videos" };
+            Settings.Default.Save( );
             MediaComponent mediaComponent = Player.GetComponent<MediaComponent>( );
             mediaComponent.OnMediaLoaded += OnOnMediaLoaded;
             mediaComponent.OnMediaUnloaded += OnOnMediaUnloaded;
             mediaComponent.OnMediaFailedToLoad += MediaComponentOnOnMediaFailedToLoad;
 
+            Interface.Initialize( UserAgent );
+            Interface.Client.LogIn( "", "", false );
+
             WindowButtonCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
             RightWindowCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
             LeftWindowCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
-
-            Client = new Client( UserAgent );
 
             Application.Current.Exit += ( sender, args ) =>
             {
@@ -141,7 +140,7 @@ namespace Videre.Windows
         private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
         {
             MediaControlsContainer.IsEnabled = true;
-
+            
             Player.GetComponent<StateComponent>( ).Play( );
         }
 

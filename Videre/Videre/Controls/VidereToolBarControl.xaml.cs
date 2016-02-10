@@ -108,5 +108,13 @@ namespace Videre.Controls
         private void OnEnableSubtitlesUnchecked( object Sender, RoutedEventArgs E ) => MainWindow.Player.GetComponent<SubtitlesComponent>( ).Disable( );
 
         private void OnSettingsClick( object Sender, RoutedEventArgs E ) => new SettingsWindow( ).ShowDialog( );
+
+        private void OnShowLibraryClick( object Sender, RoutedEventArgs E )
+        {
+            LibraryWindow lib = new LibraryWindow( );
+            bool? result = lib.ShowDialog( );
+            if ( result.HasValue && result.Value )
+                Player.GetComponent<MediaComponent>( ).LoadMedia( lib.Media.File.FullName );
+        }
     }
 }

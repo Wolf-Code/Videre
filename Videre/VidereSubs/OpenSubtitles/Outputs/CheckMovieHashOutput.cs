@@ -16,25 +16,38 @@ namespace VidereSubs.OpenSubtitles.Outputs
         public Dictionary<string, MovieData[ ]> MovieData { get; } = new Dictionary<string, MovieData[ ]>( );
 
         /// <summary>
+        /// The hashes that were not processed.
+        /// </summary>
+        public string[ ] NotProcessed { get; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="output">The check movie hash(2) result.</param>
         public CheckMovieHashOutput( XmlRpcStruct output ) : base( output )
         {
             XmlRpcStruct data = ( XmlRpcStruct ) output[ "data" ];
+            
+            NotProcessed = output[ "not_processed" ] as string[ ] ?? new string[ 0 ];
+
             foreach ( DictionaryEntry hash in data )
             {
-                XmlRpcStruct[ ] hashData = ( XmlRpcStruct[ ] ) hash.Value;
-                MovieData[ ] movieDataArray = new MovieData[ hashData.Length ];
-
-                int C = 0;
-                foreach ( XmlRpcStruct moviedata in hashData )
+                if ( hash.Value is XmlRpcStruct[ ] )
                 {
-                    MovieData mData = new MovieData( moviedata );
-                    movieDataArray[ C++ ] = mData;
-                }
+                    XmlRpcStruct[ ] hashData = ( XmlRpcStruct[ ] ) hash.Value;
+                    MovieData[ ] movieDataArray = new MovieData[ hashData.Length ];
 
-                MovieData.Add( ( string ) hash.Key, movieDataArray );
+                    int C = 0;
+                    foreach ( XmlRpcStruct moviedata in hashData )
+                    {
+                        MovieData mData = new MovieData( moviedata );
+                        movieDataArray[ C++ ] = mData;
+                    }
+
+                    MovieData.Add( ( string ) hash.Key, movieDataArray );
+                }
+                else if ( hash.Value is XmlRpcStruct )
+                    MovieData.Add( ( string ) hash.Key, new[ ] { new MovieData( ( XmlRpcStruct ) hash.Value ) } );
             }
         }
     }

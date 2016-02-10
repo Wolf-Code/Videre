@@ -8,7 +8,8 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Menu>
         <MenuItem Header="File">
-            <MenuItem Header="Open Media" Click="OnOpenMediaClick"/>
+            <MenuItem Header="Open File" Click="OnOpenMediaClick"/>
+            <MenuItem Header="Show Library" Click="OnShowLibraryClick"/>
         </MenuItem>
         <MenuItem Header="Subtitles">
             <MenuItem Header="Enable Subtitles" IsEnabled="False" x:Name="EnableSubs" IsCheckable="True" Unchecked="OnEnableSubtitlesUnchecked" Checked="OnEnableSubtitlesChecked"/>

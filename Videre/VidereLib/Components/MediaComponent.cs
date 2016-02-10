@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using VidereLib.Data;
 using VidereLib.EventArgs;
+using VidereSubs.OpenSubtitles;
+using VidereSubs.OpenSubtitles.Data;
+using VidereSubs.OpenSubtitles.Outputs;
 
 namespace VidereLib.Components
 {
@@ -77,6 +82,65 @@ namespace VidereLib.Components
             FileInfo info = new FileInfo( Path );
 
             Player.MediaPlayer.LoadMedia( info );
+        }
+
+        /// <summary>
+        /// Looks for all media files which the <see cref="ViderePlayer"/> can play.
+        /// </summary>
+        /// <param name="directory">The directory to look inside for all media files.</param>
+        /// <param name="recursive">Whether or not to look into subdirectories recursively.</param>
+        /// <returns>A list of all media files found in the directory.</returns>
+        public List<VidereMedia> FindMediaInDirectory( string directory, bool recursive = true )
+        {
+            List<VidereMedia> media = new List<VidereMedia>( );
+
+            DirectoryInfo info = new DirectoryInfo( directory );
+
+            if ( !info.Exists )
+                return media;
+
+            FileInfo[ ] files = info.GetFiles( );
+            foreach ( FileInfo file in files )
+            {
+                if ( Player.MediaPlayer.CanPlayMediaExtension( file.Extension.Substring( 1 ) ) )
+                    media.Add( new VidereMedia( file ) );
+            }
+
+            if ( !recursive ) return media;
+
+            DirectoryInfo[ ] subDirs = info.GetDirectories( );
+            foreach ( DirectoryInfo subDir in subDirs )
+                media.AddRange( FindMediaInDirectory( subDir.FullName ) );
+
+            return media;
+        }
+
+        /// <summary>
+        /// Gets the IMDB IDs for <see cref="VidereMedia"/>.
+        /// </summary>
+        /// <param name="medias">The <see cref="VidereMedia"/> for which we want the IMDB ID.</param>
+        /// <returns>The IMDB ID.</returns>
+        public async Task RetrieveMediaInformation( params VidereMedia[ ] medias )
+        {
+            string[ ] hashes = new string[ medias.Length ];
+            Dictionary<string, VidereMedia> hashMedias = new Dictionary<string, VidereMedia>( );
+            for ( int x = 0; x < medias.Length; x++ )
+            {
+                string hash = Hasher.ComputeMovieHash( medias[ x ].File.FullName );
+                hashes[ x ] = hash;
+                hashMedias.Add( hash, medias[ x ] );
+            }
+
+            CheckMovieHashOutput output = await Interface.CheckMovieHashBestGuessOnly( hashes );
+            foreach ( var pair in output.MovieData )
+            {
+                if ( pair.Value.Length <= 0 ) continue;
+                MovieData data = pair.Value[ 0 ];
+
+                VidereMedia media = hashMedias[ pair.Key ];
+                media.Name = data.MovieName;
+                media.IMDBID = data.MovieImbdID;
+            }
         }
 
         /// <summary>

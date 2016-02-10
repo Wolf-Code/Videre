@@ -26,5 +26,8 @@
     <Setting Name="ProgID" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Videre.VideoPlayer</Value>
     </Setting>
+    <Setting Name="MediaFolders" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

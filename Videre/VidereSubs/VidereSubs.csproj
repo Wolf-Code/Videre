@@ -66,6 +66,7 @@
     <Compile Include="OpenSubtitles\Data\SubtitleLanguage.cs" />
     <Compile Include="OpenSubtitles\Data\SubtitleData.cs" />
     <Compile Include="OpenSubtitles\Hasher.cs" />
+    <Compile Include="OpenSubtitles\Interface.cs" />
     <Compile Include="OpenSubtitles\Interfaces\IClient.cs" />
     <Compile Include="OpenSubtitles\Interfaces\IServer.cs" />
     <Compile Include="OpenSubtitles\Outputs\CheckMovieHashOutput.cs" />

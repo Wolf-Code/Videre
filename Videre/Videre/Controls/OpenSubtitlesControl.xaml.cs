@@ -12,6 +12,7 @@ using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using Videre.Windows;
 using VidereLib.Components;
+using VidereSubs.OpenSubtitles;
 using VidereSubs.OpenSubtitles.Data;
 using VidereSubs.OpenSubtitles.Outputs;
 
@@ -107,13 +108,13 @@ namespace Videre.Controls
 
         private async void OnFlyoutFirstOpen( )
         {
-            if ( MainWindow.Client.IsLoggedIn ) return;
+            if ( Interface.Client.IsLoggedIn ) return;
 
             controller = await window.ShowProgressAsync( "Signing in.", "Signing into opensubtitles.org." );
             controller.SetIndeterminate( );
             LogInOutput output = await SignInClient( );
 
-            if ( output.LogInSuccesful && MainWindow.Client.IsLoggedIn )
+            if ( output.LogInSuccesful && Interface.Client.IsLoggedIn )
             {
                 controller.SetTitle( "Downloading subtitle languages." );
                 controller.SetMessage( "Downloading the available subtitle languages from opensubtitles.org." );
@@ -143,12 +144,12 @@ namespace Videre.Controls
 
         private async Task<LogInOutput> SignInClient( )
         {
-            return await Task.Run( ( ) => MainWindow.Client.LogIn( string.Empty, string.Empty, false ) );
+            return await Task.Run( ( ) => Interface.Client.LogIn( string.Empty, string.Empty, false ) );
         }
 
         private async Task<SubtitleLanguage[ ]> GetSubtitleLanguages( )
         {
-            return await Task.Run( ( ) => MainWindow.Client.GetSubLanguages( ) );
+            return await Task.Run( ( ) => Interface.Client.GetSubLanguages( ) );
         }
 
         private async void DownloadSelectedLanguageSubtitles( )
@@ -163,7 +164,7 @@ namespace Videre.Controls
             for ( int x = 0; x < languages.Length; ++x )
                 languages[ x ] = ( ( SubtitleLanguage ) LanguageList.SelectedItems[ x ] ).ISO639_3;
 
-            SubtitleData[ ] data = await Task.Run( ( ) => MainWindow.Client.SearchSubtitles( languages, MainWindow.Player.GetComponent<MediaComponent>( ).Media.File ) );
+            SubtitleData[ ] data = await Task.Run( ( ) => Interface.Client.SearchSubtitles( languages, MainWindow.Player.GetComponent<MediaComponent>( ).Media.File ) );
 
             SubsGroupBox.Visibility = Visibility.Visible;
 

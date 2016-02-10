@@ -115,5 +115,16 @@ namespace Videre {
                 return ((string)(this["ProgID"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Generic.List<System.String> MediaFolders {
+            get {
+                return ((global::System.Collections.Generic.List<System.String>)(this["MediaFolders"]));
+            }
+            set {
+                this["MediaFolders"] = value;
+            }
+        }
     }
 }

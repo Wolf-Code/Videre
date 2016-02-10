@@ -99,7 +99,7 @@ namespace VidereSubs.OpenSubtitles
         /// Retrieves information about the movie hash.
         /// </summary>
         /// <param name="movieHashes">The hashes to check the information for.</param>
-        public CheckMovieHashOutput CheckMovieHash2( params string[ ] movieHashes )
+        public CheckMovieHashOutput CheckMovieHashAllGuesses( params string[ ] movieHashes )
         {
             XmlRpcStruct ret = clientProxy.CheckMovieHash2( login.Token, movieHashes );
 
@@ -108,6 +108,22 @@ namespace VidereSubs.OpenSubtitles
 
             return output;
         }
+
+
+        /// <summary>
+        /// Retrieves information about the movie hash.
+        /// </summary>
+        /// <param name="movieHashes">The hashes to check the information for.</param>
+        public CheckMovieHashOutput CheckMovieHashBestGuessOnly( params string[ ] movieHashes )
+        {
+            XmlRpcStruct ret = clientProxy.CheckMovieHash( login.Token, movieHashes );
+
+            CheckMovieHashOutput output = new CheckMovieHashOutput( ret );
+            ResetTimer( );
+
+            return output;
+        }
+
 
         /// <summary>
         /// Searches for subtitle information.
