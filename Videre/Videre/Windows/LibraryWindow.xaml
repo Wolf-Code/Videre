@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Videre.Windows"
         xmlns:controls="clr-namespace:Videre.Controls"
         mc:Ignorable="d"
-        Title="LibraryWindow" Height="300" Width="300"
+        Title="Media Library" Height="300" Width="300"
         GlowBrush="{DynamicResource AccentColorBrush}">
     <Grid>
         <Grid.RowDefinitions>

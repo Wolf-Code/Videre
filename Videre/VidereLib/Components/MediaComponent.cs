@@ -118,6 +118,9 @@ namespace VidereLib.Components
             Dictionary<string, VidereMedia> hashMedias = new Dictionary<string, VidereMedia>( );
             for ( int x = 0; x < medias.Length; x++ )
             {
+                if ( medias[ x ].Type != VidereMedia.MediaType.Video )
+                    return;
+
                 string hash = Hasher.ComputeMovieHash( medias[ x ].File.FullName );
                 hashes[ x ] = hash;
                 hashMedias.Add( hash, medias[ x ] );

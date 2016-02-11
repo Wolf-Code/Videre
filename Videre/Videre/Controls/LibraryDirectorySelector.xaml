@@ -6,5 +6,17 @@
              xmlns:local="clr-namespace:Videre.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <ListBox Name="DirectoryList" SelectionMode="Multiple"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <GroupBox Header="Directories" Grid.Row="0" Grid.Column="0">
+            <ListBox Name="DirectoryList" SelectionMode="Multiple"/>
+        </GroupBox>
+    </Grid>
 </local:VidereControl>

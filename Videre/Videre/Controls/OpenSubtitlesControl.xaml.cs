@@ -93,18 +93,10 @@ namespace Videre.Controls
 
         private void OsFlyoutOnIsOpenChanged( object Sender, RoutedEventArgs Args )
         {
-            if ( flyout.IsOpen )
-            {
-                if ( firstOpen )
-                {
-                    firstOpen = false;
-                    OnFlyoutFirstOpen(  );
-                    return;
-                }
-                OnFlyoutOpen( );
-            }
-            else
-                OnFlyoutClose( );
+            if ( !flyout.IsOpen && !firstOpen ) return;
+
+            firstOpen = false;
+            OnFlyoutFirstOpen( );
         }
 
         private async void OnFlyoutFirstOpen( )
@@ -129,18 +121,6 @@ namespace Videre.Controls
                 await window.ShowMessageAsync( "Signing in failed", $"Unable to sign in to opensubtitles.org. Please try again later. (Status: {output.Status}, {output.StatusStringWithoutCode})" );
 
             await controller.CloseAsync( );
-
-            OnFlyoutOpen( );
-        }
-
-        private void OnFlyoutOpen( )
-        {
-
-        }
-
-        private void OnFlyoutClose( )
-        {
-
         }
 
         private async Task<LogInOutput> SignInClient( )
