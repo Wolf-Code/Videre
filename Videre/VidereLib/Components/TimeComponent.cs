@@ -99,8 +99,10 @@ namespace VidereLib.Components
                 throw new Exception( "No media loaded." );
 
             ViderePlayer.MediaPlayer.SetPosition( Span );
+
             double progress = Span.TotalSeconds / ViderePlayer.MediaPlayer.GetMediaLength( ).TotalSeconds;
             OnPositionChanged?.Invoke( this, new OnPositionChangedEventArgs( Span, progress ) );
+
             ViderePlayer.GetComponent<SubtitlesComponent>( ).CheckForSubtitles( );
         }
 
@@ -110,7 +112,9 @@ namespace VidereLib.Components
         public void StartChangingPosition( )
         {
             StateComponent stateHandler = ViderePlayer.GetComponent<StateComponent>( );
+
             pausedWhenChangingPosition = stateHandler.CurrentState == StateComponent.PlayerState.Paused;
+
             stateHandler.Pause( );
             stateHandler.CurrentState = StateComponent.PlayerState.ChangingPosition;
         }

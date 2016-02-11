@@ -20,7 +20,7 @@ namespace Videre.Controls
 
         private void TimeOffset_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
         {
-            if ( !this.IsPlayerInitialized )
+            if ( !ViderePlayer.IsInitialized )
                 return;
 
             if ( !E.NewValue.HasValue )
@@ -31,7 +31,7 @@ namespace Videre.Controls
 
         private void PositionOffset_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
         {
-            if ( !this.IsPlayerInitialized )
+            if ( !ViderePlayer.IsInitialized )
                 return;
 
             if ( !E.NewValue.HasValue )
@@ -43,7 +43,7 @@ namespace Videre.Controls
 
         private void SubSize_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
         {
-            if ( !this.IsPlayerInitialized )
+            if ( !ViderePlayer.IsInitialized )
                 return;
             
             if ( !E.NewValue.HasValue )

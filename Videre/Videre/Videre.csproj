@@ -102,6 +102,10 @@
     <StartupObject>Videre.Startup</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Hasseware.Net.TMDb, Version=1.2.6.0, Culture=neutral, PublicKeyToken=4d204bf90cffca75, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hasseware.TheMovieDB.1.2.6.0\lib\net45\Hasseware.Net.TMDb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>

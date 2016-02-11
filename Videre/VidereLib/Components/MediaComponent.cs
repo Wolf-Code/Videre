@@ -135,6 +135,7 @@ namespace VidereLib.Components
                 VidereMedia media = hashMedias[ pair.Key ];
                 media.Name = data.MovieName;
                 media.IMDBID = data.MovieImbdID;
+                media.Year = data.MovieYear;
             }
         }
 

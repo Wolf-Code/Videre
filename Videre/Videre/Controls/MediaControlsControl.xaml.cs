@@ -204,7 +204,7 @@ namespace Videre.Controls
 
         private void m_VolumeSlider_OnValueChanged( object Sender, RoutedPropertyChangedEventArgs<double> E )
         {
-            if ( !IsPlayerInitialized )
+            if ( !ViderePlayer.IsInitialized )
                 return;
 
             ViderePlayer.MediaPlayer.SetVolume( ( float ) E.NewValue );

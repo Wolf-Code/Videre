@@ -34,7 +34,7 @@ namespace Videre.Controls
 
         private void SetQRCodeImage( )
         {
-            if ( !this.IsPlayerInitialized )
+            if ( !ViderePlayer.IsInitialized )
                 return;
 
             qrStream = new MemoryStream( );
@@ -54,7 +54,7 @@ namespace Videre.Controls
 
         private void OnPortChanged( object Sender, RoutedPropertyChangedEventArgs<double?> E )
         {
-            if ( !this.IsPlayerInitialized )
+            if ( !ViderePlayer.IsInitialized )
                 return;
 
             if ( !E.NewValue.HasValue )

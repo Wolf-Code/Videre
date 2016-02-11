@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Windows.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using VidereLib;
+using VidereLib.Components;
 using VidereLib.Data;
 
 namespace Videre.Windows
@@ -20,6 +23,16 @@ namespace Videre.Windows
         public LibraryWindow( )
         {
             InitializeComponent( );
+
+            this.Loaded += async ( Sender, Args ) =>
+            {
+                ProgressDialogController controller = await this.ShowProgressAsync( "Retrieving TheMovieDB.org configuration", "Retrieving server configuration from TheMovieDB.org." );
+                controller.SetIndeterminate( );
+
+                await ViderePlayer.GetComponent<TheMovieDBComponent>( ).RetrieveConfiguration( );
+
+                await controller.CloseAsync( );
+            };
         }
 
         /// <summary>

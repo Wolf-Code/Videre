@@ -93,28 +93,33 @@ namespace Videre.Controls
 
         private void OsFlyoutOnIsOpenChanged( object Sender, RoutedEventArgs Args )
         {
-            if ( !flyout.IsOpen && !firstOpen ) return;
-
-            firstOpen = false;
-            OnFlyoutFirstOpen( );
+            if ( flyout.IsOpen )
+            {
+                if ( firstOpen )
+                {
+                    firstOpen = false;
+                    OnFlyoutFirstOpen( );
+                }
+            }
         }
 
         private async void OnFlyoutFirstOpen( )
         {
-            if ( Interface.Client.IsLoggedIn ) return;
-
             controller = await window.ShowProgressAsync( "Signing in.", "Signing into opensubtitles.org." );
             controller.SetIndeterminate( );
-            LogInOutput output = await SignInClient( );
 
-            if ( output.LogInSuccesful && Interface.Client.IsLoggedIn )
+            LogInOutput output = null;
+            if ( !Interface.Client.IsLoggedIn )
+                output = await SignInClient( );
+
+            if ( output == null || ( output.LogInSuccesful && Interface.Client.IsLoggedIn ) )
             {
                 controller.SetTitle( "Downloading subtitle languages." );
                 controller.SetMessage( "Downloading the available subtitle languages from opensubtitles.org." );
                 this.languages = await GetSubtitleLanguages( );
                 this.LanguageList.ItemsSource = this.languages;
 
-                CollectionView languagesView = ( CollectionView )CollectionViewSource.GetDefaultView( LanguageList.ItemsSource );
+                CollectionView languagesView = ( CollectionView ) CollectionViewSource.GetDefaultView( LanguageList.ItemsSource );
                 languagesView.SortDescriptions.Add( new SortDescription( "LanguageName", ListSortDirection.Ascending ) );
             }
             else

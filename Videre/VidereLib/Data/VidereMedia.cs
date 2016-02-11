@@ -81,6 +81,11 @@ namespace VidereLib.Data
         public string IMDBID { set; get; }
 
         /// <summary>
+        /// The media's year of release.
+        /// </summary>
+        public ushort Year { set; get; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="file">The <see cref="FileInfo"/> of the media.</param>
