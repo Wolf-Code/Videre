@@ -31,6 +31,13 @@ namespace Videre.Windows
         public MainWindow( )
         {
             InitializeComponent( );
+
+            this.Loaded += async ( Sender, Args ) =>
+            {
+                ProgressDialogController controller = await this.ShowProgressAsync( "Signing in.", "Signing in to opensubtitles.org." );
+                Interface.Client.LogIn( "", "", false );
+                await controller.CloseAsync( );
+            };
         }
 
         /// <summary>
@@ -62,7 +69,6 @@ namespace Videre.Windows
             mediaComponent.OnMediaFailedToLoad += MediaComponentOnOnMediaFailedToLoad;
 
             Interface.Initialize( UserAgent );
-            Interface.Client.LogIn( "", "", false );
 
             WindowButtonCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
             RightWindowCommandsOverlayBehavior = WindowCommandsOverlayBehavior.Never;
@@ -101,6 +107,7 @@ namespace Videre.Windows
             base.OnInitialized( e );
 
             ( ( OpenSubtitlesControl ) this.OSFlyout.Content ).InitWindow( this );
+            MediaInformationManager.LoadMediaData( );
         }
 
         private static void OnKeyDown( object Sender, KeyEventArgs KeyEventArgs )

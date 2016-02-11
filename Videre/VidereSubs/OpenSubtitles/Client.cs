@@ -20,11 +20,10 @@ namespace VidereSubs.OpenSubtitles
         private LogInOutput login;
         private readonly Timer keepAliveTimer;
 
-
         /// <summary>
         /// The user agent to use on opensubtitles.org.
         /// </summary>
-        public string UserAgent { private set; get; }
+        public string UserAgent { get; }
 
         /// <summary>
         /// Whether or not the client is logged in.

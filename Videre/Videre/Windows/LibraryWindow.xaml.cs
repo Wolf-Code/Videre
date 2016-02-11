@@ -33,6 +33,8 @@ namespace Videre.Windows
 
                 await controller.CloseAsync( );
             };
+
+            this.Closing += ( Sender, Args ) => MediaInformationManager.SaveMediaData( );
         }
 
         /// <summary>

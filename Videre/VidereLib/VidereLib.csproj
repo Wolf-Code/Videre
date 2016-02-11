@@ -106,6 +106,7 @@
     <Compile Include="Components\TheMovieDBComponent.cs" />
     <Compile Include="Components\TimeComponent.cs" />
     <Compile Include="Data\AudioInfo.cs" />
+    <Compile Include="Data\MovieInformation.cs" />
     <Compile Include="Data\VideoInfo.cs" />
     <Compile Include="Data\VidereMedia.cs" />
     <Compile Include="EventArgs\OnClientConnectedEventArgs.cs" />

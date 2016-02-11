@@ -54,26 +54,46 @@ namespace Videre.Controls
                     ToolTip = item.File.Name,
                 };
 
-                if ( item.IMDBID != null )
+                if ( item.MovieInfo?.IMDBID != null && item.Type == VidereMedia.MediaType.Video )
                 {
                     control.LoadingRing.IsActive = true;
 
-                    ThreadPool.QueueUserWorkItem( async obj =>
+                    MovieInformation movieInfo;
+                    if ( MediaInformationManager.ContainsMovieInformationForHash( item.MovieInfo.Hash, out movieInfo ) )
                     {
-                        RequestMovieInfoJob job = new RequestMovieInfoJob( item );
-                        Movie movie = await job.Request( );
-                        if ( movie == null )
-                            return;
+                        BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( movieInfo.Poster ) ) );
+                        control.Image.Source = img;
+                        control.Title.Text = movieInfo.Name;
 
-                        ViderePlayer.MainDispatcher.Invoke( ( ) =>
+                        control.Rating.Text = movieInfo.Rating.ToString( );
+                        control.LoadingRing.IsActive = false;
+                    }
+                    else
+                    {
+                        if ( item.MovieInfo != null )
+                            MediaInformationManager.SetMovieInformation( item.MovieInfo );
+
+                        ThreadPool.QueueUserWorkItem( async obj =>
                         {
-                            BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( movie.Poster ) ) );
-                            control.Image.Source = img;
+                            RequestMovieInfoJob job = new RequestMovieInfoJob( item );
+                            Movie movie = await job.Request( );
+                            if ( movie == null )
+                                return;
 
-                            control.Rating.Text = movie.VoteAverage.ToString( CultureInfo.InvariantCulture );
-                            control.LoadingRing.IsActive = false;
+                            ViderePlayer.MainDispatcher.Invoke( ( ) =>
+                            {
+                                MovieInformation info = MediaInformationManager.GetMovieInformationByHash( item.MovieInfo.Hash );
+                                info.Poster = movieComp.GetPosterURL( movie.Poster );
+                                info.Rating = movie.VoteAverage;
+
+                                BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( movie.Poster ) ) );
+                                control.Image.Source = img;
+
+                                control.Rating.Text = movie.VoteAverage.ToString( CultureInfo.InvariantCulture );
+                                control.LoadingRing.IsActive = false;
+                            } );
                         } );
-                    } );
+                    }
                 }
 
                 MediaList.Items.Add( control );

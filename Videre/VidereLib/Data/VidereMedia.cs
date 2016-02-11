@@ -76,14 +76,9 @@ namespace VidereLib.Data
         public MediaType Type { private set; get; }
 
         /// <summary>
-        /// The IMDB ID.
+        /// The movie information for this media file, if any.
         /// </summary>
-        public string IMDBID { set; get; }
-
-        /// <summary>
-        /// The media's year of release.
-        /// </summary>
-        public ushort Year { set; get; }
+        public MovieInformation MovieInfo { set; get; }
 
         /// <summary>
         /// Constructor.

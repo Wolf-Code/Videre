@@ -58,10 +58,9 @@ namespace VidereLib.NetworkingRequests
         /// </summary>
         public async Task<Movie> Request( )
         {
-            if ( media.IMDBID == null )
-                return null;
+            if ( media.MovieInfo?.IMDBID == null ) return null;
 
-            idRequest = new TheMovieDBRequest<Resource>( async ( ) => await client.FindAsync( "tt" + media.IMDBID, "imdb_id", token.Token ) );
+            idRequest = new TheMovieDBRequest<Resource>( async ( ) => await client.FindAsync( "tt" + media.MovieInfo.IMDBID, "imdb_id", token.Token ) );
             idRequest.OnRequestLimitReached += ( Sender, Args ) => this.OnRequestLimitReached?.Invoke( this, null );
             Resource Res = await idRequest.Request( );
             if ( Res == null )

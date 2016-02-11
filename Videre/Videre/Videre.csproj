@@ -192,6 +192,7 @@
       <DependentUpon>VidereToolBarControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="FocusVisualTreeChanger.cs" />
+    <Compile Include="MediaInformationManager.cs" />
     <Compile Include="Players\VLCPlayer.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Settings.cs" />
