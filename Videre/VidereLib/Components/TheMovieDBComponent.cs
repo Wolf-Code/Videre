@@ -10,6 +10,9 @@ namespace VidereLib.Components
     /// </summary>
     public class TheMovieDBComponent : ComponentBase
     {
+        /// <summary>
+        /// The API key for themoviedb.org.
+        /// </summary>
         public const string APIKey = "51f2d94f857dd380ee6ae5f52e3c782f";
         private readonly ServiceClient client;
 

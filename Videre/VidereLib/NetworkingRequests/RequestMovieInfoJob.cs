@@ -2,10 +2,8 @@
 using System.Net.TMDb;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 using VidereLib.Components;
 using VidereLib.Data;
-using VidereLib.Networking;
 
 namespace VidereLib.NetworkingRequests
 {
@@ -16,11 +14,6 @@ namespace VidereLib.NetworkingRequests
     {
         private readonly VidereMedia media;
         private readonly ServiceClient client;
-
-        /// <summary>
-        /// Called whenever a service request exception is thrown.
-        /// </summary>
-        public event EventHandler<ServiceRequestException> OnServiceException; 
 
         /// <summary>
         /// Called whenever the request are suspended due to too many requests having been sent.
