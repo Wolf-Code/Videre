@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Documents;
+using VidereLib;
 using VidereLib.Components;
 using VidereLib.EventArgs;
 
@@ -28,7 +29,7 @@ namespace Videre.Controls
             Settings.Default.PropertyChanged += ( Sender, Args ) => SubsTextBlock.Margin = new Thickness( 0, 0, 0, Settings.Default.FontPosition );
             SubsTextBlock.Margin = new Thickness( 0, 0, 0, Settings.Default.FontPosition );
 
-            Player.GetComponent<SubtitlesComponent>( ).OnSubtitlesChanged += OnOnSubtitlesChanged;
+            ViderePlayer.GetComponent<SubtitlesComponent>( ).OnSubtitlesChanged += OnOnSubtitlesChanged;
         }
 
         private void OnOnSubtitlesChanged( object Sender, OnSubtitlesChangedEventArgs OnSubtitlesChangedEventArgs )

@@ -7,6 +7,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Videre.Properties;
+using VidereLib;
 using VidereLib.Components;
 using VidereLib.EventArgs;
 
@@ -97,14 +98,14 @@ namespace Videre.Controls
         /// </summary>
         public override void OnPlayerInitialized( )
         {
-            Player.GetComponent<TimeComponent>( ).OnPositionChanged += OnOnPositionChanged;
-            Player.GetComponent<StateComponent>( ).OnStateChanged += OnOnStateChanged;
+            ViderePlayer.GetComponent<TimeComponent>( ).OnPositionChanged += OnOnPositionChanged;
+            ViderePlayer.GetComponent<StateComponent>( ).OnStateChanged += OnOnStateChanged;
 
-            MediaComponent media = Player.GetComponent<MediaComponent>( );
+            MediaComponent media = ViderePlayer.GetComponent<MediaComponent>( );
             media.OnMediaLoaded += MediaOnOnMediaLoaded;
             media.OnMediaUnloaded += MediaOnOnMediaUnloaded;
 
-            InputComponent inputComponent = Player.GetComponent<InputComponent>( );
+            InputComponent inputComponent = ViderePlayer.GetComponent<InputComponent>( );
             inputComponent.OnShowControls += ( Sender, Args ) => this.Visibility = Visibility.Visible;
             inputComponent.OnHideControls += ( Sender, Args ) => this.Visibility = Visibility.Collapsed;
         }
@@ -140,7 +141,7 @@ namespace Videre.Controls
 
         private void PerformTimeSlide( )
         {
-            TimeComponent timeHandler = Player.GetComponent<TimeComponent>( );
+            TimeComponent timeHandler = ViderePlayer.GetComponent<TimeComponent>( );
             double progress = this.TimeSlider.Value / this.TimeSlider.Maximum;
             timeHandler.SetPosition( progress );
 
@@ -150,7 +151,7 @@ namespace Videre.Controls
 
         private void m_OnTimeSliderValueChanged( object Sender, RoutedPropertyChangedEventArgs<double> E )
         {
-            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+            if ( !ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 return;
 
             if ( changedExternally )
@@ -160,7 +161,7 @@ namespace Videre.Controls
             }
 
             if ( !SliderTimer.IsEnabled )
-                Player.GetComponent<TimeComponent>( ).StartChangingPosition( );
+                ViderePlayer.GetComponent<TimeComponent>( ).StartChangingPosition( );
 
             // Reset the timer.
             SliderTimer.Start( );
@@ -193,10 +194,10 @@ namespace Videre.Controls
 
         private void m_OnPlayPauseButtonClick( object Sender, RoutedEventArgs E )
         {
-            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+            if ( !ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 return;
 
-            Player.GetComponent<StateComponent>( ).ResumeOrPause( );
+            ViderePlayer.GetComponent<StateComponent>( ).ResumeOrPause( );
 
             OnPlayPauseButtonClick?.Invoke( this, E );
         }
@@ -206,7 +207,7 @@ namespace Videre.Controls
             if ( !IsPlayerInitialized )
                 return;
 
-            Player.MediaPlayer.SetVolume( ( float ) E.NewValue );
+            ViderePlayer.MediaPlayer.SetVolume( ( float ) E.NewValue );
 
             OnVolumeChanged?.Invoke( this, E );
         }
@@ -241,7 +242,7 @@ namespace Videre.Controls
             else if ( OffsetFromBorder > MaxRight )
                 PointerOffset = OffsetFromBorder - MaxRight;
 
-            TimeSpan hoverTime = TimeSpan.FromTicks( ( long ) ( Player.MediaPlayer.GetMediaLength( ).Ticks * Progress ) );
+            TimeSpan hoverTime = TimeSpan.FromTicks( ( long ) ( ViderePlayer.MediaPlayer.GetMediaLength( ).Ticks * Progress ) );
             TimeShower.TimeLabel.Content = hoverTime.ToString( TimeFormat );
 
             Canvas.SetLeft( TimeShower.Pointer, halfWidth + PointerOffset );

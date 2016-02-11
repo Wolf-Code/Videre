@@ -43,8 +43,7 @@ namespace VidereLib.Components
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="player">the <see cref="ViderePlayer"/>.</param>
-        public ScreenComponent( ViderePlayer player ) : base( player )
+        public ScreenComponent( )
         {
             displayTimer = new DispatcherTimer( TimeSpan.FromSeconds( StandbyResetInterval ), DispatcherPriority.Input, ( Sender, Args ) => ResetStandbyTimers( ), Dispatcher.CurrentDispatcher );
             displayTimer.Stop( );
@@ -69,15 +68,15 @@ namespace VidereLib.Components
 
             if ( fullScreen && !IsFullScreen )
             {
-                oldState = Player.windowData.Window.WindowState;
-                oldStyle = Player.windowData.Window.WindowStyle;
+                oldState = ViderePlayer.windowData.Window.WindowState;
+                oldStyle = ViderePlayer.windowData.Window.WindowStyle;
             }
 
-            Player.windowData.Window.ResizeMode = fullScreen ? ResizeMode.NoResize : ResizeMode.CanResize;
-            Player.windowData.Window.ShowTitleBar = !fullScreen;
-            Player.windowData.Window.ShowCloseButton = !fullScreen;
-            Player.windowData.Window.WindowStyle = fullScreen ? WindowStyle.None : oldStyle;
-            Player.windowData.Window.WindowState = fullScreen ? WindowState.Maximized : oldState;
+            ViderePlayer.windowData.Window.ResizeMode = fullScreen ? ResizeMode.NoResize : ResizeMode.CanResize;
+            ViderePlayer.windowData.Window.ShowTitleBar = !fullScreen;
+            ViderePlayer.windowData.Window.ShowCloseButton = !fullScreen;
+            ViderePlayer.windowData.Window.WindowStyle = fullScreen ? WindowStyle.None : oldStyle;
+            ViderePlayer.windowData.Window.WindowState = fullScreen ? WindowState.Maximized : oldState;
 
             IsFullScreen = fullScreen;
             OnFullscreenChanged?.Invoke( this, new OnFullscreenChangedEventArgs( IsFullScreen ) );

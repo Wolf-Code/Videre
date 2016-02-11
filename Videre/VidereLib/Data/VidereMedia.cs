@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using VidereSubs.OpenSubtitles;
 
 namespace VidereLib.Data
 {
@@ -12,6 +13,11 @@ namespace VidereLib.Data
         /// The file containing the media.
         /// </summary>
         public FileInfo File { set; get; }
+
+        /// <summary>
+        /// The opensubtitles.org hash for the media file.
+        /// </summary>
+        public string OpenSubtitlesHash => !File.Exists ? null : Hasher.ComputeMovieHash( File.FullName );
 
         /// <summary>
         /// The duration of the media.
@@ -44,6 +50,32 @@ namespace VidereLib.Data
         public bool HasAudio => Audio != null;
 
         /// <summary>
+        /// The different kinds of media.
+        /// </summary>
+        public enum MediaType
+        {
+            /// <summary>
+            /// A video file.
+            /// </summary>
+            Video,
+
+            /// <summary>
+            /// An audio file.
+            /// </summary>
+            Audio,
+
+            /// <summary>
+            /// An unknown media file.
+            /// </summary>
+            Unknown
+        }
+
+        /// <summary>
+        /// The type of the media.
+        /// </summary>
+        public MediaType Type { private set; get; }
+
+        /// <summary>
         /// The IMDB ID.
         /// </summary>
         public string IMDBID { set; get; }
@@ -56,6 +88,33 @@ namespace VidereLib.Data
         {
             this.File = file;
             this.Name = file.Name;
+            this.Type = GetMediaTypeFromFile( file );
+        }
+
+        /// <summary>
+        /// Changes the automatically assigned media type.
+        /// </summary>
+        /// <param name="newType">The new media type.</param>
+        public void ChangeMediaType( MediaType newType )
+        {
+            this.Type = newType;
+        }
+
+        /// <summary>
+        /// Gets the media type from the file extension, using the currently active media player.
+        /// </summary>
+        /// <param name="file">The file to check for.</param>
+        /// <returns>The type of the media.</returns>
+        public static MediaType GetMediaTypeFromFile( FileInfo file )
+        {
+            string extension = file.Extension.Substring( 1 );
+            if ( ViderePlayer.MediaPlayer.CanPlayVideoExtension( extension ) )
+                return MediaType.Video;
+
+            if ( ViderePlayer.MediaPlayer.CanPlayAudioExtension( extension ) )
+                return MediaType.Audio;
+
+            return MediaType.Unknown;
         }
     }
 }

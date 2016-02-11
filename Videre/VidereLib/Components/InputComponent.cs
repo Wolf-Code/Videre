@@ -31,15 +31,6 @@ namespace VidereLib.Components
         private Point lastCursorPos;
 
         /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="Player">The <see cref="ViderePlayer"/>.</param>
-        public InputComponent( ViderePlayer Player ) : base( Player )
-        {
-
-        }
-
-        /// <summary>
         /// Gets called after all components have been added to the player.
         /// </summary>
         protected override void OnInitialize( )
@@ -47,11 +38,11 @@ namespace VidereLib.Components
             hideControlsTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 1500 ) };
             hideControlsTimer.Tick += HideControlsTimerOnTick;
 
-            Player.windowData.MediaArea.MouseLeave += MediaPlayerOnMouseLeave;
-            Player.windowData.MediaArea.MouseEnter += MediaAreaOnMouseEnter;
+            ViderePlayer.windowData.MediaArea.MouseLeave += MediaPlayerOnMouseLeave;
+            ViderePlayer.windowData.MediaArea.MouseEnter += MediaAreaOnMouseEnter;
 
-            Player.windowData.MediaArea.MouseDown += MediaPlayerOnMouseDown;
-            Player.windowData.MediaArea.MouseMove += MediaPlayerOnMouseMove;
+            ViderePlayer.windowData.MediaArea.MouseDown += MediaPlayerOnMouseDown;
+            ViderePlayer.windowData.MediaArea.MouseMove += MediaPlayerOnMouseMove;
         }
 
         private void MediaAreaOnMouseEnter( object Sender, MouseEventArgs Args )
@@ -63,10 +54,10 @@ namespace VidereLib.Components
         {
             hideControlsTimer.Stop( );
 
-            if ( !Player.windowData.MediaArea.IsMouseOver )
+            if ( !ViderePlayer.windowData.MediaArea.IsMouseOver )
                 return;
 
-            if ( !Player.GetComponent<ScreenComponent>( ).IsFullScreen )
+            if ( !ViderePlayer.GetComponent<ScreenComponent>( ).IsFullScreen )
                 return;
 
             Mouse.OverrideCursor = Cursors.None;
@@ -81,7 +72,7 @@ namespace VidereLib.Components
 
         private void MediaPlayerOnMouseMove( object Sender, MouseEventArgs Args )
         {
-            if ( Args.GetPosition( Player.windowData.Window ) == lastCursorPos )
+            if ( Args.GetPosition( ViderePlayer.windowData.Window ) == lastCursorPos )
                 return;
 
             this.ShowCursorAndResetTimer( Args );
@@ -99,13 +90,13 @@ namespace VidereLib.Components
             // Resets the timer.
             hideControlsTimer.Stop( );
             hideControlsTimer.Start( );
-            lastCursorPos = Args.GetPosition( Player.windowData.Window );
+            lastCursorPos = Args.GetPosition( ViderePlayer.windowData.Window );
         }
 
         private void MediaPlayerOnMouseDown( object Sender, MouseButtonEventArgs MouseButtonEventArgs )
         {
             if ( MouseButtonEventArgs.ClickCount == 2 && MouseButtonEventArgs.ChangedButton == MouseButton.Left )
-                Player.GetComponent<ScreenComponent>( ).ToggleFullScreen( );
+                ViderePlayer.GetComponent<ScreenComponent>( ).ToggleFullScreen( );
         }
     }
 }

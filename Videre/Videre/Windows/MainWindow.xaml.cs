@@ -21,11 +21,6 @@ namespace Videre.Windows
     public partial class MainWindow
     {
         /// <summary>
-        /// The active <see cref="ViderePlayer"/>.
-        /// </summary>
-        public static ViderePlayer Player { private set; get; }
-
-        /// <summary>
         /// The videre user agent.
         /// </summary>
         public const string UserAgent = "Videre v0.1";
@@ -56,12 +51,12 @@ namespace Videre.Windows
 #endif
                 Application.Current.Shutdown( );
             };
-
-            Player = new ViderePlayer( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new VLCPlayer( MediaArea.MediaPlayer ), MediaArea = MediaArea } );
-
+            
+            ViderePlayer.Initialize( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new VLCPlayer( MediaArea.MediaPlayer ), MediaArea = MediaArea } );
             Settings.Default.MediaFolders = new List<string> { @"D:\Folders\Videos" };
             Settings.Default.Save( );
-            MediaComponent mediaComponent = Player.GetComponent<MediaComponent>( );
+
+            MediaComponent mediaComponent = ViderePlayer.GetComponent<MediaComponent>( );
             mediaComponent.OnMediaLoaded += OnOnMediaLoaded;
             mediaComponent.OnMediaUnloaded += OnOnMediaUnloaded;
             mediaComponent.OnMediaFailedToLoad += MediaComponentOnOnMediaFailedToLoad;
@@ -81,8 +76,8 @@ namespace Videre.Windows
 
             KeyDown += OnKeyDown;
 
-            StateComponent stateComponent = Player.GetComponent<StateComponent>( );
-            ScreenComponent screenComponent = Player.GetComponent<ScreenComponent>( );
+            StateComponent stateComponent = ViderePlayer.GetComponent<StateComponent>( );
+            ScreenComponent screenComponent = ViderePlayer.GetComponent<ScreenComponent>( );
 
             stateComponent.OnStateChanged += ( Sender, Args ) =>
             {
@@ -101,7 +96,7 @@ namespace Videre.Windows
 
             string[ ] cmdArgs = Environment.GetCommandLineArgs( );
             if ( cmdArgs.Length > 1 )
-                Player.GetComponent<MediaComponent>( ).LoadMedia( cmdArgs[ 1 ] );
+                ViderePlayer.GetComponent<MediaComponent>( ).LoadMedia( cmdArgs[ 1 ] );
 
             base.OnInitialized( e );
 
@@ -116,13 +111,14 @@ namespace Videre.Windows
             switch ( KeyEventArgs.Key )
             {
                 case Key.Escape:
-                    if ( Player.GetComponent<ScreenComponent>( ).IsFullScreen )
-                        Player.GetComponent<ScreenComponent>( ).SetFullScreen( false );
+                    ScreenComponent screenComp = ViderePlayer.GetComponent<ScreenComponent>( );
+                    if ( screenComp.IsFullScreen )
+                        screenComp.SetFullScreen( false );
                     break;
 
                 case Key.Space:
-                    if ( Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
-                        Player.GetComponent<StateComponent>( ).ResumeOrPause( );
+                    if ( ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+                        ViderePlayer.GetComponent<StateComponent>( ).ResumeOrPause( );
                     break;
             }
         }
@@ -140,8 +136,8 @@ namespace Videre.Windows
         private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
         {
             MediaControlsContainer.IsEnabled = true;
-            
-            Player.GetComponent<StateComponent>( ).Play( );
+
+            ViderePlayer.GetComponent<StateComponent>( ).Play( );
         }
 
         private static void WriteExceptionDetails( Exception exception, TextWriter writer )
@@ -156,12 +152,12 @@ namespace Videre.Windows
 
         private void Cmd_TogglePlayPause( object Sender, ExecutedRoutedEventArgs E )
         {
-            Player.GetComponent<StateComponent>( ).ResumeOrPause( );
+            ViderePlayer.GetComponent<StateComponent>( ).ResumeOrPause( );
         }
 
         private void CanCmd_TogglePlayPause( object Sender, CanExecuteRoutedEventArgs E )
         {
-            E.CanExecute = Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded;
+            E.CanExecute = ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded;
         }
     }
 }

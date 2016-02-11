@@ -7,21 +7,7 @@ namespace VidereLib.Components
     /// </summary>
     public abstract class ComponentBase
     {
-        /// <summary>
-        /// The <see cref="ViderePlayer"/> this component is attached to.
-        /// </summary>
-        protected ViderePlayer Player { set; get; }
-
         private bool isInitialized;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="player">The <see cref="ViderePlayer"/> this component is attached to.</param>
-        protected ComponentBase( ViderePlayer player )
-        {
-            Player = player;
-        }
 
         internal void Initialize( )
         {

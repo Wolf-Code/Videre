@@ -18,12 +18,12 @@ namespace VidereLib.Components
         /// <summary>
         /// Returns whether or not any media has been loaded.
         /// </summary>
-        public bool HasMediaBeenLoaded => Player.MediaPlayer.IsMediaLoaded;
+        public bool HasMediaBeenLoaded => ViderePlayer.MediaPlayer.IsMediaLoaded;
 
         /// <summary>
         /// The currently loaded media.
         /// </summary>
-        public VidereMedia Media => Player.MediaPlayer.Media;
+        public VidereMedia Media => ViderePlayer.MediaPlayer.Media;
 
         /// <summary>
         /// Gets called whenever media has been loaded.
@@ -41,21 +41,13 @@ namespace VidereLib.Components
         public event EventHandler<OnMediaFailedToLoadEventArgs> OnMediaFailedToLoad;
 
         /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="player">The <see cref="ViderePlayer"/>.</param>
-        public MediaComponent( ViderePlayer player ) : base( player )
-        {
-        }
-
-        /// <summary>
         /// Initializes the <see cref="MediaComponent"/>.
         /// </summary>
         protected override void OnInitialize( )
         {
-            Player.MediaPlayer.MediaFailedToLoad += ( sender, args ) => OnMediaFailedToLoad?.Invoke( this, args );
-            Player.MediaPlayer.MediaLoaded += ( sender, args ) => OnMediaLoaded?.Invoke( this, args );
-            Player.MediaPlayer.MediaUnloaded += ( sender, args ) => OnMediaUnloaded?.Invoke( this, args );
+            ViderePlayer.MediaPlayer.MediaFailedToLoad += ( sender, args ) => OnMediaFailedToLoad?.Invoke( this, args );
+            ViderePlayer.MediaPlayer.MediaLoaded += ( sender, args ) => OnMediaLoaded?.Invoke( this, args );
+            ViderePlayer.MediaPlayer.MediaUnloaded += ( sender, args ) => OnMediaUnloaded?.Invoke( this, args );
         }
 
         /// <summary>
@@ -67,7 +59,7 @@ namespace VidereLib.Components
             if ( !HasMediaBeenLoaded )
                 throw new Exception( "Attempted to get media length while there is no media loaded." );
 
-            return Player.MediaPlayer.GetMediaLength( );
+            return ViderePlayer.MediaPlayer.GetMediaLength( );
         }
 
         /// <summary>
@@ -76,12 +68,12 @@ namespace VidereLib.Components
         /// <param name="Path">The path of the media.</param>
         public void LoadMedia( string Path )
         {
-            if ( Player.GetComponent<StateComponent>( ).CurrentState != StateComponent.PlayerState.Stopped )
+            if ( ViderePlayer.GetComponent<StateComponent>( ).CurrentState != StateComponent.PlayerState.Stopped )
                 throw new Exception( "Attempting to load media while playing." );
 
             FileInfo info = new FileInfo( Path );
 
-            Player.MediaPlayer.LoadMedia( info );
+            ViderePlayer.MediaPlayer.LoadMedia( info );
         }
 
         /// <summary>
@@ -102,7 +94,7 @@ namespace VidereLib.Components
             FileInfo[ ] files = info.GetFiles( );
             foreach ( FileInfo file in files )
             {
-                if ( Player.MediaPlayer.CanPlayMediaExtension( file.Extension.Substring( 1 ) ) )
+                if ( ViderePlayer.MediaPlayer.CanPlayMediaExtension( file.Extension.Substring( 1 ) ) )
                     media.Add( new VidereMedia( file ) );
             }
 
@@ -148,7 +140,7 @@ namespace VidereLib.Components
         /// </summary>
         public void UnloadMedia( )
         {
-            Player.MediaPlayer.UnloadMedia( );
+            ViderePlayer.MediaPlayer.UnloadMedia( );
         }
     }
 }

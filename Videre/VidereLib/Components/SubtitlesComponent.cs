@@ -47,15 +47,6 @@ namespace VidereLib.Components
         public bool HaveSubtitlesBeenLoaded => Subtitles != null;
 
         /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="player">The <see cref="ViderePlayer"/>.</param>
-        public SubtitlesComponent( ViderePlayer player ) : base( player )
-        {
-
-        }
-
-        /// <summary>
         /// Creates the subtitles timer and adds a hook to the <see cref="StateComponent.OnStateChanged"/> event.
         /// </summary>
         protected override void OnInitialize( )
@@ -63,9 +54,9 @@ namespace VidereLib.Components
             subtitlesTimer = new DispatcherTimer( );
             subtitlesTimer.Tick += SubtitlesTimerOnTick;
 
-            Player.GetComponent<StateComponent>( ).OnStateChanged += StateHandlerOnOnStateChanged;
-            Player.GetComponent<MediaComponent>( ).OnMediaUnloaded += OnOnMediaUnloaded;
-            Player.GetComponent<MediaComponent>( ).OnMediaLoaded += OnOnMediaLoaded;
+            ViderePlayer.GetComponent<StateComponent>( ).OnStateChanged += StateHandlerOnOnStateChanged;
+            ViderePlayer.GetComponent<MediaComponent>( ).OnMediaUnloaded += OnOnMediaUnloaded;
+            ViderePlayer.GetComponent<MediaComponent>( ).OnMediaLoaded += OnOnMediaLoaded;
         }
 
         private void OnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
@@ -140,7 +131,7 @@ namespace VidereLib.Components
         /// <param name="filePath">The path to the file.</param>
         public void LoadSubtitles( string filePath )
         {
-            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+            if ( !ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "Unable to load subtitles before any media has been loaded." );
 
             if ( HaveSubtitlesBeenLoaded )
@@ -167,7 +158,7 @@ namespace VidereLib.Components
             if ( !HaveSubtitlesBeenLoaded || !enabled )
                 return;
 
-            TimeSpan position = Player.GetComponent<TimeComponent>( ).GetPosition( );
+            TimeSpan position = ViderePlayer.GetComponent<TimeComponent>( ).GetPosition( );
             TimeSpan currentPosition = position - subtitlesOffset;
             if ( !Subtitles.AnySubtitlesLeft( currentPosition ) )
                 return;

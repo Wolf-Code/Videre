@@ -11,6 +11,7 @@ using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using Videre.Windows;
+using VidereLib;
 using VidereLib.Components;
 using VidereSubs.OpenSubtitles;
 using VidereSubs.OpenSubtitles.Data;
@@ -83,7 +84,7 @@ namespace Videre.Controls
 
             File.Delete( tempFile );
 
-            MainWindow.Player.GetComponent<SubtitlesComponent>( ).LoadSubtitles( downloadPath );
+            ViderePlayer.GetComponent<SubtitlesComponent>( ).LoadSubtitles( downloadPath );
 
             await controller.CloseAsync( );
 
@@ -164,7 +165,7 @@ namespace Videre.Controls
             for ( int x = 0; x < languages.Length; ++x )
                 languages[ x ] = ( ( SubtitleLanguage ) LanguageList.SelectedItems[ x ] ).ISO639_3;
 
-            SubtitleData[ ] data = await Task.Run( ( ) => Interface.Client.SearchSubtitles( languages, MainWindow.Player.GetComponent<MediaComponent>( ).Media.File ) );
+            SubtitleData[ ] data = await Task.Run( ( ) => Interface.Client.SearchSubtitles( languages, ViderePlayer.GetComponent<MediaComponent>( ).Media.File ) );
 
             SubsGroupBox.Visibility = Visibility.Visible;
 

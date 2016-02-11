@@ -3,7 +3,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Videre.Windows;
+using VidereLib;
 using VidereLib.Components;
 
 namespace Videre.Controls
@@ -29,7 +29,7 @@ namespace Videre.Controls
         public override void OnPlayerInitialized( )
         {
             SetQRCodeImage( );
-            IPLabel.Content = Player.GetComponent<NetworkComponent>( ).IP;
+            IPLabel.Content = ViderePlayer.GetComponent<NetworkComponent>( ).IP;
         }
 
         private void SetQRCodeImage( )
@@ -39,7 +39,7 @@ namespace Videre.Controls
 
             qrStream = new MemoryStream( );
 
-            using ( Bitmap bmp = MainWindow.Player.GetComponent<NetworkComponent>( ).GetQRCode( ) )
+            using ( Bitmap bmp = ViderePlayer.GetComponent<NetworkComponent>( ).GetQRCode( ) )
             {
                 bmp.Save( qrStream, ImageFormat.Png );
 
@@ -63,7 +63,7 @@ namespace Videre.Controls
             Settings.Default.ListenPort = ( ushort )E.NewValue;
             Settings.Default.Save( );
 
-            NetworkComponent comp = MainWindow.Player.GetComponent<NetworkComponent>( );
+            NetworkComponent comp = ViderePlayer.GetComponent<NetworkComponent>( );
 
             comp.ShutdownServer( );
             comp.SetUpNetworkReceiver( Settings.Default.ListenPort );
@@ -72,7 +72,7 @@ namespace Videre.Controls
 
         private void ServerStartButton_OnClick( object Sender, RoutedEventArgs E )
         {
-            NetworkComponent comp = MainWindow.Player.GetComponent<NetworkComponent>( );
+            NetworkComponent comp = ViderePlayer.GetComponent<NetworkComponent>( );
 
             comp.ShutdownServer( );
             comp.SetUpNetworkReceiver( Settings.Default.ListenPort );

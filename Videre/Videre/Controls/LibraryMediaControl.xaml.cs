@@ -5,6 +5,9 @@
     /// </summary>
     public partial class LibraryMediaControl
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public LibraryMediaControl( )
         {
             InitializeComponent( );

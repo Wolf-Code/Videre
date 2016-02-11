@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using VidereLib;
 using VidereLib.Components;
 using VidereLib.Data;
 
@@ -28,18 +29,18 @@ namespace Videre.Controls
         /// <param name="directory">The directory to add.</param>
         public async void LoadDirectory( string directory )
         {
-            List<VidereMedia> media = this.Player.GetComponent<MediaComponent>( ).FindMediaInDirectory( directory );
+            List<VidereMedia> media = ViderePlayer.GetComponent<MediaComponent>( ).FindMediaInDirectory( directory );
 
             ProgressDialogController controller = await ( ( MetroWindow ) Window.GetWindow( this ) ).ShowProgressAsync( "Retrieving media information", "Retrieving media information from OpenSubtitles.org." );
             controller.SetIndeterminate( );
 
-            await this.Player.GetComponent<MediaComponent>( ).RetrieveMediaInformation( media.ToArray(  ) );
+            await ViderePlayer.GetComponent<MediaComponent>( ).RetrieveMediaInformation( media.ToArray(  ) );
 
             media.Sort( ( A, B ) => String.Compare( A.Name, B.Name, StringComparison.Ordinal ) );
 
             controller.SetTitle( "Retrieving movie posters" );
             controller.SetMessage( "Retrieving movie posters from TheMovieDB.org." );
-            Dictionary<string, string> imgs = await this.Player.GetComponent<TheMovieDBComponent>( ).GetMoviePosters( media.ToArray( ) );
+            Dictionary<string, string> imgs = await ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetMoviePosters( media.ToArray( ) );
 
             foreach ( VidereMedia item in media )
             {

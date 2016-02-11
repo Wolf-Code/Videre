@@ -34,15 +34,6 @@ namespace VidereLib.Components
         public IPAddress IP => Server.IP;
 
         /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="player">The videre player.</param>
-        public NetworkComponent( ViderePlayer player ) : base( player )
-        {
-
-        }
-
-        /// <summary>
         /// Gets called after all components have been added to the player.
         /// </summary>
         protected override void OnInitialize( )
@@ -159,21 +150,21 @@ namespace VidereLib.Components
         private void OnPlayRequest( BinaryReader reader )
         {
             Console.WriteLine( "Play request" );
-            Player.GetComponent<StateComponent>( ).Play( );
+            ViderePlayer.GetComponent<StateComponent>( ).Play( );
         }
 
         [NetworkRequest( NetworkRequestAttribute.RequestIdentifier.Pause )]
         private void OnPauseRequest( BinaryReader reader )
         {
             Console.WriteLine( "Pause request" );
-            Player.GetComponent<StateComponent>( ).Pause( );
+            ViderePlayer.GetComponent<StateComponent>( ).Pause( );
         }
 
         [NetworkRequest( NetworkRequestAttribute.RequestIdentifier.PauseOrResume )]
         private void OnPauseOrResumeRequest( BinaryReader reader )
         {
             Console.WriteLine( "Pause / resume request" );
-            Player.GetComponent<StateComponent>( ).ResumeOrPause( );
+            ViderePlayer.GetComponent<StateComponent>( ).ResumeOrPause( );
         }
     }
 }

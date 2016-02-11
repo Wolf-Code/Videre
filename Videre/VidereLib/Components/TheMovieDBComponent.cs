@@ -18,8 +18,7 @@ namespace VidereLib.Components
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="player">The <see cref="ViderePlayer"/>.</param>
-        public TheMovieDBComponent( ViderePlayer player ) : base( player )
+        public TheMovieDBComponent( )
         {
             client = new ServiceClient( APIKey );
         }

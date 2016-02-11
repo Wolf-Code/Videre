@@ -58,15 +58,6 @@ namespace VidereLib.Components
         private PlayerState m_CurrentState = PlayerState.Stopped;
 
         /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="player">The <see cref="ViderePlayer"/>.</param>
-        public StateComponent( ViderePlayer player ) : base( player )
-        {
-
-        }
-
-        /// <summary>
         /// Stops the player and unloads the media.
         /// </summary>
         public void Stop( )
@@ -74,8 +65,8 @@ namespace VidereLib.Components
             if ( CurrentState == PlayerState.Stopped )
                 return;
 
-            Player.MediaPlayer.Stop( );
-            Player.GetComponent<MediaComponent>( ).UnloadMedia( );
+            ViderePlayer.MediaPlayer.Stop( );
+            ViderePlayer.GetComponent<MediaComponent>( ).UnloadMedia( );
             this.CurrentState = PlayerState.Stopped;
         }
 
@@ -87,10 +78,10 @@ namespace VidereLib.Components
             if ( CurrentState == PlayerState.Playing )
                 return;
 
-            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+            if ( !ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
 
-            Player.windowData.MediaPlayer.Play( );
+            ViderePlayer.windowData.MediaPlayer.Play( );
             CurrentState = PlayerState.Playing;
         }
 
@@ -102,13 +93,13 @@ namespace VidereLib.Components
             if ( CurrentState == PlayerState.Paused )
                 return;
 
-            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+            if ( !ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
 
             switch ( CurrentState )
             {
                 case PlayerState.Playing:
-                    Player.windowData.MediaPlayer.Pause( );
+                    ViderePlayer.windowData.MediaPlayer.Pause( );
                     break;
 
                 default:
@@ -123,7 +114,7 @@ namespace VidereLib.Components
         /// </summary>
         public void ResumeOrPause( )
         {
-            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+            if ( !ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
 
             switch ( CurrentState )

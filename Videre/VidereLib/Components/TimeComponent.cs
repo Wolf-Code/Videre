@@ -21,15 +21,6 @@ namespace VidereLib.Components
         private TimeSpan previousTimeSpan;
 
         /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="player">The <see cref="ViderePlayer"/>.</param>
-        public TimeComponent( ViderePlayer player ) : base( player )
-        {
-            
-        }
-
-        /// <summary>
         /// Creates the timing timer.
         /// </summary>
         protected override void OnInitialize( )
@@ -37,7 +28,7 @@ namespace VidereLib.Components
             timeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds( 100 ) };
             timeTimer.Tick += TimeTimerOnTick;
 
-            Player.GetComponent<StateComponent>( ).OnStateChanged += OnOnStateChanged;
+            ViderePlayer.GetComponent<StateComponent>( ).OnStateChanged += OnOnStateChanged;
         }
 
         private void OnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )
@@ -57,13 +48,13 @@ namespace VidereLib.Components
 
         private void TimeTimerOnTick( object Sender, System.EventArgs Args )
         {
-            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+            if ( !ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 return;
 
-            TimeSpan currentPosition = Player.MediaPlayer.GetPosition( );
+            TimeSpan currentPosition = ViderePlayer.MediaPlayer.GetPosition( );
             if ( currentPosition == previousTimeSpan ) return;
 
-            double progress = currentPosition.TotalSeconds / Player.MediaPlayer.GetMediaLength( ).TotalSeconds;
+            double progress = currentPosition.TotalSeconds / ViderePlayer.MediaPlayer.GetMediaLength( ).TotalSeconds;
             OnPositionChanged?.Invoke( this, new OnPositionChangedEventArgs( currentPosition, progress ) );
             previousTimeSpan = currentPosition;
         }
@@ -74,7 +65,7 @@ namespace VidereLib.Components
         /// <returns>The position in the loaded media.</returns>
         public TimeSpan GetPosition( )
         {
-            return Player.MediaPlayer.GetPosition( );
+            return ViderePlayer.MediaPlayer.GetPosition( );
         }
 
         /// <summary>
@@ -83,7 +74,7 @@ namespace VidereLib.Components
         /// <param name="Progress">The float containing the progress of the media, 0 being the start and 1 being the end.</param>
         public void SetPosition( double Progress )
         {
-            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+            if ( !ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
 
             if ( Progress < 0 )
@@ -92,7 +83,7 @@ namespace VidereLib.Components
             if ( Progress > 1 )
                 Progress = 1;
 
-            TimeSpan duration = Player.GetComponent<MediaComponent>( ).GetMediaLength( );
+            TimeSpan duration = ViderePlayer.GetComponent<MediaComponent>( ).GetMediaLength( );
             TimeSpan newPositon = new TimeSpan( ( long )( duration.Ticks * Progress ) );
 
             SetPosition( newPositon );
@@ -104,13 +95,13 @@ namespace VidereLib.Components
         /// <param name="Span">The <see cref="TimeSpan"/> to set the player to.</param>
         public void SetPosition( TimeSpan Span )
         {
-            if ( !Player.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
+            if ( !ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
                 throw new Exception( "No media loaded." );
 
-            Player.MediaPlayer.SetPosition( Span );
-            double progress = Span.TotalSeconds / Player.MediaPlayer.GetMediaLength( ).TotalSeconds;
+            ViderePlayer.MediaPlayer.SetPosition( Span );
+            double progress = Span.TotalSeconds / ViderePlayer.MediaPlayer.GetMediaLength( ).TotalSeconds;
             OnPositionChanged?.Invoke( this, new OnPositionChangedEventArgs( Span, progress ) );
-            this.Player.GetComponent<SubtitlesComponent>( ).CheckForSubtitles( );
+            ViderePlayer.GetComponent<SubtitlesComponent>( ).CheckForSubtitles( );
         }
 
         /// <summary>
@@ -118,7 +109,7 @@ namespace VidereLib.Components
         /// </summary>
         public void StartChangingPosition( )
         {
-            StateComponent stateHandler = Player.GetComponent<StateComponent>( );
+            StateComponent stateHandler = ViderePlayer.GetComponent<StateComponent>( );
             pausedWhenChangingPosition = stateHandler.CurrentState == StateComponent.PlayerState.Paused;
             stateHandler.Pause( );
             stateHandler.CurrentState = StateComponent.PlayerState.ChangingPosition;
@@ -129,7 +120,7 @@ namespace VidereLib.Components
         /// </summary>
         public void StopChangingPosition( )
         {
-            StateComponent stateHandler = Player.GetComponent<StateComponent>( );
+            StateComponent stateHandler = ViderePlayer.GetComponent<StateComponent>( );
 
             if ( stateHandler.CurrentState != StateComponent.PlayerState.ChangingPosition )
                 throw new Exception( "Can't stop changing the position if not currently changing the position." );
