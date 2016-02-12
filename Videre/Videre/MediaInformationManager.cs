@@ -48,7 +48,7 @@ namespace Videre
         /// </summary>
         public static void SaveMediaData( )
         {
-            using ( FileStream FS = File.OpenWrite( MediaDataFile ) )
+            using ( FileStream FS = File.Create( MediaDataFile ) )
                 using ( StreamWriter writer = new StreamWriter( FS ) )
                 {
                     JsonWriter jsonWriter = new JsonTextWriter( writer );

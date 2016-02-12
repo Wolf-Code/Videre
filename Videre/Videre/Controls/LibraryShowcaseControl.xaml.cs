@@ -42,19 +42,8 @@ namespace Videre.Controls
 
             media.Sort( ( A, B ) => string.Compare( A.Name, B.Name, StringComparison.Ordinal ) );
 
-            TheMovieDBComponent movieComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
-
             foreach ( VidereMedia item in media )
-            {
-                LibraryMediaControl control = new LibraryMediaControl( item )
-                {
-                    Title = { Text = item.Name },
-                    Rating = { Text = string.Empty },
-                    ToolTip = item.File.Name,
-                };
-
-                MediaList.Items.Add( control );
-            }
+                MediaList.Items.Add( new LibraryMediaControl( item ) );
 
             await controller.CloseAsync( );
         }

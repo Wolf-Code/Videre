@@ -35,6 +35,10 @@ namespace Videre.Controls
         protected override void OnInitialized( EventArgs e )
         {
             base.OnInitialized( e );
+
+            Title.Text = media.Name;
+            ToolTip = media.File.Name;
+            
             this.LoadingRing.IsActive = true;
 
             if ( media.MovieInfo?.IMDBID != null && media.Type == VidereMedia.MediaType.Video )
