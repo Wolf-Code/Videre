@@ -38,6 +38,17 @@ namespace Videre.Controls
 
             Title.Text = media.Name;
             ToolTip = media.File.Name;
+
+            switch ( media.Type )
+            {
+                    case VidereMedia.MediaType.Video:
+                    VideoPlaceholder.Visibility = Visibility.Visible;
+                    break;
+
+                    case VidereMedia.MediaType.Audio:
+                    AudioPlaceholder.Visibility = Visibility.Visible;
+                    break;
+            }
             
             this.LoadingRing.IsActive = true;
 
@@ -79,6 +90,8 @@ namespace Videre.Controls
 
             if ( media.MovieInfo?.IMDBID == null || media.Type == VidereMedia.MediaType.Audio )
                 return;
+
+            this.VideoPlaceholder.Visibility = Visibility.Hidden;
 
             TheMovieDBComponent movieComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
 

@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DesignWidth="300"
              d:DesignHeight="300"
-             Unloaded="OnControlUnloaded">
+             Unloaded="OnControlUnloaded" Margin="5">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -21,7 +21,18 @@
 
         <Image Grid.Row="0" Stretch="Uniform" Name="Image" Margin="5"/>
         <controls:ProgressRing Grid.Row="0" Name="LoadingRing" IsActive="False" Foreground="{DynamicResource AccentColorBrush}"/>
-        
+        <Rectangle Grid.Row="0" Name="VideoPlaceholder" Visibility="Hidden">
+            <Rectangle.Fill>
+                <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_video}" />
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <Rectangle Grid.Row="0" Name="AudioPlaceholder" Visibility="Hidden">
+            <Rectangle.Fill>
+                <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_music}" />
+            </Rectangle.Fill>
+        </Rectangle>
+
         <TextBlock Grid.Row="1" FontWeight="Bold" FontSize="12" Name="Title" TextAlignment="Center" TextWrapping="Wrap"/>
         <TextBlock Grid.Row="2" FontStyle="Italic" FontSize="10" Name="Rating" TextAlignment="Center" TextWrapping="Wrap"/>
     </Grid>

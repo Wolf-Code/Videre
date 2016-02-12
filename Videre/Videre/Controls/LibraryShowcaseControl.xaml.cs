@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Net.TMDb;
-using System.Threading;
 using System.Windows;
-using System.Windows.Media.Imaging;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.Data;
-using VidereLib.NetworkingRequests;
 
 namespace Videre.Controls
 {
