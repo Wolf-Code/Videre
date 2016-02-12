@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Net.TMDb;
 using System.Threading;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using VidereLib;
 using VidereLib.Components;
@@ -16,6 +17,7 @@ namespace Videre.Controls
     public partial class LibraryMediaControl
     {
         private readonly VidereMedia media;
+        private RequestMovieInfoJob movieRequest;
 
         /// <summary>
         /// Constructor.
@@ -45,10 +47,10 @@ namespace Videre.Controls
                     if ( media.MovieInfo != null )
                         MediaInformationManager.SetMovieInformation( media.MovieInfo );
 
+                    movieRequest = new RequestMovieInfoJob( media );
                     ThreadPool.QueueUserWorkItem( async obj =>
                     {
-                        RequestMovieInfoJob job = new RequestMovieInfoJob( media );
-                        Movie movie = await job.Request( );
+                        Movie movie = await movieRequest.Request( );
                         if ( movie == null )
                             return;
 
@@ -77,11 +79,17 @@ namespace Videre.Controls
             TheMovieDBComponent movieComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
 
             MovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MovieInfo.Hash );
+            this.Title.Text = info.Name;
 
             BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( info.Poster ) ) );
             this.Image.Source = img;
 
             this.Rating.Text = info.Rating.ToString( CultureInfo.InvariantCulture );
+        }
+
+        private void OnControlUnloaded( object Sender, RoutedEventArgs E )
+        {
+            movieRequest?.Cancel( );
         }
     }
 }
