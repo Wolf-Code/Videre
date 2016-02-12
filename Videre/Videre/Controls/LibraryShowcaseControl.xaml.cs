@@ -46,54 +46,12 @@ namespace Videre.Controls
 
             foreach ( VidereMedia item in media )
             {
-                LibraryMediaControl control = new LibraryMediaControl
+                LibraryMediaControl control = new LibraryMediaControl( item )
                 {
                     Title = { Text = item.Name },
                     Rating = { Text = string.Empty },
                     ToolTip = item.File.Name,
                 };
-
-                if ( item.MovieInfo?.IMDBID != null && item.Type == VidereMedia.MediaType.Video )
-                {
-                    control.LoadingRing.IsActive = true;
-
-                    MovieInformation movieInfo;
-                    if ( MediaInformationManager.ContainsMovieInformationForHash( item.MovieInfo.Hash, out movieInfo ) )
-                    {
-                        BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( movieInfo.Poster ) ) );
-                        control.Image.Source = img;
-                        control.Title.Text = movieInfo.Name;
-
-                        control.Rating.Text = movieInfo.Rating.ToString( );
-                        control.LoadingRing.IsActive = false;
-                    }
-                    else
-                    {
-                        if ( item.MovieInfo != null )
-                            MediaInformationManager.SetMovieInformation( item.MovieInfo );
-
-                        ThreadPool.QueueUserWorkItem( async obj =>
-                        {
-                            RequestMovieInfoJob job = new RequestMovieInfoJob( item );
-                            Movie movie = await job.Request( );
-                            if ( movie == null )
-                                return;
-
-                            ViderePlayer.MainDispatcher.Invoke( ( ) =>
-                            {
-                                MovieInformation info = MediaInformationManager.GetMovieInformationByHash( item.MovieInfo.Hash );
-                                info.Poster = movieComp.GetPosterURL( movie.Poster );
-                                info.Rating = movie.VoteAverage;
-
-                                BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( movie.Poster ) ) );
-                                control.Image.Source = img;
-
-                                control.Rating.Text = movie.VoteAverage.ToString( CultureInfo.InvariantCulture );
-                                control.LoadingRing.IsActive = false;
-                            } );
-                        } );
-                    }
-                }
 
                 MediaList.Items.Add( control );
             }
