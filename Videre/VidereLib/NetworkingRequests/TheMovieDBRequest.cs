@@ -1,44 +1,34 @@
 ﻿using System;
 using System.Net.TMDb;
-using System.Threading;
 using System.Threading.Tasks;
 using VidereLib.Components;
+using VidereLib.Networking;
 
 namespace VidereLib.NetworkingRequests
 {
-    class TheMovieDBRequest<T>
+    class TheMovieDBRequest<T> : NetworkingRequest<T>
     {
-        private readonly Func<Task<T>> request;
-        private readonly CancellationTokenSource token;
+        public override event EventHandler OnRequestLimitReached;
 
-        public event EventHandler OnRequestLimitReached;  
-
-        public TheMovieDBRequest( Func<Task<T>> request )
+        public TheMovieDBRequest( Func<Task<T>> request ) : base( request )
         {
-            this.request = request;
-            this.token = new CancellationTokenSource( );
         }
 
-        public void Cancel( )
-        {
-            this.token.Cancel( );
-        }
-
-        public async Task<T> Request( )
+        public override async Task<T> Request( )
         {
             bool Retry = true;
             while ( Retry )
             {
                 try
                 {
-                    return await request( );
+                    return await this.RequestFunc( );
                 }
                 catch ( ServiceRequestException e )
                 {
                     if ( e.StatusCode == 429 )
                     {
                         this.OnRequestLimitReached?.Invoke( this, null );
-                        await Task.Delay( TimeSpan.FromSeconds( TheMovieDBComponent.TheMovieDBRequestLimitPeriod ), token.Token );
+                        await Task.Delay( TimeSpan.FromSeconds( TheMovieDBComponent.TheMovieDBRequestLimitPeriod ), this.TokenSource.Token );
                     }
                     else
                         Retry = false;

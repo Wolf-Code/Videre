@@ -20,7 +20,7 @@
         </Grid.ColumnDefinitions>
 
         <Image Grid.Row="0" Stretch="Uniform" Name="Image" Margin="5"/>
-        <controls:ProgressRing Grid.Row="0" Name="LoadingRing" IsActive="False" Foreground="{DynamicResource AccentColorBrush}"/>
+        
         <Rectangle Grid.Row="0" Name="VideoPlaceholder" Visibility="Hidden">
             <Rectangle.Fill>
                 <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_video}" />
@@ -35,5 +35,7 @@
 
         <TextBlock Grid.Row="1" FontWeight="Bold" FontSize="12" Name="Title" TextAlignment="Center" TextWrapping="Wrap"/>
         <TextBlock Grid.Row="2" FontStyle="Italic" FontSize="10" Name="Rating" TextAlignment="Center" TextWrapping="Wrap"/>
+
+        <controls:ProgressRing Grid.Row="0" Name="LoadingRing" IsActive="False" Foreground="{DynamicResource AccentColorBrush}"/>
     </Grid>
 </UserControl>

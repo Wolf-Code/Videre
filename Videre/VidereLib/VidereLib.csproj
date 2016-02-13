@@ -125,6 +125,7 @@
     <Compile Include="Implementations\MediaElementPlayer.cs" />
     <Compile Include="NetworkingRequests\RequestMovieInfoJob.cs" />
     <Compile Include="NetworkingRequests\TheMovieDBRequest.cs" />
+    <Compile Include="Networking\NetworkingRequest.cs" />
     <Compile Include="Networking\Server.cs" />
     <Compile Include="Players\MediaPlayerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
