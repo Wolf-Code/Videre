@@ -6,6 +6,7 @@ using MahApps.Metro.Controls.Dialogs;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.Data;
+using VidereSubs.OpenSubtitles.Data;
 
 namespace Videre.Controls
 {
@@ -33,12 +34,43 @@ namespace Videre.Controls
             ProgressDialogController controller = await ( ( MetroWindow ) Window.GetWindow( this ) ).ShowProgressAsync( "Retrieving media information", "Retrieving media information from OpenSubtitles.org." );
             controller.SetIndeterminate( );
 
-            await ViderePlayer.GetComponent<MediaComponent>( ).RetrieveMediaInformation( media.ToArray(  ) );
+            await ViderePlayer.GetComponent<MediaComponent>( ).RetrieveMediaInformation( media.ToArray( ) );
 
             media.Sort( ( A, B ) => string.Compare( A.Name, B.Name, StringComparison.Ordinal ) );
 
             foreach ( VidereMedia item in media )
-                MediaList.Items.Add( new LibraryMediaControl( item ) );
+            {
+                LibraryMediaControl control;
+                switch ( item.Type )
+                {
+                    case VidereMedia.MediaType.Video:
+                        switch ( item.MovieInfo?.MovieType )
+                        {
+                            case MovieData.MovieKind.Episode:
+                                control = new LibraryEpisodeControl( item );
+                                break;
+
+                            case MovieData.MovieKind.Movie:
+                                control = new LibraryMovieControl( item );
+                                break;
+
+                            case null:
+                            default:
+                                control = new LibraryUnknownControl( item );
+                                break;
+                        }
+                        break;
+
+                    case VidereMedia.MediaType.Audio:
+                        control = new LibraryAudioControl( item );
+                        break;
+
+                    default:
+                        throw new Exception( $"Unknown media type: {item.File}" );
+                }
+
+                MediaList.Items.Add( control );
+            }
 
             await controller.CloseAsync( );
         }

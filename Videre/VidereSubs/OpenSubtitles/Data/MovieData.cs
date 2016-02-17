@@ -53,6 +53,27 @@ namespace VidereSubs.OpenSubtitles.Data
         public uint SubCount { private set; get; }
 
         /// <summary>
+        /// The kind of movie, be it an episode or a movie, etc.
+        /// </summary>
+        public enum MovieKind
+        {
+            /// <summary>
+            /// A movie.
+            /// </summary>
+            Movie,
+
+            /// <summary>
+            /// An episode of a series
+            /// </summary>
+            Episode
+        }
+
+        /// <summary>
+        /// The movie data's type.
+        /// </summary>
+        public MovieKind MovieType { private set; get; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="output">The struct containing the data.</param>
@@ -67,6 +88,17 @@ namespace VidereSubs.OpenSubtitles.Data
             this.SeriesEpisode = ushort.Parse( ( string ) output[ "SeriesEpisode" ] );
             this.SeenCount = ulong.Parse( ( string ) output[ "SeenCount" ] );
             this.SubCount = uint.Parse( ( string ) output[ "SubCount" ] );
+
+            switch ( ( string ) output[ "MovieKind" ] )
+            {
+                case "movie":
+                    this.MovieType = MovieKind.Movie;
+                    break;
+
+                case "episode":
+                    this.MovieType = MovieKind.Episode;
+                    break;
+            }
         }
 
         /// <summary>

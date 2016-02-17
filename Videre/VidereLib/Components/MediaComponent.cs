@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using VidereLib.Data;
 using VidereLib.EventArgs;
@@ -119,30 +120,29 @@ namespace VidereLib.Components
             for ( int x = 0; x < medias.Length; x++ )
             {
                 if ( medias[ x ].Type != VidereMedia.MediaType.Video )
-                    return;
+                    continue;
 
-                string hash = Hasher.ComputeMovieHash( medias[ x ].File.FullName );
+                string hash = medias[ x ].OpenSubtitlesHash;
                 hashes[ x ] = hash;
                 hashMedias.Add( hash, medias[ x ] );
             }
 
             CheckMovieHashOutput output = await Interface.CheckMovieHashBestGuessOnly( hashes );
+            
             foreach ( var pair in output.MovieData )
             {
-                if ( pair.Value.Length <= 0 ) continue;
-                MovieData data = pair.Value[ 0 ];
+                if ( pair.Value.Length <= 0 )
+                    continue;
 
+                MovieData data = pair.Value[ 0 ];
                 VidereMedia media = hashMedias[ pair.Key ];
-                MovieInformation movieInfo = new MovieInformation
-                {
-                    Hash = data.MovieHash,
-                    IMDBID = data.MovieImbdID,
-                    Name = data.MovieName,
-                    Year = data.MovieYear
-                };
+                MovieInformation movieInfo = new MovieInformation( data );
 
                 media.MovieInfo = movieInfo;
             }
+
+            if ( output.NotProcessed.Length > 0 )
+                await RetrieveMediaInformation( medias.Where( O => output.NotProcessed.Contains( O.OpenSubtitlesHash ) ).ToArray( ) );
         }
 
         /// <summary>

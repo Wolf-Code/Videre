@@ -93,14 +93,10 @@ namespace Videre.Controls
 
         private void OsFlyoutOnIsOpenChanged( object Sender, RoutedEventArgs Args )
         {
-            if ( flyout.IsOpen )
-            {
-                if ( firstOpen )
-                {
-                    firstOpen = false;
-                    OnFlyoutFirstOpen( );
-                }
-            }
+            if ( !flyout.IsOpen || !firstOpen ) return;
+
+            firstOpen = false;
+            OnFlyoutFirstOpen( );
         }
 
         private async void OnFlyoutFirstOpen( )
@@ -163,9 +159,7 @@ namespace Videre.Controls
 
             await controller.CloseAsync( );
         }
-
-        #region UI
-
+        
         private void DownloadSubsLanguagesButton_OnClick( object Sender, RoutedEventArgs E )
         {
             DownloadSelectedLanguageSubtitles( );
@@ -186,7 +180,7 @@ namespace Videre.Controls
                 await window.ShowMessageAsync( "No subtitles selected", "Please select a subtitles file to download." );
             else
             {
-                SaveFileDialog dialog = new SaveFileDialog { FileName = data.SubFileName, Filter = "SubRip (*.srt)|*.srt" };
+                SaveFileDialog dialog = new SaveFileDialog { InitialDirectory = ViderePlayer.MediaPlayer.Media.File.Directory.FullName, FileName = data.SubFileName, Filter = "SubRip (*.srt)|*.srt" };
                 if ( !dialog.ShowDialog( ).GetValueOrDefault( ) ) return;
 
                 controller = await window.ShowProgressAsync( "Downloading subtitles", $"Downloading {data.SubFileName} from opensubtitles.org." );
@@ -196,7 +190,5 @@ namespace Videre.Controls
                 downloader.DownloadFileAsync( new Uri( data.SubDownloadLink ), tempFile );
             }
         }
-
-        #endregion
     }
 }

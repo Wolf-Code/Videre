@@ -22,6 +22,11 @@ namespace VidereLib.Networking
         public abstract event EventHandler OnRequestLimitReached;
 
         /// <summary>
+        /// Called whenever an exception has been thrown.
+        /// </summary>
+        public abstract event EventHandler<Exception> OnExceptionThrown;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="request">The request which will be called in <see cref="Request"/>.</param>

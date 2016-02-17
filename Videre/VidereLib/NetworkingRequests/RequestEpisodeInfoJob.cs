@@ -10,7 +10,7 @@ namespace VidereLib.NetworkingRequests
     /// <summary>
     /// A job for requesting movie info.
     /// </summary>
-    public class RequestMovieInfoJob
+    public class RequestEpisodeInfoJob
     {
         private readonly VidereMedia media;
         private readonly ServiceClient client;
@@ -28,7 +28,7 @@ namespace VidereLib.NetworkingRequests
         /// Constructor.
         /// </summary>
         /// <param name="media">The media to find information for.</param>
-        public RequestMovieInfoJob( VidereMedia media )
+        public RequestEpisodeInfoJob( VidereMedia media )
         {
             client = new ServiceClient( TheMovieDBComponent.APIKey );
             this.media = media;
@@ -47,7 +47,7 @@ namespace VidereLib.NetworkingRequests
         /// <summary>
         /// Initiates the request.
         /// </summary>
-        public async Task<Movie> Request( )
+        public async Task<Episode> Request( )
         {
             if ( media.MovieInfo?.IMDBID == null ) return null;
 
@@ -55,7 +55,7 @@ namespace VidereLib.NetworkingRequests
             idRequest.OnRequestLimitReached += ( Sender, Args ) => this.OnRequestLimitReached?.Invoke( this, null );
             Resource Res = await idRequest.Request( );
 
-            return Res as Movie;
+            return Res as Episode;
         }
     }
 }

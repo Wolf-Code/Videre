@@ -35,7 +35,9 @@ namespace Videre
                             Name = movie.Name,
                             IMDBID = movie.IMDB,
                             Poster = movie.Poster,
-                            Rating = movie.Rating
+                            Rating = movie.Rating,
+                            Episode = movie.Episode ?? ( ushort ) 0,
+                            Season = movie.Season ?? ( ushort ) 0
                         };
 
                         movieInformation.Add( ( string ) movie.Hash, info );
@@ -79,6 +81,15 @@ namespace Videre
 
                         jsonWriter.WritePropertyName( "IMDB" );
                         jsonWriter.WriteValue( movie.IMDBID );
+
+                        if ( movie.Episode > 0 && movie.Season > 0 )
+                        {
+                            jsonWriter.WritePropertyName( "Episode" );
+                            jsonWriter.WriteValue( movie.Episode );
+
+                            jsonWriter.WritePropertyName( "Season" );
+                            jsonWriter.WriteValue( movie.Season );
+                        }
 
                         jsonWriter.WritePropertyName( "Hash" );
                         jsonWriter.WriteValue( hash );

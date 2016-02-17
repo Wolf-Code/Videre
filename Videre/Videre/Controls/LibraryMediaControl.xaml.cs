@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Globalization;
-using System.Net.TMDb;
-using System.Threading;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.Data;
-using VidereLib.NetworkingRequests;
 
 namespace Videre.Controls
 {
@@ -16,8 +14,10 @@ namespace Videre.Controls
     /// </summary>
     public partial class LibraryMediaControl
     {
-        private readonly VidereMedia media;
-        private RequestMovieInfoJob movieRequest;
+        /// <summary>
+        /// The <see cref="VidereMedia"/>.
+        /// </summary>
+        protected readonly VidereMedia media;
 
         /// <summary>
         /// Constructor.
@@ -39,52 +39,13 @@ namespace Videre.Controls
             Title.Text = media.Name;
             ToolTip = media.File.Name;
 
-            switch ( media.Type )
-            {
-                    case VidereMedia.MediaType.Video:
-                    VideoPlaceholder.Visibility = Visibility.Visible;
-                    break;
-
-                    case VidereMedia.MediaType.Audio:
-                    AudioPlaceholder.Visibility = Visibility.Visible;
-                    break;
-            }
-            
             this.LoadingRing.IsActive = true;
-
-            if ( media.MovieInfo?.IMDBID != null && media.Type == VidereMedia.MediaType.Video )
-            {
-                MovieInformation movieInfo;
-                if ( MediaInformationManager.ContainsMovieInformationForHash( media.MovieInfo.Hash, out movieInfo ) )
-                    this.FinishLoadingVideo( );
-                else
-                {
-                    if ( media.MovieInfo != null )
-                        MediaInformationManager.SetMovieInformation( media.MovieInfo );
-
-                    movieRequest = new RequestMovieInfoJob( media );
-                    ThreadPool.QueueUserWorkItem( async obj =>
-                    {
-                        Movie movie = await movieRequest.Request( );
-                        if ( movie == null )
-                            return;
-
-                        ViderePlayer.MainDispatcher.Invoke( ( ) =>
-                        {
-                            MovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MovieInfo.Hash );
-                            info.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( movie.Poster );
-                            info.Rating = movie.VoteAverage;
-
-                            this.FinishLoadingVideo( );
-                        } );
-                    } );
-                }
-            }
-            else
-                this.LoadingRing.IsActive = false;
         }
 
-        private void FinishLoadingVideo( )
+        /// <summary>
+        /// Finishes the loading of the video.
+        /// </summary>
+        protected void FinishLoadingVideo( )
         {
             this.LoadingRing.IsActive = false;
 
@@ -101,12 +62,47 @@ namespace Videre.Controls
             BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( info.Poster ) ) );
             this.Image.Source = img;
 
-            this.Rating.Text = info.Rating.ToString( CultureInfo.InvariantCulture );
+            this.Rating.Text = Math.Round( info.Rating, 1 ).ToString( CultureInfo.InvariantCulture );
+
+            this.OnFinishLoadingVideo( );
+        }
+
+        /// <summary>
+        /// Called whenever the loading of a video is being finished.
+        /// </summary>
+        protected virtual void OnFinishLoadingVideo( )
+        {
+
+        }
+
+        /// <summary>
+        /// Finishes the loading of audio.
+        /// </summary>
+        protected void FinishLoadingAudio( )
+        {
+            this.LoadingRing.IsActive = false;
         }
 
         private void OnControlUnloaded( object Sender, RoutedEventArgs E )
         {
-            movieRequest?.Cancel( );
+            this.OnControlUnload( );
+        }
+
+        /// <summary>
+        /// Gets called whenever the control is unloaded.
+        /// </summary>
+        protected virtual void OnControlUnload( )
+        {
+            
+        }
+
+        private void OnControlClick( object Sender, MouseButtonEventArgs E )
+        {
+            ViderePlayer.MediaPlayer.Stop( );
+            ViderePlayer.MediaPlayer.LoadMedia( media.File );
+            ViderePlayer.MediaPlayer.Play( );
+
+            Window.GetWindow( this ).Close( );
         }
     }
 }

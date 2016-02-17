@@ -151,12 +151,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\LibraryAudioControl.cs" />
     <Compile Include="Controls\LibraryDirectorySelector.xaml.cs">
       <DependentUpon>LibraryDirectorySelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LibraryEpisodeControl.cs" />
     <Compile Include="Controls\LibraryMediaControl.xaml.cs">
       <DependentUpon>LibraryMediaControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LibraryUnknownControl.cs" />
+    <Compile Include="Controls\LibraryMovieControl.cs" />
     <Compile Include="Controls\LibraryShowcaseControl.xaml.cs">
       <DependentUpon>LibraryShowcaseControl.xaml</DependentUpon>
     </Compile>

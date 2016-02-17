@@ -123,6 +123,7 @@
     <Compile Include="EventArgs\OnSubtitlesFailedToLoadEventArgs.cs" />
     <Compile Include="EventArgs\OnSubtitlesChangedEventArgs.cs" />
     <Compile Include="Implementations\MediaElementPlayer.cs" />
+    <Compile Include="NetworkingRequests\RequestEpisodeInfoJob.cs" />
     <Compile Include="NetworkingRequests\RequestMovieInfoJob.cs" />
     <Compile Include="NetworkingRequests\TheMovieDBRequest.cs" />
     <Compile Include="Networking\NetworkingRequest.cs" />
