@@ -41,8 +41,8 @@ namespace Videre.Controls
             };
 
             InputComponent inputComponent = ViderePlayer.GetComponent<InputComponent>( );
-            inputComponent.OnShowControls += ( Sender, Args ) => this.Visibility = Visibility.Visible;
-            inputComponent.OnHideControls += ( Sender, Args ) => this.Visibility = Visibility.Collapsed;
+            inputComponent.OnShowControls += ( Sender, Args ) => Visibility = Visibility.Visible;
+            inputComponent.OnHideControls += ( Sender, Args ) => Visibility = Visibility.Collapsed;
 
             SubtitlesComponent subs = ViderePlayer.GetComponent<SubtitlesComponent>( );
             subs.OnSubtitlesFailedToLoad += SubsOnOnSubtitlesFailedToLoad;

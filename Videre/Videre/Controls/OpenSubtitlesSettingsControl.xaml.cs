@@ -26,7 +26,7 @@ namespace Videre.Controls
             private set
             {
                 m_IsSignedIn = value;
-                this.OnPropertyChanged( nameof( IsSignedIn ) );
+                OnPropertyChanged( nameof( IsSignedIn ) );
             }
             get { return m_IsSignedIn; }
         }
@@ -60,11 +60,11 @@ namespace Videre.Controls
                 await controller.CloseAsync( );
 
                 LogInOutput output = ( LogInOutput ) Args.Result;
-                this.IsSignedIn = output.LogInSuccesful;
+                IsSignedIn = output.LogInSuccesful;
                 StatusImage.Visibility = Visibility.Visible;
                 StatusLabel.Visibility = Visibility.Visible;
 
-                StatusLabel.Content = !this.IsSignedIn ? output.StatusString.Substring( 4 ) : string.Empty;
+                StatusLabel.Content = !IsSignedIn ? output.StatusString.Substring( 4 ) : string.Empty;
             };
             worker.RunWorkerAsync( new Tuple<string, string>( Username.Text, Password.Password ) );
         }

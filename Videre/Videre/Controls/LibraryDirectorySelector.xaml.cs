@@ -21,7 +21,7 @@
         {
             DirectoryList.Items.Clear( );
             foreach ( string dir in directories )
-                this.DirectoryList.Items.Add( dir );
+                DirectoryList.Items.Add( dir );
         }
     }
 }

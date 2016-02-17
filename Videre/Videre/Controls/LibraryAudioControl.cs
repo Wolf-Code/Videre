@@ -29,7 +29,7 @@ namespace Videre.Controls
             Title.Text = media.Name;
             ToolTip = media.File.Name;
 
-            this.FinishLoadingAudio( );
+            FinishLoadingAudio( );
         }
     }
 }

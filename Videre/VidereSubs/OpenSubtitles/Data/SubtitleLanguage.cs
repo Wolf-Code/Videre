@@ -28,9 +28,9 @@ namespace VidereSubs.OpenSubtitles.Data
         /// <param name="output">The server's output.</param>
         public SubtitleLanguage( XmlRpcStruct output )
         {
-            this.ISO639_3 = output.GetString( "SubLanguageID" );
-            this.LanguageName = output.GetString( "LanguageName" );
-            this.ISO639_2 = output.GetString( "ISO639" );
+            ISO639_3 = output.GetString( "SubLanguageID" );
+            LanguageName = output.GetString( "LanguageName" );
+            ISO639_2 = output.GetString( "ISO639" );
         }
 
         /// <summary>

@@ -51,7 +51,7 @@ namespace Videre.Controls
         /// <param name="mainWindow">The <see cref="MainWindow"/>.</param>
         public void InitWindow( MainWindow mainWindow )
         {
-            this.window = mainWindow;
+            window = mainWindow;
             flyout = window.OSFlyout;
             flyout.IsOpenChanged += OsFlyoutOnIsOpenChanged;
 
@@ -71,7 +71,7 @@ namespace Videre.Controls
                 if ( !Args.WidthChanged )
                     return;
 
-                this.Width = Args.NewSize.Width * 0.8;
+                Width = Args.NewSize.Width * 0.8;
             };
         }
 
@@ -112,8 +112,8 @@ namespace Videre.Controls
             {
                 controller.SetTitle( "Downloading subtitle languages." );
                 controller.SetMessage( "Downloading the available subtitle languages from opensubtitles.org." );
-                this.languages = await GetSubtitleLanguages( );
-                this.LanguageList.ItemsSource = this.languages;
+                languages = await GetSubtitleLanguages( );
+                LanguageList.ItemsSource = languages;
 
                 CollectionView languagesView = ( CollectionView ) CollectionViewSource.GetDefaultView( LanguageList.ItemsSource );
                 languagesView.SortDescriptions.Add( new SortDescription( "LanguageName", ListSortDirection.Ascending ) );
@@ -150,7 +150,7 @@ namespace Videre.Controls
 
             SubsGroupBox.Visibility = Visibility.Visible;
 
-            this.SubtitlesList.ItemsSource = data;
+            SubtitlesList.ItemsSource = data;
 
             CollectionView subsView = ( CollectionView ) CollectionViewSource.GetDefaultView( SubtitlesList.ItemsSource );
             subsView.SortDescriptions.Add( new SortDescription( "DownloadsCount", ListSortDirection.Descending ) );

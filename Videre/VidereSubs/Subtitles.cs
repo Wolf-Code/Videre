@@ -32,7 +32,7 @@ namespace VidereSubs
         /// <param name="FilePath">The path to the .srt file.</param>
         protected Subtitles( string FilePath )
         {
-            this.LoadSubtitles( FilePath );
+            LoadSubtitles( FilePath );
             Keys = new List<TimeSpan>( SubtitleDatas.Keys );
         }
 
@@ -60,8 +60,8 @@ namespace VidereSubs
         {
             try
             {
-                this.SubtitleDatas = ParseFile( filePath );
-                SubtitlesParsedSuccesfully = this.SubtitleDatas != null;
+                SubtitleDatas = ParseFile( filePath );
+                SubtitlesParsedSuccesfully = SubtitleDatas != null;
             }
             catch
             {

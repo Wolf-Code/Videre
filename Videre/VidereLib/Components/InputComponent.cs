@@ -47,7 +47,7 @@ namespace VidereLib.Components
 
         private void MediaAreaOnMouseEnter( object Sender, MouseEventArgs Args )
         {
-            this.ShowCursorAndResetTimer( Args );
+            ShowCursorAndResetTimer( Args );
         }
 
         private void HideControlsTimerOnTick( object Sender, System.EventArgs Args )
@@ -67,7 +67,7 @@ namespace VidereLib.Components
 
         private void MediaPlayerOnMouseLeave( object Sender, MouseEventArgs Args )
         {
-            this.ShowCursorAndResetTimer( Args );
+            ShowCursorAndResetTimer( Args );
         }
 
         private void MediaPlayerOnMouseMove( object Sender, MouseEventArgs Args )
@@ -75,7 +75,7 @@ namespace VidereLib.Components
             if ( Args.GetPosition( ViderePlayer.windowData.Window ) == lastCursorPos )
                 return;
 
-            this.ShowCursorAndResetTimer( Args );
+            ShowCursorAndResetTimer( Args );
         }
 
         private void ShowCursorAndResetTimer( MouseEventArgs Args )

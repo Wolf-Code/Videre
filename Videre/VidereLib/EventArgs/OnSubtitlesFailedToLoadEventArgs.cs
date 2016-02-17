@@ -18,7 +18,7 @@ namespace VidereLib.EventArgs
         /// <param name="info">The subtitles file.</param>
         public OnSubtitlesFailedToLoadEventArgs( FileInfo info )
         {
-            this.Subtitles = info;
+            Subtitles = info;
         }
     }
 }

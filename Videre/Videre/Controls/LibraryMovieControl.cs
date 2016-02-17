@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Net.TMDb;
 using System.Threading;
 using System.Windows;
+using TMDbLib.Objects.General;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.Data;
@@ -41,7 +41,7 @@ namespace Videre.Controls
             {
                 MovieInformation movieInfo;
                 if ( MediaInformationManager.ContainsMovieInformationForHash( media.MovieInfo.Hash, out movieInfo ) )
-                    this.FinishLoadingVideo( );
+                    FinishLoadingVideo( );
                 else
                 {
                     if ( media.MovieInfo != null )
@@ -51,27 +51,27 @@ namespace Videre.Controls
                     ThreadPool.QueueUserWorkItem( async obj =>
                     {
                         movieRequest = new RequestMovieInfoJob( media );
-                        Movie movie = await movieRequest.Request( );
+                        MovieResult movie = await movieRequest.Request( );
                         if ( movie == null )
                         {
-                            ViderePlayer.MainDispatcher.Invoke( ( ) => this.LoadingRing.IsActive = false );
+                            ViderePlayer.MainDispatcher.Invoke( ( ) => LoadingRing.IsActive = false );
                             return;
                         }
 
                         ViderePlayer.MainDispatcher.Invoke( ( ) =>
                         {
                             MovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MovieInfo.Hash );
-                            info.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( movie.Poster );
-                            info.Rating = movie.VoteAverage;
+                            info.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( movie.PosterPath );
+                            info.Rating = ( decimal ) movie.VoteAverage;
 
-                            this.FinishLoadingVideo( );
+                            FinishLoadingVideo( );
                         } );
 
                     } );
                 }
             }
             else
-                this.LoadingRing.IsActive = false;
+                LoadingRing.IsActive = false;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Videre.Controls
         /// </summary>
         protected override void OnControlUnload( )
         {
-            this.movieRequest?.Cancel( );
+            movieRequest?.Cancel( );
         }
     }
 }

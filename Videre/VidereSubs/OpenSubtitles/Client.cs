@@ -36,14 +36,14 @@ namespace VidereSubs.OpenSubtitles
         public Client( string userAgent )
         {
             clientProxy = XmlRpcProxyGen.Create<IClient>( );
-            this.UserAgent = userAgent;
+            UserAgent = userAgent;
             keepAliveTimer = new Timer( TimeSpan.FromMinutes( 10 ).TotalMilliseconds );
             keepAliveTimer.Elapsed += KeepAliveTimerOnElapsed;
         }
 
         private void KeepAliveTimerOnElapsed( object Sender, ElapsedEventArgs Args )
         {
-            clientProxy.NoOperation( this.login.Token );
+            clientProxy.NoOperation( login.Token );
         }
 
         private void ResetTimer( )
@@ -69,9 +69,9 @@ namespace VidereSubs.OpenSubtitles
 
                 password = Hasher.ToHexadecimal( hash );
             }
-            XmlRpcStruct ret = clientProxy.LogIn( username, password, "eng", this.UserAgent );
+            XmlRpcStruct ret = clientProxy.LogIn( username, password, "eng", UserAgent );
 
-            this.login = new LogInOutput( ret );
+            login = new LogInOutput( ret );
             keepAliveTimer.Start( );
 
             return login;

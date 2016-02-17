@@ -39,7 +39,7 @@ namespace VidereLib.Attributes
         /// <param name="identifier">The network request identifier.</param>
         public NetworkRequestAttribute( RequestIdentifier identifier )
         {
-            this.Identifier = identifier;
+            Identifier = identifier;
         }
     }
 }

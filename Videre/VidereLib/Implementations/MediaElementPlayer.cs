@@ -21,17 +21,17 @@ namespace VidereLib.Implementations
         /// <param name="element">The <see cref="MediaElement"/> for the player.</param>
         public MediaElementPlayer( MediaElement element )
         {
-            this.player = element;
-            this.player.MediaOpened += ( Sender, Args ) =>
+            player = element;
+            player.MediaOpened += ( Sender, Args ) =>
             {
                 VidereMedia media = new VidereMedia( lastLoaded )
                 {
-                    Duration = this.player.NaturalDuration.TimeSpan,
+                    Duration = player.NaturalDuration.TimeSpan,
                     Name = lastLoaded.Name
                 };
                 OnMediaLoaded( new OnMediaLoadedEventArgs( media ) );
             };
-            this.player.MediaFailed += ( Sender, Args ) => OnMediaFailedToLoad( new OnMediaFailedToLoadEventArgs( Args.ErrorException, Media ) );
+            player.MediaFailed += ( Sender, Args ) => OnMediaFailedToLoad( new OnMediaFailedToLoadEventArgs( Args.ErrorException, Media ) );
 
             VideoFileExtensions = new[ ]
             {
@@ -49,7 +49,7 @@ namespace VidereLib.Implementations
         /// </summary>
         public override void Play( )
         {
-            if ( !this.IsMediaLoaded )
+            if ( !IsMediaLoaded )
                 return;
 
             player.Play( );
@@ -60,7 +60,7 @@ namespace VidereLib.Implementations
         /// </summary>
         public override void Pause( )
         {
-            if ( !this.IsMediaLoaded )
+            if ( !IsMediaLoaded )
                 return;
             
             player.Pause( );

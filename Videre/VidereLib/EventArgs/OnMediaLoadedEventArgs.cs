@@ -18,7 +18,7 @@ namespace VidereLib.EventArgs
         /// <param name="media">The <see cref="VidereMedia"/> of the loaded media.</param>
         public OnMediaLoadedEventArgs( VidereMedia media )
         {
-            this.MediaFile = media;
+            MediaFile = media;
         }
     }
 }

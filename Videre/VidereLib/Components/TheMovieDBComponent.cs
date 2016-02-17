@@ -1,7 +1,6 @@
-﻿using System.Net.TMDb;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using VidereLib.NetworkingRequests;
+using TMDbLib.Client;
 
 namespace VidereLib.Components
 {
@@ -14,7 +13,7 @@ namespace VidereLib.Components
         /// The API key for themoviedb.org.
         /// </summary>
         public const string APIKey = "51f2d94f857dd380ee6ae5f52e3c782f";
-        private readonly ServiceClient client;
+        private readonly TMDbClient client;
 
         /// <summary>
         /// The amount of time to wait if there have been too many requests. In seconds.
@@ -36,7 +35,7 @@ namespace VidereLib.Components
         /// </summary>
         public TheMovieDBComponent( )
         {
-            client = new ServiceClient( APIKey );
+            client = new TMDbClient( APIKey, true );
         }
 
         /// <summary>
@@ -46,10 +45,9 @@ namespace VidereLib.Components
         {
             CancellationToken token = new CancellationToken( );
 
-            TheMovieDBRequest<dynamic> configRequest = new TheMovieDBRequest<dynamic>( async ( ) => await client.Settings.GetConfigurationAsync( token ) );
-            dynamic config = await configRequest.Request( );
+            await Task.Run( ( ) => client.GetConfig( ), token );
 
-            this.BaseURL = config.images.base_url;
+            BaseURL = client.Config.Images.BaseUrl;
         }
 
         /// <summary>

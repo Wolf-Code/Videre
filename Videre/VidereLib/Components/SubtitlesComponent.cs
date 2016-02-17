@@ -66,12 +66,12 @@ namespace VidereLib.Components
 
             FileInfo subtitlesInfo = new FileInfo( subtitlesPath );
             if ( subtitlesInfo.Exists )
-                this.LoadSubtitles( subtitlesInfo.FullName );
+                LoadSubtitles( subtitlesInfo.FullName );
         }
 
         private void OnOnMediaUnloaded( object Sender, OnMediaUnloadedEventArgs MediaUnloadedEventArgs )
         {
-            this.UnloadSubtitles( );
+            UnloadSubtitles( );
         }
 
         private void StateHandlerOnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )
@@ -79,15 +79,15 @@ namespace VidereLib.Components
             switch ( StateChangedEventArgs.State )
             {
                 case StateComponent.PlayerState.Paused:
-                    this.subtitlesTimer.Stop( );
+                    subtitlesTimer.Stop( );
                     break;
 
                 case StateComponent.PlayerState.Playing:
-                    this.CheckForSubtitles( );
+                    CheckForSubtitles( );
                     break;
 
                 case StateComponent.PlayerState.Stopped:
-                    this.StopSubtitles( );
+                    StopSubtitles( );
                     break;
             }
         }
@@ -97,9 +97,9 @@ namespace VidereLib.Components
         /// </summary>
         public void UnloadSubtitles( )
         {
-            this.StopSubtitles( );
-            this.OnSubtitlesUnloaded?.Invoke( this, new OnSubtitlesUnloadedEventArgs( this.Subtitles ) );
-            this.Subtitles = null;
+            StopSubtitles( );
+            OnSubtitlesUnloaded?.Invoke( this, new OnSubtitlesUnloadedEventArgs( Subtitles ) );
+            Subtitles = null;
         }
 
         internal void SubtitlesTimerOnTick( object Sender, System.EventArgs Args )
@@ -109,8 +109,8 @@ namespace VidereLib.Components
 
         private void StopSubtitles( )
         {
-            this.OnSubtitlesChanged?.Invoke( this, new OnSubtitlesChangedEventArgs( SubtitleSegment.Empty ) );
-            this.subtitlesTimer.Stop( );
+            OnSubtitlesChanged?.Invoke( this, new OnSubtitlesChangedEventArgs( SubtitleSegment.Empty ) );
+            subtitlesTimer.Stop( );
         }
 
         /// <summary>
@@ -120,9 +120,9 @@ namespace VidereLib.Components
         public void SetSubtitlesOffset( TimeSpan offset )
         {
             subtitlesOffset = offset;
-            this.subtitlesTimer.Stop( );
+            subtitlesTimer.Stop( );
 
-            this.CheckForSubtitles( );
+            CheckForSubtitles( );
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace VidereLib.Components
                 throw new Exception( "Unable to load subtitles before any media has been loaded." );
 
             if ( HaveSubtitlesBeenLoaded )
-                this.UnloadSubtitles( );
+                UnloadSubtitles( );
 
             FileInfo file = new FileInfo( filePath );
             Subtitles = Subtitles.LoadSubtitlesFile( filePath );
@@ -144,7 +144,7 @@ namespace VidereLib.Components
             if ( Subtitles.SubtitlesParsedSuccesfully )
             {
                 OnSubtitlesLoaded?.Invoke( this, new OnSubtitlesLoadedEventArgs( file ) );
-                this.CheckForSubtitles( );
+                CheckForSubtitles( );
             }
             else
             {
@@ -169,7 +169,7 @@ namespace VidereLib.Components
             // If we're in the sub interval.
             if ( currentPosition < subs.To && currentPosition >= subs.From )
             {
-                this.OnSubtitlesChanged?.Invoke( this, new OnSubtitlesChangedEventArgs( subs ) );
+                OnSubtitlesChanged?.Invoke( this, new OnSubtitlesChangedEventArgs( subs ) );
 
                 subtitlesTimer.Interval = subs.To - currentPosition;
             }
@@ -177,7 +177,7 @@ namespace VidereLib.Components
             else
             {
                 // Stop the showing of subtitles.
-                this.StopSubtitles( );
+                StopSubtitles( );
 
                 // If there are still subs left, change the interval to run when they need to be shown.
                 if ( nextSubs != null )
@@ -205,7 +205,7 @@ namespace VidereLib.Components
         public void Disable( )
         {
             enabled = false;
-            this.StopSubtitles( );
+            StopSubtitles( );
         }
     }
 }

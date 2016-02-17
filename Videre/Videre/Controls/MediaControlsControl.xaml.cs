@@ -64,7 +64,7 @@ namespace Videre.Controls
             set
             {
                 m_IsPlaying = value;
-                this.OnPropertyChanged( nameof( IsPlaying ) );
+                OnPropertyChanged( nameof( IsPlaying ) );
             }
             get { return m_IsPlaying; }
         }
@@ -106,27 +106,27 @@ namespace Videre.Controls
             media.OnMediaUnloaded += MediaOnOnMediaUnloaded;
 
             InputComponent inputComponent = ViderePlayer.GetComponent<InputComponent>( );
-            inputComponent.OnShowControls += ( Sender, Args ) => this.Visibility = Visibility.Visible;
-            inputComponent.OnHideControls += ( Sender, Args ) => this.Visibility = Visibility.Collapsed;
+            inputComponent.OnShowControls += ( Sender, Args ) => Visibility = Visibility.Visible;
+            inputComponent.OnHideControls += ( Sender, Args ) => Visibility = Visibility.Collapsed;
         }
 
         private void MediaOnOnMediaUnloaded( object Sender, OnMediaUnloadedEventArgs MediaUnloadedEventArgs )
         {
-            this.TimeLabel_Total.Content = "--:--:--";
-            this.TimeLabel_Current.Content = this.TimeLabel_Total.Content;
+            TimeLabel_Total.Content = "--:--:--";
+            TimeLabel_Current.Content = TimeLabel_Total.Content;
         }
 
         private void MediaOnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
         {
-            this.TimeLabel_Total.Content = MediaLoadedEventArgs.MediaFile.Duration.ToString( TimeFormat );
+            TimeLabel_Total.Content = MediaLoadedEventArgs.MediaFile.Duration.ToString( TimeFormat );
         }
 
         private void OnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )
         {
-            this.IsPlaying = StateChangedEventArgs.State == StateComponent.PlayerState.Playing;
+            IsPlaying = StateChangedEventArgs.State == StateComponent.PlayerState.Playing;
 
             if ( StateChangedEventArgs.State == StateComponent.PlayerState.Stopped )
-                this.TimeSlider.Value = 0;
+                TimeSlider.Value = 0;
         }
 
         private void OnOnPositionChanged( object Sender, OnPositionChangedEventArgs PositionChangedEventArgs )
@@ -135,14 +135,14 @@ namespace Videre.Controls
                 return;
 
             changedExternally = true;
-            this.TimeSlider.Value = PositionChangedEventArgs.Progress * this.TimeSlider.Maximum;
-            this.TimeLabel_Current.Content = PositionChangedEventArgs.Position.ToString( TimeFormat );
+            TimeSlider.Value = PositionChangedEventArgs.Progress * TimeSlider.Maximum;
+            TimeLabel_Current.Content = PositionChangedEventArgs.Position.ToString( TimeFormat );
         }
 
         private void PerformTimeSlide( )
         {
             TimeComponent timeHandler = ViderePlayer.GetComponent<TimeComponent>( );
-            double progress = this.TimeSlider.Value / this.TimeSlider.Maximum;
+            double progress = TimeSlider.Value / TimeSlider.Maximum;
             timeHandler.SetPosition( progress );
 
             SliderTimer.Stop( );
@@ -182,7 +182,7 @@ namespace Videre.Controls
 
         private void m_OnBackButtonClick( object Sender, RoutedEventArgs E )
         {
-            this.TimeSlider.Value = 0;
+            TimeSlider.Value = 0;
 
             OnBackButtonClick?.Invoke( this, E );
         }
@@ -214,7 +214,7 @@ namespace Videre.Controls
 
         private void ResizeTimeShower( )
         {
-            TimeShower.Width = this.ActualWidth / 7;
+            TimeShower.Width = ActualWidth / 7;
             TimeShower.SetPointerWidth( TimeShower.ActualWidth / 10 );
         }
 
@@ -235,7 +235,7 @@ namespace Videre.Controls
             double halfWidth = TimeShower.ActualWidth / 2;
             double OffsetFromBorder = translated.X + mouseFromLeftEdge - halfWidth;
 
-            double MaxRight = this.ActualWidth - TimeShower.ActualWidth + thumb.ActualWidth / 2;
+            double MaxRight = ActualWidth - TimeShower.ActualWidth + thumb.ActualWidth / 2;
             double PointerOffset = 0;
             if ( OffsetFromBorder < 0 )
                 PointerOffset = OffsetFromBorder;

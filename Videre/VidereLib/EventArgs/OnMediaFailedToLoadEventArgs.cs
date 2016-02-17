@@ -25,8 +25,8 @@ namespace VidereLib.EventArgs
         /// <param name="file">The <see cref="VidereMedia"/> of the media that failed to load.</param>
         public OnMediaFailedToLoadEventArgs( Exception exception, VidereMedia file )
         {
-            this.Exception = exception;
-            this.MediaFile = file;
+            Exception = exception;
+            MediaFile = file;
         }
     }
 }

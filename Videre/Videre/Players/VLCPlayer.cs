@@ -27,9 +27,9 @@ namespace Videre.Players
         /// <param name="control">The <see cref="VlcPlayer"/> with which media is played.</param>
         public VLCPlayer( VlcPlayer control )
         {
-            this.player = control;
-            this.player.Initialize( GetLibDirectory( ).FullName, "--no-osd", "--no-sub-autodetect-file" );
-            this.player.VlcMediaPlayer.MediaChanged += PlayerOnMediaChanged;
+            player = control;
+            player.Initialize( GetLibDirectory( ).FullName, "--no-osd", "--no-sub-autodetect-file" );
+            player.VlcMediaPlayer.MediaChanged += PlayerOnMediaChanged;
 
             VideoFileExtensions = new[ ]
             {
@@ -102,7 +102,7 @@ namespace Videre.Players
         /// </summary>
         public override void Play( )
         {
-            this.player.Play( );
+            player.Play( );
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Videre.Players
         /// </summary>
         public override void Pause( )
         {
-            this.player.VlcMediaPlayer.Pause( );
+            player.VlcMediaPlayer.Pause( );
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Videre.Players
         /// </summary>
         protected override void OnStop( )
         {
-            this.player.BeginStop( );
+            player.BeginStop( );
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Videre.Players
         /// <param name="volume">0 means no volume, 1 means full volume.</param>
         public override void SetVolume( float volume )
         {
-            this.player.Volume = ( int ) ( volume * 100 );
+            player.Volume = ( int ) ( volume * 100 );
         }
 
         /// <summary>
@@ -136,9 +136,9 @@ namespace Videre.Players
         /// <param name="file">The media file.</param>
         public override void LoadMedia( FileInfo file )
         {
-            this.player.BeginStop( ( ) =>
+            player.BeginStop( ( ) =>
             {
-                this.player.LoadMedia( file.FullName );
+                player.LoadMedia( file.FullName );
             } );
         }
 
@@ -156,7 +156,7 @@ namespace Videre.Players
         /// <returns>The length of the loaded media.</returns>
         public override TimeSpan GetMediaLength( )
         {
-            return this.player.Length;
+            return player.Length;
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Videre.Players
         /// <returns>The position in the loaded media.</returns>
         public override TimeSpan GetPosition( )
         {
-            return TimeSpan.FromSeconds( this.player.Position * this.player.Length.TotalSeconds );
+            return TimeSpan.FromSeconds( player.Position * player.Length.TotalSeconds );
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Videre.Players
         /// <param name="time">The time to move to.</param>
         public override void SetPosition( TimeSpan time )
         {
-            this.player.Position = ( float ) ( time.TotalSeconds / GetMediaLength( ).TotalSeconds );
+            player.Position = ( float ) ( time.TotalSeconds / GetMediaLength( ).TotalSeconds );
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Videre.Players
         /// <filterpriority>2</filterpriority>
         public override void Dispose( )
         {
-            this.player.BeginStop( ( ) => this.player.Dispose( ) );
+            player.BeginStop( ( ) => player.Dispose( ) );
         }
     }
 }

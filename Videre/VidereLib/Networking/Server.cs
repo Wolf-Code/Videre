@@ -49,9 +49,9 @@ namespace VidereLib.Networking
         /// <param name="port">The port to listen on.</param>
         public Server( int port )
         {
-            this.server = new TcpListener( IP, port );
+            server = new TcpListener( IP, port );
 
-            this.StartListening( );
+            StartListening( );
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace VidereLib.Networking
         /// </summary>
         public void Stop( )
         {
-            this.server.Stop( );
+            server.Stop( );
         }
 
         private void AcceptTcpClientCallback( IAsyncResult result )
@@ -71,7 +71,7 @@ namespace VidereLib.Networking
             try
             {
                 TcpClient cl = srv.EndAcceptTcpClient( result );
-                this.Client = cl;
+                Client = cl;
                 Console.WriteLine( "Client!" );
                 OnClientConnected?.Invoke( this, new OnClientConnectedEventArgs( cl ) );
             }
@@ -83,8 +83,8 @@ namespace VidereLib.Networking
 
         private void StartListening( )
         {
-            this.server.Start( );
-            this.server.BeginAcceptTcpClient( AcceptTcpClientCallback, this.server );
+            server.Start( );
+            server.BeginAcceptTcpClient( AcceptTcpClientCallback, server );
         }
     }
 }

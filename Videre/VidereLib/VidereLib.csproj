@@ -60,16 +60,8 @@
       <HintPath>..\packages\QrCode.Net.0.4.0.0\lib\net45\Gma.QrCodeNet.Encoding.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Hasseware.Net.TMDb, Version=1.2.6.0, Culture=neutral, PublicKeyToken=4d204bf90cffca75, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hasseware.TheMovieDB.1.2.6.0\lib\net45\Hasseware.Net.TMDb.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -123,6 +115,9 @@
     <Compile Include="EventArgs\OnSubtitlesFailedToLoadEventArgs.cs" />
     <Compile Include="EventArgs\OnSubtitlesChangedEventArgs.cs" />
     <Compile Include="Implementations\MediaElementPlayer.cs" />
+    <Compile Include="NetworkingRequests\RequestBaseJob.cs" />
+    <Compile Include="NetworkingRequests\RequestSeasonInfoJob.cs" />
+    <Compile Include="NetworkingRequests\RequestTvInfoJob.cs" />
     <Compile Include="NetworkingRequests\RequestEpisodeInfoJob.cs" />
     <Compile Include="NetworkingRequests\RequestMovieInfoJob.cs" />
     <Compile Include="NetworkingRequests\TheMovieDBRequest.cs" />
@@ -134,6 +129,10 @@
     <Compile Include="Data\WindowData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TMDbLib\TMDbLib\TMDbLib.csproj">
+      <Project>{c0006f17-212a-474f-983e-7da2f91e0233}</Project>
+      <Name>TMDbLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VidereSubs\VidereSubs.csproj">
       <Project>{f2d9b0ae-0864-44e1-8b07-0ce2a595e724}</Project>
       <Name>VidereSubs</Name>

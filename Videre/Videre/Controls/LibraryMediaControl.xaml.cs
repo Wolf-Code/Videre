@@ -39,7 +39,7 @@ namespace Videre.Controls
             Title.Text = media.Name;
             ToolTip = media.File.Name;
 
-            this.LoadingRing.IsActive = true;
+            LoadingRing.IsActive = true;
         }
 
         /// <summary>
@@ -47,24 +47,24 @@ namespace Videre.Controls
         /// </summary>
         protected void FinishLoadingVideo( )
         {
-            this.LoadingRing.IsActive = false;
+            LoadingRing.IsActive = false;
 
             if ( media.MovieInfo?.IMDBID == null || media.Type == VidereMedia.MediaType.Audio )
                 return;
 
-            this.VideoPlaceholder.Visibility = Visibility.Hidden;
+            VideoPlaceholder.Visibility = Visibility.Hidden;
 
             TheMovieDBComponent movieComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
 
             MovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MovieInfo.Hash );
-            this.Title.Text = info.Name;
+            Title.Text = info.Name;
 
             BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( info.Poster ) ) );
-            this.Image.Source = img;
+            Image.Source = img;
 
-            this.Rating.Text = Math.Round( info.Rating, 1 ).ToString( CultureInfo.InvariantCulture );
+            Rating.Text = Math.Round( info.Rating, 1 ).ToString( CultureInfo.InvariantCulture );
 
-            this.OnFinishLoadingVideo( );
+            OnFinishLoadingVideo( );
         }
 
         /// <summary>
@@ -80,12 +80,12 @@ namespace Videre.Controls
         /// </summary>
         protected void FinishLoadingAudio( )
         {
-            this.LoadingRing.IsActive = false;
+            LoadingRing.IsActive = false;
         }
 
         private void OnControlUnloaded( object Sender, RoutedEventArgs E )
         {
-            this.OnControlUnload( );
+            OnControlUnload( );
         }
 
         /// <summary>

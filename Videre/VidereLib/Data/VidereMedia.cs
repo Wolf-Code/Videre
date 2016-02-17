@@ -86,9 +86,9 @@ namespace VidereLib.Data
         /// <param name="file">The <see cref="FileInfo"/> of the media.</param>
         public VidereMedia( FileInfo file )
         {
-            this.File = file;
-            this.Name = file.Name;
-            this.Type = GetMediaTypeFromFile( file );
+            File = file;
+            Name = file.Name;
+            Type = GetMediaTypeFromFile( file );
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace VidereLib.Data
         /// <param name="newType">The new media type.</param>
         public void ChangeMediaType( MediaType newType )
         {
-            this.Type = newType;
+            Type = newType;
         }
 
         /// <summary>

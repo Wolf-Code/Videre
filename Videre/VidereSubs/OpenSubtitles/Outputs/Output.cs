@@ -133,12 +133,12 @@ namespace VidereSubs.OpenSubtitles.Outputs
         protected Output( XmlRpcStruct output )
         {
             if ( output.ContainsKey( "status" ) )
-                this.StatusString = ( string ) output[ "status" ];
+                StatusString = ( string ) output[ "status" ];
             else
-                this.StatusString = "200 OK";
+                StatusString = "200 OK";
 
-            this.Status = ConvertStatusToStatusCode( StatusString );
-            this.Seconds = ( double ) output[ "seconds" ];
+            Status = ConvertStatusToStatusCode( StatusString );
+            Seconds = ( double ) output[ "seconds" ];
         }
 
         /// <summary>

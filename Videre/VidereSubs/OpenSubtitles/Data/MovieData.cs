@@ -79,24 +79,24 @@ namespace VidereSubs.OpenSubtitles.Data
         /// <param name="output">The struct containing the data.</param>
         public MovieData( XmlRpcStruct output )
         {
-            this.MovieHash = ( string ) output[ "MovieHash" ];
-            this.MovieImbdID = ( string ) output[ "MovieImdbID" ];
-            this.MovieName = ( string ) output[ "MovieName" ];
-            this.MovieYear = ushort.Parse( ( string ) output[ "MovieYear" ] );
-            this.Type = ( string ) output[ "MovieKind" ];
-            this.SeriesSeason = ushort.Parse( ( string ) output[ "SeriesSeason" ] );
-            this.SeriesEpisode = ushort.Parse( ( string ) output[ "SeriesEpisode" ] );
-            this.SeenCount = ulong.Parse( ( string ) output[ "SeenCount" ] );
-            this.SubCount = uint.Parse( ( string ) output[ "SubCount" ] );
+            MovieHash = ( string ) output[ "MovieHash" ];
+            MovieImbdID = ( string ) output[ "MovieImdbID" ];
+            MovieName = ( string ) output[ "MovieName" ];
+            MovieYear = ushort.Parse( ( string ) output[ "MovieYear" ] );
+            Type = ( string ) output[ "MovieKind" ];
+            SeriesSeason = ushort.Parse( ( string ) output[ "SeriesSeason" ] );
+            SeriesEpisode = ushort.Parse( ( string ) output[ "SeriesEpisode" ] );
+            SeenCount = ulong.Parse( ( string ) output[ "SeenCount" ] );
+            SubCount = uint.Parse( ( string ) output[ "SubCount" ] );
 
             switch ( ( string ) output[ "MovieKind" ] )
             {
                 case "movie":
-                    this.MovieType = MovieKind.Movie;
+                    MovieType = MovieKind.Movie;
                     break;
 
                 case "episode":
-                    this.MovieType = MovieKind.Episode;
+                    MovieType = MovieKind.Episode;
                     break;
             }
         }

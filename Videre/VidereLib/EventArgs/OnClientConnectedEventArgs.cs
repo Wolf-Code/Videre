@@ -18,7 +18,7 @@ namespace VidereLib.EventArgs
         /// <param name="client">The connected client.</param>
         public OnClientConnectedEventArgs( TcpClient client )
         {
-            this.Client = client;
+            Client = client;
         }
     }
 }

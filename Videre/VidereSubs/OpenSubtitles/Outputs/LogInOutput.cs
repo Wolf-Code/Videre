@@ -24,7 +24,7 @@ namespace VidereSubs.OpenSubtitles.Outputs
         /// <param name="output">The login request output.</param>
         public LogInOutput( XmlRpcStruct output ) : base( output )
         {
-            this.Token = ( string ) output[ "token" ];
+            Token = ( string ) output[ "token" ];
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Videre.Windows
         {
             InitializeComponent( );
 
-            this.Loaded += async ( Sender, Args ) =>
+            Loaded += async ( Sender, Args ) =>
             {
                 ProgressDialogController controller = await this.ShowProgressAsync( "Retrieving TheMovieDB.org configuration", "Retrieving server configuration from TheMovieDB.org." );
                 controller.SetIndeterminate( );
@@ -34,7 +34,7 @@ namespace Videre.Windows
                 await controller.CloseAsync( );
             };
 
-            this.Closing += ( Sender, Args ) => MediaInformationManager.SaveMediaData( );
+            Closing += ( Sender, Args ) => MediaInformationManager.SaveMediaData( );
         }
 
         /// <summary>
@@ -45,8 +45,8 @@ namespace Videre.Windows
         {
             base.OnInitialized( e );
 
-            this.DirectorySelector.DirectoryList.SelectionChanged += DirectoryListOnSelectionChanged;
-            this.DirectorySelector.SetDirectories( Settings.Default.MediaFolders.ToArray( ) );
+            DirectorySelector.DirectoryList.SelectionChanged += DirectoryListOnSelectionChanged;
+            DirectorySelector.SetDirectories( Settings.Default.MediaFolders.ToArray( ) );
         }
 
         private void DirectoryListOnSelectionChanged( object Sender, SelectionChangedEventArgs SelectionChangedEventArgs )
@@ -54,7 +54,7 @@ namespace Videre.Windows
             if ( SelectionChangedEventArgs.AddedItems.Count <= 0 ) return;
 
             foreach ( object dir in SelectionChangedEventArgs.AddedItems )
-                this.MediaShowcase.LoadDirectory( dir as string );
+                MediaShowcase.LoadDirectory( dir as string );
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Videre.Windows
         {
             InitializeComponent( );
 
-            this.Loaded += async ( Sender, Args ) =>
+            Loaded += async ( Sender, Args ) =>
             {
                 ProgressDialogController controller = await this.ShowProgressAsync( "Signing in.", "Signing in to opensubtitles.org." );
                 Interface.Client.LogIn( "", "", false );
@@ -106,7 +106,7 @@ namespace Videre.Windows
 
             base.OnInitialized( e );
 
-            ( ( OpenSubtitlesControl ) this.OSFlyout.Content ).InitWindow( this );
+            ( ( OpenSubtitlesControl ) OSFlyout.Content ).InitWindow( this );
             MediaInformationManager.LoadMediaData( );
         }
 

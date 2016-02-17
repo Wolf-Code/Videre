@@ -26,7 +26,7 @@ namespace Videre.Controls
             base.OnInitialized( e );
 
             UnknownPlaceHolder.Visibility = Visibility.Visible;
-            this.LoadingRing.IsActive = false;
+            LoadingRing.IsActive = false;
         }
     }
 }

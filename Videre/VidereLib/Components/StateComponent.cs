@@ -50,7 +50,7 @@ namespace VidereLib.Components
                     return;
 
                 m_CurrentState = value;
-                this.OnStateChanged?.Invoke( this, new OnStateChangedEventArgs( value ) );
+                OnStateChanged?.Invoke( this, new OnStateChangedEventArgs( value ) );
             }
             get { return m_CurrentState; }
         }
@@ -67,7 +67,7 @@ namespace VidereLib.Components
 
             ViderePlayer.MediaPlayer.Stop( );
             ViderePlayer.GetComponent<MediaComponent>( ).UnloadMedia( );
-            this.CurrentState = PlayerState.Stopped;
+            CurrentState = PlayerState.Stopped;
         }
 
         /// <summary>

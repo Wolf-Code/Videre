@@ -59,15 +59,15 @@ namespace VidereSubs.OpenSubtitles.Data
         /// <param name="output">The output from the request.</param>
         public SubtitleData( XmlRpcStruct output )
         {
-            this.SubFileName = output.GetString( "SubFileName" );
-            this.AddDate = DateTime.Parse( output.GetString( "SubAddDate" ) );
-            this.IDSubtitleFile = output.GetULong( "IDSubtitleFile" );
-            this.DownloadsCount = output.GetUInt( "SubDownloadsCnt" );
-            this.SubDownloadLink = output.GetString( "SubDownloadLink" );
-            this.SubFileSize = output.GetUInt( "SubSize" );
-            this.LanguageName = output.GetString( "LanguageName" );
-            this.SubFileHash = output.GetString( "SubHash" );
-            this.ISO639 = output.GetString( "ISO639" );
+            SubFileName = output.GetString( "SubFileName" );
+            AddDate = DateTime.Parse( output.GetString( "SubAddDate" ) );
+            IDSubtitleFile = output.GetULong( "IDSubtitleFile" );
+            DownloadsCount = output.GetUInt( "SubDownloadsCnt" );
+            SubDownloadLink = output.GetString( "SubDownloadLink" );
+            SubFileSize = output.GetUInt( "SubSize" );
+            LanguageName = output.GetString( "LanguageName" );
+            SubFileHash = output.GetString( "SubHash" );
+            ISO639 = output.GetString( "ISO639" );
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Net.TMDb;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
-using VidereLib.Components;
+using TMDbLib.Objects.Find;
+using TMDbLib.Objects.Search;
 using VidereLib.Data;
 
 namespace VidereLib.NetworkingRequests
@@ -10,52 +10,33 @@ namespace VidereLib.NetworkingRequests
     /// <summary>
     /// A job for requesting movie info.
     /// </summary>
-    public class RequestEpisodeInfoJob
+    public class RequestEpisodeInfoJob : RequestBaseJob<SearchTvEpisode>
     {
-        private readonly VidereMedia media;
-        private readonly ServiceClient client;
-
         /// <summary>
         /// Called whenever the request are suspended due to too many requests having been sent.
         /// </summary>
-        public event EventHandler OnRequestLimitReached; 
-
-        private readonly CancellationTokenSource token;
-
-        private TheMovieDBRequest<Resource> idRequest;
+        public override event EventHandler OnRequestLimitReached;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="media">The media to find information for.</param>
-        public RequestEpisodeInfoJob( VidereMedia media )
+        public RequestEpisodeInfoJob( VidereMedia media ) : base( media )
         {
-            client = new ServiceClient( TheMovieDBComponent.APIKey );
-            this.media = media;
-            this.token = new CancellationTokenSource( );
-        }
-
-        /// <summary>
-        /// Cancels the request.
-        /// </summary>
-        public void Cancel( )
-        {
-            token.Cancel( );
-            idRequest?.Cancel( );
         }
 
         /// <summary>
         /// Initiates the request.
         /// </summary>
-        public async Task<Episode> Request( )
+        public override async Task<SearchTvEpisode> Request( )
         {
             if ( media.MovieInfo?.IMDBID == null ) return null;
 
-            idRequest = new TheMovieDBRequest<Resource>( async ( ) => await client.FindAsync( "tt" + media.MovieInfo.IMDBID, "imdb_id", token.Token ) );
-            idRequest.OnRequestLimitReached += ( Sender, Args ) => this.OnRequestLimitReached?.Invoke( this, null );
-            Resource Res = await idRequest.Request( );
+            request = new TheMovieDBRequest<FindContainer>( async ( ) => await Task.Run( ( ) => client.Find( FindExternalSource.Imdb, "tt" + media.MovieInfo.IMDBID ) ) );
+            request.OnRequestLimitReached += ( Sender, Args ) => OnRequestLimitReached?.Invoke( this, null );
+            FindContainer Res = await request.Request( );
 
-            return Res as Episode;
+            return Res.TvEpisodes.FirstOrDefault( );
         }
     }
 }

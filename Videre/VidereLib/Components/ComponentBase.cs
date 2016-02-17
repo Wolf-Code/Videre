@@ -14,7 +14,7 @@ namespace VidereLib.Components
             if ( isInitialized )
                 throw new Exception( $"Attempting to initialize {this} twice." );
 
-            this.OnInitialize( );
+            OnInitialize( );
             isInitialized = true;
         }
 

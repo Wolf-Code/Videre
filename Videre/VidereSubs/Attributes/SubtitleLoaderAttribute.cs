@@ -19,7 +19,7 @@ namespace VidereSubs.Attributes
         /// <param name="extensions">The extensions for which this loader should be used.</param>
         public SubtitleLoaderAttribute( params string[ ] extensions )
         {
-            this.Extensions = extensions;
+            Extensions = extensions;
         }
     }
 }

@@ -4,7 +4,11 @@ using System.Threading.Tasks;
 
 namespace VidereLib.Networking
 {
-    abstract class NetworkingRequest<T>
+    /// <summary>
+    /// A base class for a networking request return a <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type that will be returned.</typeparam>
+    public abstract class NetworkingRequest<T>
     {
         /// <summary>
         /// The function which will be called in <see cref="Request"/>.
@@ -32,8 +36,8 @@ namespace VidereLib.Networking
         /// <param name="request">The request which will be called in <see cref="Request"/>.</param>
         protected NetworkingRequest( Func<Task<T>> request )
         {
-            this.RequestFunc = request;
-            this.TokenSource = new CancellationTokenSource( );
+            RequestFunc = request;
+            TokenSource = new CancellationTokenSource( );
         }
 
         /// <summary>
@@ -41,7 +45,7 @@ namespace VidereLib.Networking
         /// </summary>
         public void Cancel( )
         {
-            this.TokenSource.Cancel( );
+            TokenSource.Cancel( );
         }
 
         /// <summary>

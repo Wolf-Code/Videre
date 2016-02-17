@@ -17,7 +17,7 @@ namespace VidereLib.EventArgs
         /// <param name="isFullScreen">True if the new state is fullscreen, false otherwise.</param>
         public OnFullscreenChangedEventArgs( bool isFullScreen )
         {
-            this.IsFullScreen = isFullScreen;
+            IsFullScreen = isFullScreen;
         }
     }
 }

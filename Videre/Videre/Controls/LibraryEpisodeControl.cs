@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Net.TMDb;
 using System.Threading;
 using System.Windows;
+using TMDbLib.Objects.Search;
+using TMDbLib.Objects.TvShows;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.Data;
@@ -15,9 +16,14 @@ namespace Videre.Controls
     public class LibraryEpisodeControl : LibraryMediaControl
     {
         /// <summary>
-        /// The show request.
+        /// The episode request.
         /// </summary>
-        protected RequestEpisodeInfoJob showRequest;
+        protected RequestEpisodeInfoJob episodeRequest;
+
+        /// <summary>
+        /// The season request.
+        /// </summary>
+        protected RequestSeasonInfoJob seasonRequest;
 
         /// <summary>
         /// Constructor.
@@ -40,42 +46,44 @@ namespace Videre.Controls
             Title.Text = media.Name;
             ToolTip = media.File.Name;
 
-            this.LoadingRing.IsActive = true;
+            LoadingRing.IsActive = true;
 
             if ( media.MovieInfo?.IMDBID != null && media.Type == VidereMedia.MediaType.Video )
             {
                 MovieInformation movieInfo;
                 if ( MediaInformationManager.ContainsMovieInformationForHash( media.MovieInfo.Hash, out movieInfo ) )
-                    this.FinishLoadingVideo( );
+                    FinishLoadingVideo( );
                 else
                 {
                     if ( media.MovieInfo != null )
                         MediaInformationManager.SetMovieInformation( media.MovieInfo );
 
-
                     ThreadPool.QueueUserWorkItem( async obj =>
                     {
-                        showRequest = new RequestEpisodeInfoJob( media );
-                        Episode episode = await showRequest.Request( );
+                        episodeRequest = new RequestEpisodeInfoJob( media );
+                        SearchTvEpisode episode = await episodeRequest.Request( );
                         if ( episode == null )
                         {
-                            ViderePlayer.MainDispatcher.Invoke( ( ) => this.LoadingRing.IsActive = false );
+                            ViderePlayer.MainDispatcher.Invoke( ( ) => LoadingRing.IsActive = false );
                             return;
                         }
+
+                        seasonRequest = new RequestSeasonInfoJob( media, episode.ShowId, episode.SeasonNumber );
+                        TvSeason season = await seasonRequest.Request( );
 
                         ViderePlayer.MainDispatcher.Invoke( ( ) =>
                         {
                             MovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MovieInfo.Hash );
-                            info.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( episode.Backdrop );
-                            info.Rating = episode.VoteAverage;
+                            info.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( season.PosterPath );
+                            info.Rating = ( decimal ) episode.VoteAverage;
 
-                            this.FinishLoadingVideo( );
+                            FinishLoadingVideo( );
                         } );
                     } );
                 }
             }
             else
-                this.LoadingRing.IsActive = false;
+                LoadingRing.IsActive = false;
         }
 
         /// <summary>
@@ -84,8 +92,8 @@ namespace Videre.Controls
         protected override void OnFinishLoadingVideo( )
         {
             MovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MovieInfo.Hash );
-            this.SubTitle.Visibility = Visibility.Visible;
-            this.SubTitle.Text = $"Season {info.Season}, Episode {info.Episode}";
+            SubTitle.Visibility = Visibility.Visible;
+            SubTitle.Text = $"Season {info.Season}, Episode {info.Episode}";
         }
 
         /// <summary>
@@ -93,7 +101,7 @@ namespace Videre.Controls
         /// </summary>
         protected override void OnControlUnload( )
         {
-            this.showRequest?.Cancel( );
+            episodeRequest?.Cancel( );
         }
     }
 }

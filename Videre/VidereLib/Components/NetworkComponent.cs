@@ -86,10 +86,10 @@ namespace VidereLib.Components
         public void SetUpNetworkReceiver( ushort port )
         {
             if ( server != null )
-                if ( port == this.Port )
+                if ( port == Port )
                     throw new Exception( "Attempting to start a server twice. Have you called ShutdownServer yet?" );
             
-            this.Port = port;
+            Port = port;
             server = new Server( port );
             server.OnClientConnected += ServerOnOnClientConnected;
         }
@@ -143,7 +143,7 @@ namespace VidereLib.Components
         private void OnClientDisconnected( )
         {
             Console.WriteLine( "Client disconnected" );
-            SetUpNetworkReceiver( this.Port );
+            SetUpNetworkReceiver( Port );
         }
 
         [NetworkRequest( NetworkRequestAttribute.RequestIdentifier.Play )]
