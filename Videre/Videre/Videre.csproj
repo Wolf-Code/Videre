@@ -154,7 +154,6 @@
     <Compile Include="Controls\LibraryMediaControl.xaml.cs">
       <DependentUpon>LibraryMediaControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\LibraryUnknownControl.cs" />
     <Compile Include="Controls\LibraryMovieControl.cs" />
     <Compile Include="Controls\LibraryShowcaseControl.xaml.cs">
       <DependentUpon>LibraryShowcaseControl.xaml</DependentUpon>

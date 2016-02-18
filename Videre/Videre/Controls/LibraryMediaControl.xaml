@@ -34,12 +34,6 @@
             </Rectangle.Fill>
         </Rectangle>
 
-        <Rectangle Grid.Row="0" Name="UnknownPlaceHolder" Visibility="Hidden">
-            <Rectangle.Fill>
-                <VisualBrush AlignmentX="Center" AlignmentY="Center" Visual="{StaticResource appbar_question}" />
-            </Rectangle.Fill>
-        </Rectangle>
-
         <TextBlock Grid.Row="1" FontWeight="Bold" FontSize="12" Name="Title" TextAlignment="Center" TextWrapping="Wrap"/>
         <TextBlock Grid.Row="2" FontStyle="Oblique" Visibility="Collapsed" FontSize="11" Name="SubTitle" TextAlignment="Center" TextWrapping="Wrap"/>
         <TextBlock Grid.Row="3" FontStyle="Italic" FontSize="10" Name="Rating" TextAlignment="Center" TextWrapping="Wrap"/>
