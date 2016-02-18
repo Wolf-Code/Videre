@@ -40,25 +40,31 @@ namespace Videre.Controls
 
             foreach ( VidereMedia item in media )
             {
-                LibraryMediaControl control;
 
                 switch ( item.MediaInformation?.MovieType )
                 {
                     case MovieData.MovieKind.Episode:
-                        control = new LibraryEpisodeControl( item );
+                        SeriesList.Items.Add( new LibraryEpisodeControl( item ) );
+
+                        if ( SeriesTab.Visibility != Visibility.Visible )
+                            SeriesTab.Visibility = Visibility.Visible;
+
                         break;
 
                     case MovieData.MovieKind.Movie:
-                        control = new LibraryMovieControl( item );
-                        break;
+                        MoviesList.Items.Add( new LibraryMovieControl( item ) );
 
-                    case null:
+                        if ( MoviesTab.Visibility != Visibility.Visible )
+                            MoviesTab.Visibility = Visibility.Visible;
+                        break;
+                        
                     default:
-                        control = new LibraryUnknownControl( item );
+                        MiscList.Items.Add( new LibraryUnknownControl( item ) );
+
+                        if ( MiscTab.Visibility != Visibility.Visible )
+                            MiscTab.Visibility = Visibility.Visible;
                         break;
                 }
-
-                MediaList.Items.Add( control );
             }
 
             await controller.CloseAsync( );
