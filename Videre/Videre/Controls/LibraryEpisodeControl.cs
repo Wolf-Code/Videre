@@ -56,8 +56,6 @@ namespace Videre.Controls
                     FinishLoadingVideo( );
                 else
                 {
-                    MediaInformationManager.SetEpisodeInformation( media.MediaInformation as VidereEpisodeInformation );
-
                     ThreadPool.QueueUserWorkItem( async obj =>
                     {
                         episodeRequest = new RequestEpisodeInfoJob( media );
@@ -73,6 +71,8 @@ namespace Videre.Controls
 
                         ViderePlayer.MainDispatcher.Invoke( ( ) =>
                         {
+                            MediaInformationManager.SetEpisodeInformation( media.MediaInformation as VidereEpisodeInformation );
+
                             VidereEpisodeInformation info = MediaInformationManager.GetEpisodeInformationByHash( media.MediaInformation.Hash );
                             info.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( season.PosterPath );
                             info.Rating = ( decimal ) episode.VoteAverage;

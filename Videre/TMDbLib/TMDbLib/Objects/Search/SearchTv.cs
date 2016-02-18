@@ -6,43 +6,46 @@ namespace TMDbLib.Objects.Search
 {
     public class SearchTv
     {
-        [JsonProperty("id")]
+        [JsonProperty( "id" )]
         public int Id { get; set; }
 
-        [JsonProperty("backdrop_path")]
+        [JsonProperty( "backdrop_path" )]
         public string BackdropPath { get; set; }
 
-        [JsonProperty("original_name")]
+        [JsonProperty( "original_name" )]
         public string OriginalName { get; set; }
 
-        [JsonProperty("original_language")]
+        [JsonProperty( "original_language" )]
         public string OriginalLanguage { get; set; }
 
-        [JsonProperty("first_air_date")]
+        [JsonProperty( "first_air_date" )]
         public DateTime? FirstAirDate { get; set; }
 
-        [JsonProperty("poster_path")]
+        [JsonProperty( "poster_path" )]
         public string PosterPath { get; set; }
 
-        [JsonProperty("popularity")]
+        [JsonProperty( "popularity" )]
         public double Popularity { get; set; }
 
-        [JsonProperty("name")]
+        [JsonProperty( "name" )]
         public string Name { get; set; }
 
-        [JsonProperty("overview")]
+        [JsonProperty( "overview" )]
         public string Overview { get; set; }
 
-        [JsonProperty("vote_average")]
+        [JsonProperty( "vote_average" )]
         public double VoteAverage { get; set; }
 
-        [JsonProperty("vote_count")]
+        [JsonProperty( "vote_count" )]
         public int VoteCount { get; set; }
 
-        [JsonProperty("origin_country")]
+        /// <summary>
+        /// Country ISO code ex. US
+        /// </summary>
+        [JsonProperty( "origin_country" )]
         public List<string> OriginCountry { get; set; }
 
-        [JsonProperty("genre_ids")]
+        [JsonProperty( "genre_ids" )]
         public List<int> GenreIds { get; set; }
     }
 }
