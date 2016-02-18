@@ -42,15 +42,13 @@
             </TabItem>
 
             <TabItem Header="Miscellaneous" Visibility="Collapsed" Name="MiscTab">
-                <ScrollViewer>
-                    <ItemsControl Name="MiscList" ScrollViewer.VerticalScrollBarVisibility="Auto"  ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel ItemWidth="180" ItemHeight="300" Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </ScrollViewer>
+                <ListView Margin="10" Name="MiscList">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Name" Width="Auto"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </TabItem>
         </TabControl>
     </Grid>

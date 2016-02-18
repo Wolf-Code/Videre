@@ -40,7 +40,6 @@ namespace Videre.Controls
 
             foreach ( VidereMedia item in media )
             {
-
                 switch ( item.MediaInformation?.MovieType )
                 {
                     case MovieData.MovieKind.Episode:
@@ -59,7 +58,7 @@ namespace Videre.Controls
                         break;
                         
                     default:
-                        MiscList.Items.Add( new LibraryUnknownControl( item ) );
+                        MiscList.Items.Add( item.Name );
 
                         if ( MiscTab.Visibility != Visibility.Visible )
                             MiscTab.Visibility = Visibility.Visible;
