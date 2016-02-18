@@ -15,11 +15,6 @@ namespace Videre.Windows
     public partial class LibraryWindow
     {
         /// <summary>
-        /// The selected media.
-        /// </summary>
-        public VidereMedia Media { private set; get; }
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         public LibraryWindow( )
@@ -28,17 +23,21 @@ namespace Videre.Windows
 
             Loaded += async ( Sender, Args ) =>
             {
-                ProgressDialogController controller = await this.ShowProgressAsync( "Retrieving TheMovieDB.org configuration", "Retrieving server configuration from TheMovieDB.org." );
-                controller.SetIndeterminate( );
+                TheMovieDBComponent dbComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
+                if ( !dbComp.HasConfig )
+                {
+                    ProgressDialogController controller = await this.ShowProgressAsync( "Retrieving TheMovieDB.org configuration", "Retrieving server configuration from TheMovieDB.org." );
+                    controller.SetIndeterminate( );
 
-                await ViderePlayer.GetComponent<TheMovieDBComponent>( ).RetrieveConfiguration( );
+                    await dbComp.RetrieveConfiguration( );
 
-                await controller.CloseAsync( );
+                    await controller.CloseAsync( );
+                }
 
                 DirectorySelector.SetDirectories( Settings.Default.MediaFolders.ToArray( ) );
             };
 
-            Closing += ( Sender, Args ) =>
+            Closed += ( Sender, Args ) =>
             {
                 MediaInformationManager.SaveMediaData( );
 

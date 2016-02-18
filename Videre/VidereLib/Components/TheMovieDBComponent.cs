@@ -26,6 +26,11 @@ namespace VidereLib.Components
         public string BaseURL { private set; get; }
 
         /// <summary>
+        /// Checks to see if the configuration has already been retrieved.
+        /// </summary>
+        public bool HasConfig => BaseURL != null;
+
+        /// <summary>
         /// The poster size to use.
         /// </summary>
         public string PosterSize => "w500";

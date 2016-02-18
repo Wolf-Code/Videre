@@ -60,8 +60,6 @@ namespace Videre.Windows
             };
             
             ViderePlayer.Initialize( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new VLCPlayer( MediaArea.MediaPlayer ), MediaArea = MediaArea } );
-            Settings.Default.MediaFolders = new List<string> { @"D:\Folders\Videos" };
-            Settings.Default.Save( );
 
             MediaComponent mediaComponent = ViderePlayer.GetComponent<MediaComponent>( );
             mediaComponent.OnMediaLoaded += OnOnMediaLoaded;
