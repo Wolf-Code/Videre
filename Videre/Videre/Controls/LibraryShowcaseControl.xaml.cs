@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using VidereLib;
@@ -58,7 +59,7 @@ namespace Videre.Controls
                         break;
                         
                     default:
-                        MiscList.Items.Add( item.Name );
+                        MiscList.Items.Add( item );
 
                         if ( MiscTab.Visibility != Visibility.Visible )
                             MiscTab.Visibility = Visibility.Visible;
@@ -67,6 +68,15 @@ namespace Videre.Controls
             }
 
             await controller.CloseAsync( );
+        }
+
+        private void OnSelectionChange( object Sender, SelectionChangedEventArgs E )
+        {
+            Window.GetWindow( this ).Close( );
+
+            ViderePlayer.MediaPlayer.Stop( );
+            ViderePlayer.MediaPlayer.LoadMedia( ( ( VidereMedia ) MiscList.SelectedItem ).File );
+            ViderePlayer.MediaPlayer.Play( );
         }
     }
 }
