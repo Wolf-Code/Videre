@@ -53,26 +53,26 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <Button Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="0" Click="m_OnBackButtonClick">
-                <Rectangle Width="20" Height="20">
-                    <Rectangle.Fill>
+                <Rectangle Width="20" Height="20" Fill="{DynamicResource AccentColorBrush}">
+                    <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_rewind}" />
-                    </Rectangle.Fill>
+                    </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
             <Button x:Name="PlayPauseButton" Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="1" Click="m_OnPlayPauseButtonClick">
-                <Rectangle x:Name="PlayPauseButtonRectangle" Width="20" Height="20">
+                <Rectangle x:Name="PlayPauseButtonRectangle" Width="20" Height="20" Fill="{DynamicResource AccentColorBrush}">
                     <Rectangle.Style>
                         <Style TargetType="{x:Type Rectangle}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ElementName=MediaControl, Path=IsPlaying}"  Value="True">
-                                    <Setter Property="Fill">
+                                    <Setter Property="OpacityMask">
                                         <Setter.Value>
                                             <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_pause}" />
                                         </Setter.Value>
                                     </Setter>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding ElementName=MediaControl, Path=IsPlaying}" Value="False">
-                                    <Setter Property="Fill">
+                                    <Setter Property="OpacityMask">
                                         <Setter.Value>
                                             <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_play}" />
                                         </Setter.Value>
@@ -84,10 +84,10 @@
                 </Rectangle>
             </Button>
             <Button Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="2" Click="m_OnForwardButtonClick">
-                <Rectangle Width="20" Height="20">
-                    <Rectangle.Fill>
+                <Rectangle Width="20" Height="20" Fill="{DynamicResource AccentColorBrush}">
+                    <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_fastforward}" />
-                    </Rectangle.Fill>
+                    </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
             <Slider x:Name="VolumeSlider" 
