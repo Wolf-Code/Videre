@@ -29,7 +29,14 @@ namespace VidereSubs.OpenSubtitles
         /// <returns>The output.</returns>
         public static async Task<CheckMovieHashOutput> CheckMovieHashAllGuesses( params string[ ] movieHashes )
         {
-            return await Task.Run( ( ) => Client.CheckMovieHashAllGuesses( movieHashes ) );
+            try
+            {
+                return await Task.Run( ( ) => Client.CheckMovieHashAllGuesses( movieHashes ) );
+            }
+            catch ( TaskCanceledException )
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -39,7 +46,14 @@ namespace VidereSubs.OpenSubtitles
         /// <returns>The output.</returns>
         public static async Task<CheckMovieHashOutput> CheckMovieHashBestGuessOnly( params string[ ] movieHashes )
         {
-            return await Task.Run( ( ) => Client.CheckMovieHashBestGuessOnly( movieHashes ) );
+            try
+            {
+                return await Task.Run( ( ) => Client.CheckMovieHashBestGuessOnly( movieHashes ) );
+            }
+            catch ( TaskCanceledException )
+            {
+                return null;
+            }
         }
     }
 }

@@ -68,6 +68,16 @@ namespace Videre.Controls
 
                         seasonRequest = new RequestSeasonInfoJob( media, episode.ShowId, episode.SeasonNumber );
                         TvSeason season = await seasonRequest.Request( );
+                        if ( season == null )
+                        {
+                            ViderePlayer.MainDispatcher.Invoke( ( ) =>
+                            {
+                                VidereEpisodeInformation epi = MediaInformationManager.GetOrSaveEpisodeInformation( media.MediaInformation as VidereEpisodeInformation );
+                                epi.Rating = ( decimal ) episode.VoteAverage;
+                                epi.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( episode.StillPath );
+                            } );
+                            return;
+                        }
 
                         ViderePlayer.MainDispatcher.Invoke( ( ) =>
                         {
@@ -102,6 +112,7 @@ namespace Videre.Controls
         protected override void OnControlUnload( )
         {
             episodeRequest?.Cancel( );
+            seasonRequest?.Cancel( );
         }
     }
 }

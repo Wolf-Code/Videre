@@ -46,6 +46,10 @@ namespace VidereLib.NetworkingRequests
         {
             tvSeason = new TheMovieDBRequest<TvSeason>( ( ) => Task.Run( ( ) => client.GetTvSeason( showID, season ), this.token.Token ) );
             tvSeason.OnRequestLimitReached += ( Sender, Args ) => this.OnRequestLimitReached?.Invoke( this, null );
+            tvSeason.OnExceptionThrown += ( Sender, e ) =>
+            {
+                throw new Exception( "Exception during tv season request.", e );
+            };
 
             return await tvSeason.Request( );
         }

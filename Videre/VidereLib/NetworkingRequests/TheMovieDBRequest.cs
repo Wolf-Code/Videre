@@ -45,19 +45,36 @@ namespace VidereLib.NetworkingRequests
 
                 try
                 {
-                    return await RequestFunc( );
+                    return await Task.Run( ( ) => RequestFunc( ) );
                 }
                 catch ( TMDbLib.Objects.Exceptions.RequestLimitExceededException )
                 {
                     OnRequestLimitReached?.Invoke( this, null );
+                    if ( TokenSource.IsCancellationRequested )
+                        break;
+
                     await Task.Delay( TimeSpan.FromSeconds( TheMovieDBComponent.TheMovieDBRequestLimitPeriod ), TokenSource.Token );
+                }
+                catch ( TaskCanceledException )
+                {
+                    break;
                 }
                 catch ( Exception e )
                 {
                     if ( OnExceptionThrown != null )
                     {
                         OnExceptionThrown.Invoke( this, e );
-                        await Task.Delay( TimeSpan.FromSeconds( TheMovieDBComponent.TheMovieDBRequestLimitPeriod ), TokenSource.Token );
+                        try
+                        {
+                            if ( TokenSource.IsCancellationRequested )
+                                break;
+
+                            await Task.Delay( TimeSpan.FromSeconds( TheMovieDBComponent.TheMovieDBRequestLimitPeriod ), TokenSource.Token );
+                        }
+                        catch ( TaskCanceledException )
+                        {
+                            break;
+                        }
                     }
                     else
                         throw;

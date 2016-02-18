@@ -2,6 +2,7 @@
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using VidereLib;
 using VidereLib.Data;
 using VidereLib.Data.MediaData;
 
@@ -25,21 +26,21 @@ namespace Videre
             if ( !File.Exists( MediaDataFile ) )
                 return;
 
-            using ( FileStream FS = File.OpenRead( MediaDataFile ) )
+            using ( FileStream FS = File.OpenRead( Path.Combine( ViderePlayer.ProgramDirectory.FullName, MediaDataFile ) ) )
                 using ( TextReader fileReader = new StreamReader( FS ) )
                 {
                     string text = await fileReader.ReadToEndAsync( );
                     dynamic mediaInfo = JObject.Parse( text );
                     foreach ( dynamic movie in mediaInfo.Movies )
                     {
-                        VidereMovieInformation info = JsonConvert.DeserializeObject<VidereMovieInformation>( movie.ToString(  ) );
+                        VidereMovieInformation info = JsonConvert.DeserializeObject<VidereMovieInformation>( movie.ToString( ) );
 
                         movieInformation.Add( info.Hash, info );
                     }
 
                     foreach ( dynamic episode in mediaInfo.Episodes )
                     {
-                        VidereEpisodeInformation info = JsonConvert.DeserializeObject<VidereEpisodeInformation>( episode.ToString(  ) );
+                        VidereEpisodeInformation info = JsonConvert.DeserializeObject<VidereEpisodeInformation>( episode.ToString( ) );
 
                         episodeInformation.Add( info.Hash, info );
                     }

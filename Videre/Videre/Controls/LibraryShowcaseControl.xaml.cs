@@ -149,7 +149,7 @@ namespace Videre.Controls
                         MiscList.Items.RemoveAt( index );
                 }
 
-                if ( !pair.Key.HasItems )
+                //if ( !pair.Key.HasItems )
                     pair.Value.Visibility = Visibility.Collapsed;
             }
         }

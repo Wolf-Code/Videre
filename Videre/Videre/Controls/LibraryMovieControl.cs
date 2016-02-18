@@ -65,7 +65,6 @@ namespace Videre.Controls
 
                             FinishLoadingVideo( );
                         } );
-
                     } );
                 }
             }

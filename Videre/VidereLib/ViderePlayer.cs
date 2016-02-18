@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Threading;
@@ -14,6 +15,11 @@ namespace VidereLib
     /// </summary>
     public static class ViderePlayer
     {
+        /// <summary>
+        /// The directory in which the program can be found.
+        /// </summary>
+        public static DirectoryInfo ProgramDirectory => new DirectoryInfo( Path.GetDirectoryName( Assembly.GetEntryAssembly( ).Location ) );
+
         internal static WindowData windowData { private set; get; }
 
         private static readonly Dictionary<Type, ComponentBase> components = new Dictionary<Type, ComponentBase>( );

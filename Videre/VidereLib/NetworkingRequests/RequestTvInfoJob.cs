@@ -43,6 +43,10 @@ namespace VidereLib.NetworkingRequests
         {
             showRequest = new TheMovieDBRequest<TvShow>( ( ) => Task.Run( ( ) => client.GetTvShow( showID ), this.token.Token ) );
             showRequest.OnRequestLimitReached += ( Sender, Args ) => this.OnRequestLimitReached?.Invoke( this, null );
+            showRequest.OnExceptionThrown += ( Sender, e ) =>
+            {
+                throw new Exception( "Exception during tv show request.", e );
+            };
 
             return await showRequest.Request( );
         }

@@ -34,6 +34,10 @@ namespace VidereLib.NetworkingRequests
 
             request = new TheMovieDBRequest<FindContainer>( async ( ) => await Task.Run( ( ) => client.Find( FindExternalSource.Imdb, "tt" + media.MediaInformation.IMDBID ) ) );
             request.OnRequestLimitReached += ( Sender, Args ) => OnRequestLimitReached?.Invoke( this, null );
+            request.OnExceptionThrown += ( Sender, e ) =>
+            {
+                throw new Exception( "Exception during tv episode request.", e );
+            };
             FindContainer Res = await request.Request( );
 
             return Res.TvEpisodes.FirstOrDefault( );
