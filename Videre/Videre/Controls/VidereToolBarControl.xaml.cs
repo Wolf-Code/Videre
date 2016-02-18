@@ -72,12 +72,7 @@ namespace Videre.Controls
             string VideoCombinedSemiColonSeparated = "*." + string.Join( ";*.", ViderePlayer.MediaPlayer.VideoFileExtensions );
             VideoFilter += $"({VideoCombinedCommaSeparated})|{VideoCombinedSemiColonSeparated}";
 
-            string AudioFilter = "Audio Files ";
-            string AudioCombinedCommaSeparated = "*." + string.Join( ", *.", ViderePlayer.MediaPlayer.AudioFileExtensions );
-            string AudioCombinedSemiColonSeparated = "*." + string.Join( ";*.", ViderePlayer.MediaPlayer.AudioFileExtensions );
-            AudioFilter += $"({AudioCombinedCommaSeparated})|{AudioCombinedSemiColonSeparated}";
-
-            string Filter = $"Media Files ({VideoCombinedCommaSeparated}, {AudioCombinedCommaSeparated})|{VideoCombinedSemiColonSeparated};{AudioCombinedSemiColonSeparated}|{VideoFilter}|{AudioFilter}|All Files (*.*)|*.*";
+            string Filter = $"{VideoFilter}|All Files (*.*)|*.*";
             fileDialog.Filter = Filter;
 
             if ( !fileDialog.ShowDialog( Window.GetWindow( this ) ).GetValueOrDefault( ) )

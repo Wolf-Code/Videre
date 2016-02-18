@@ -41,32 +41,21 @@ namespace Videre.Controls
             foreach ( VidereMedia item in media )
             {
                 LibraryMediaControl control;
-                switch ( item.Type )
+
+                switch ( item.MediaInformation?.MovieType )
                 {
-                    case VidereMedia.MediaType.Video:
-                        switch ( item.MovieInfo?.MovieType )
-                        {
-                            case MovieData.MovieKind.Episode:
-                                control = new LibraryEpisodeControl( item );
-                                break;
-
-                            case MovieData.MovieKind.Movie:
-                                control = new LibraryMovieControl( item );
-                                break;
-
-                            case null:
-                            default:
-                                control = new LibraryUnknownControl( item );
-                                break;
-                        }
+                    case MovieData.MovieKind.Episode:
+                        control = new LibraryEpisodeControl( item );
                         break;
 
-                    case VidereMedia.MediaType.Audio:
-                        control = new LibraryAudioControl( item );
+                    case MovieData.MovieKind.Movie:
+                        control = new LibraryMovieControl( item );
                         break;
 
+                    case null:
                     default:
-                        throw new Exception( $"Unknown media type: {item.File}" );
+                        control = new LibraryUnknownControl( item );
+                        break;
                 }
 
                 MediaList.Items.Add( control );

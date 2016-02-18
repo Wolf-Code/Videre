@@ -5,6 +5,7 @@ using TMDbLib.Objects.General;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.Data;
+using VidereLib.Data.MediaData;
 using VidereLib.NetworkingRequests;
 
 namespace Videre.Controls
@@ -37,16 +38,14 @@ namespace Videre.Controls
 
             VideoPlaceholder.Visibility = Visibility.Visible;
 
-            if ( media.MovieInfo?.IMDBID != null )
+            if ( media.HasImdbID )
             {
-                MovieInformation movieInfo;
-                if ( MediaInformationManager.ContainsMovieInformationForHash( media.MovieInfo.Hash, out movieInfo ) )
+                VidereMovieInformation movieInfo;
+                if ( MediaInformationManager.ContainsMovieInformationForHash( media.MediaInformation.Hash, out movieInfo ) )
                     FinishLoadingVideo( );
                 else
                 {
-                    if ( media.MovieInfo != null )
-                        MediaInformationManager.SetMovieInformation( media.MovieInfo );
-
+                    MediaInformationManager.SetMovieInformation( media.MediaInformation as VidereMovieInformation );
 
                     ThreadPool.QueueUserWorkItem( async obj =>
                     {
@@ -60,7 +59,7 @@ namespace Videre.Controls
 
                         ViderePlayer.MainDispatcher.Invoke( ( ) =>
                         {
-                            MovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MovieInfo.Hash );
+                            VidereMovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MediaInformation.Hash );
                             info.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( movie.PosterPath );
                             info.Rating = ( decimal ) movie.VoteAverage;
 

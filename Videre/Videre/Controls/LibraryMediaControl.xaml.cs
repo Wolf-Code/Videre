@@ -49,14 +49,14 @@ namespace Videre.Controls
         {
             LoadingRing.IsActive = false;
 
-            if ( media.MovieInfo?.IMDBID == null || media.Type == VidereMedia.MediaType.Audio )
+            if ( !media.HasImdbID )
                 return;
 
             VideoPlaceholder.Visibility = Visibility.Hidden;
 
             TheMovieDBComponent movieComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
 
-            MovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MovieInfo.Hash );
+            VidereMediaInformation info = MediaInformationManager.GetMediaInformationByHash( media.MediaInformation.Hash );
             Title.Text = info.Name;
 
             BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( info.Poster ) ) );

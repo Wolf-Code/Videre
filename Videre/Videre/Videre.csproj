@@ -147,7 +147,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\LibraryAudioControl.cs" />
     <Compile Include="Controls\LibraryDirectorySelector.xaml.cs">
       <DependentUpon>LibraryDirectorySelector.xaml</DependentUpon>
     </Compile>

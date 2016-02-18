@@ -31,9 +31,9 @@ namespace VidereLib.NetworkingRequests
         /// </summary>
         public override async Task<MovieResult> Request( )
         {
-            if ( media.MovieInfo?.IMDBID == null ) return null;
+            if ( !media.HasImdbID ) return null;
 
-            request = new TheMovieDBRequest<FindContainer>( async ( ) => await Task.Run( ( ) => client.Find( FindExternalSource.Imdb, "tt" + media.MovieInfo.IMDBID ), token.Token ) );
+            request = new TheMovieDBRequest<FindContainer>( async ( ) => await Task.Run( ( ) => client.Find( FindExternalSource.Imdb, "tt" + media.MediaInformation.IMDBID ), token.Token ) );
             request.OnRequestLimitReached += ( Sender, Args ) => OnRequestLimitReached?.Invoke( this, null );
             FindContainer Res = await request.Request( );
 

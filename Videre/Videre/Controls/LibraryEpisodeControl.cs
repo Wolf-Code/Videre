@@ -6,6 +6,7 @@ using TMDbLib.Objects.TvShows;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.Data;
+using VidereLib.Data.MediaData;
 using VidereLib.NetworkingRequests;
 
 namespace Videre.Controls
@@ -48,15 +49,14 @@ namespace Videre.Controls
 
             LoadingRing.IsActive = true;
 
-            if ( media.MovieInfo?.IMDBID != null && media.Type == VidereMedia.MediaType.Video )
+            if ( media.HasImdbID )
             {
-                MovieInformation movieInfo;
-                if ( MediaInformationManager.ContainsMovieInformationForHash( media.MovieInfo.Hash, out movieInfo ) )
+                VidereEpisodeInformation episodeInformation;
+                if ( MediaInformationManager.ContainsEpisodeInformationForHash( media.MediaInformation.Hash, out episodeInformation ) )
                     FinishLoadingVideo( );
                 else
                 {
-                    if ( media.MovieInfo != null )
-                        MediaInformationManager.SetMovieInformation( media.MovieInfo );
+                    MediaInformationManager.SetEpisodeInformation( media.MediaInformation as VidereEpisodeInformation );
 
                     ThreadPool.QueueUserWorkItem( async obj =>
                     {
@@ -73,7 +73,7 @@ namespace Videre.Controls
 
                         ViderePlayer.MainDispatcher.Invoke( ( ) =>
                         {
-                            MovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MovieInfo.Hash );
+                            VidereEpisodeInformation info = MediaInformationManager.GetEpisodeInformationByHash( media.MediaInformation.Hash );
                             info.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( season.PosterPath );
                             info.Rating = ( decimal ) episode.VoteAverage;
 
@@ -91,7 +91,7 @@ namespace Videre.Controls
         /// </summary>
         protected override void OnFinishLoadingVideo( )
         {
-            MovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MovieInfo.Hash );
+            VidereEpisodeInformation info = MediaInformationManager.GetEpisodeInformationByHash( media.MediaInformation.Hash );
             SubTitle.Visibility = Visibility.Visible;
             SubTitle.Text = $"Season {info.Season}, Episode {info.Episode}";
         }

@@ -26,7 +26,12 @@ namespace VidereLib.Implementations
             {
                 VidereMedia media = new VidereMedia( lastLoaded )
                 {
-                    Duration = player.NaturalDuration.TimeSpan,
+                    FileInformation = new VidereFileInformation
+                    {
+                        Duration = player.NaturalDuration.TimeSpan,
+                        Width = ( uint ) player.NaturalVideoWidth,
+                        Height = ( uint ) player.NaturalVideoHeight
+                    },
                     Name = lastLoaded.Name
                 };
                 OnMediaLoaded( new OnMediaLoadedEventArgs( media ) );
@@ -36,11 +41,6 @@ namespace VidereLib.Implementations
             VideoFileExtensions = new[ ]
             {
                 "mp4", "mkv", "avi"
-            };
-
-            AudioFileExtensions = new[ ]
-            {
-                "mp3", "wav"
             };
         }
 

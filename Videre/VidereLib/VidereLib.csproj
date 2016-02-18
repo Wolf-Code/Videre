@@ -64,6 +64,10 @@
       <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -97,10 +101,11 @@
     <Compile Include="Components\SubtitlesComponent.cs" />
     <Compile Include="Components\TheMovieDBComponent.cs" />
     <Compile Include="Components\TimeComponent.cs" />
-    <Compile Include="Data\AudioInfo.cs" />
-    <Compile Include="Data\MovieInformation.cs" />
-    <Compile Include="Data\VideoInfo.cs" />
+    <Compile Include="Data\MediaData\VidereEpisodeInformation.cs" />
+    <Compile Include="Data\VidereFileInformation.cs" />
     <Compile Include="Data\VidereMedia.cs" />
+    <Compile Include="Data\VidereMediaInformation.cs" />
+    <Compile Include="Data\MediaData\VidereMovieInformation.cs" />
     <Compile Include="EventArgs\OnClientConnectedEventArgs.cs" />
     <Compile Include="EventArgs\OnFullscreenChangedEventArgs.cs" />
     <Compile Include="EventArgs\OnHideControlsEventArgs.cs" />

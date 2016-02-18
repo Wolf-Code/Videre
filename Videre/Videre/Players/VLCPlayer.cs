@@ -35,11 +35,6 @@ namespace Videre.Players
             {
                 "mp4", "mkv", "avi", "divx", "f4v", "flv", "mov", "ogg", "ogm"
             };
-
-            AudioFileExtensions = new[ ]
-            {
-                "mp3", "wav", "flac"
-            };
         }
 
         private void PlayerOnMediaChanged( object sender, MediaPlayerMediaChangedEventArgs e )
@@ -56,30 +51,20 @@ namespace Videre.Players
             FileInfo mediaFile = new FileInfo( new Uri( lastMedia.Mrl ).LocalPath );
             VidereMedia media = new VidereMedia( mediaFile )
             {
-                Duration = lastMedia.Duration,
+                FileInformation = new VidereFileInformation
+                {
+                    Duration = lastMedia.Duration,
+                },
                 Name = lastMedia.GetMeta( MetaDataType.Title )
             };
 
+            
             xZune.Vlc.MediaTrack vid = lastMedia.GetTracks( ).FirstOrDefault( O => O.Type == TrackType.Video );
             if ( vid?.VideoTrack != null )
             {
                 VideoTrack vidTrack = vid.VideoTrack.Value;
-                media.Video = new VideoInfo
-                {
-                    Width = vidTrack.Width,
-                    Height = vidTrack.Height
-                };
-            }
-
-            xZune.Vlc.MediaTrack aud = lastMedia.GetTracks( ).FirstOrDefault( O => O.Type == TrackType.Audio );
-            if ( aud?.AudioTrack != null )
-            {
-                AudioTrack audTrack = aud.AudioTrack.Value;
-                media.Audio = new AudioInfo
-                {
-                    Channels = audTrack.Channels,
-                    Rate = audTrack.Rate
-                };
+                media.FileInformation.Width = vidTrack.Width;
+                media.FileInformation.Height = vidTrack.Height;
             }
 
             await ViderePlayer.MainDispatcher.InvokeAsync( ( ) => OnMediaLoaded( new OnMediaLoadedEventArgs( media ) ) );
@@ -186,7 +171,7 @@ namespace Videre.Players
             if ( !IsMediaLoaded )
                 return 1f;
 
-            return Media.Video.Width / ( float ) Media.Video.Height;
+            return Media.FileInformation.Width / ( float ) Media.FileInformation.Height;
         }
 
         /// <summary>

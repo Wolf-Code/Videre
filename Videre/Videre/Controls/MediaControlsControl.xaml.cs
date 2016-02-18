@@ -118,7 +118,7 @@ namespace Videre.Controls
 
         private void MediaOnOnMediaLoaded( object Sender, OnMediaLoadedEventArgs MediaLoadedEventArgs )
         {
-            TimeLabel_Total.Content = MediaLoadedEventArgs.MediaFile.Duration.ToString( TimeFormat );
+            TimeLabel_Total.Content = MediaLoadedEventArgs.MediaFile.FileInformation.Duration.ToString( TimeFormat );
         }
 
         private void OnOnStateChanged( object Sender, OnStateChangedEventArgs StateChangedEventArgs )

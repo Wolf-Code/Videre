@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using VidereLib.Data;
+using VidereLib.Data.MediaData;
 using VidereLib.EventArgs;
 using VidereSubs.OpenSubtitles;
 using VidereSubs.OpenSubtitles.Data;
@@ -95,7 +96,7 @@ namespace VidereLib.Components
             FileInfo[ ] files = info.GetFiles( );
             foreach ( FileInfo file in files )
             {
-                if ( ViderePlayer.MediaPlayer.CanPlayMediaExtension( file.Extension.Substring( 1 ) ) )
+                if ( ViderePlayer.MediaPlayer.CanPlayVideoExtension( file.Extension.Substring( 1 ) ) )
                     media.Add( new VidereMedia( file ) );
             }
 
@@ -119,9 +120,6 @@ namespace VidereLib.Components
             Dictionary<string, VidereMedia> hashMedias = new Dictionary<string, VidereMedia>( );
             for ( int x = 0; x < medias.Length; x++ )
             {
-                if ( medias[ x ].Type != VidereMedia.MediaType.Video )
-                    continue;
-
                 string hash = medias[ x ].OpenSubtitlesHash;
                 hashes[ x ] = hash;
                 hashMedias.Add( hash, medias[ x ] );
@@ -136,9 +134,19 @@ namespace VidereLib.Components
 
                 MovieData data = pair.Value[ 0 ];
                 VidereMedia media = hashMedias[ pair.Key ];
-                MovieInformation movieInfo = new MovieInformation( data );
+                VidereMediaInformation movieInfo = null;
+                switch ( data.MovieType )
+                {
+                    case MovieData.MovieKind.Episode:
+                        movieInfo = new VidereEpisodeInformation( data );
+                        break;
 
-                media.MovieInfo = movieInfo;
+                    case MovieData.MovieKind.Movie:
+                        movieInfo = new VidereMovieInformation( data );
+                        break;
+                }
+
+                media.MediaInformation = movieInfo;
             }
 
             if ( output.NotProcessed.Length > 0 )

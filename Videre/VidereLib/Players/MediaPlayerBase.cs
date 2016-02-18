@@ -12,10 +12,8 @@ namespace VidereLib.Players
     public abstract class MediaPlayerBase : IDisposable
     {
         private string[ ] m_VideoFileExtensions;
-        private string[ ] m_AudioFileExtensions;
 
-        private HashSet<string> videoFileHashSet = new HashSet<string>( );
-        private HashSet<string> audioFileHashSet = new HashSet<string>( );  
+        private readonly HashSet<string> videoFileHashSet = new HashSet<string>( );
 
         /// <summary>
         /// The event that is called whenever media failed to load.
@@ -48,23 +46,6 @@ namespace VidereLib.Players
             get { return m_VideoFileExtensions; }
         }
 
-        /// <summary>
-        /// The supported audio file extensions.
-        /// </summary>
-        public string[ ] AudioFileExtensions
-        {
-            protected set
-            {
-                m_AudioFileExtensions = value;
-
-                audioFileHashSet.Clear( );
-
-                foreach ( string extension in value )
-                    audioFileHashSet.Add( extension );
-            }
-            get { return m_AudioFileExtensions; }
-        }
-        
         /// <summary>
         /// Indicates if any media has been loaded.
         /// </summary>
@@ -113,26 +94,6 @@ namespace VidereLib.Players
         public bool CanPlayVideoExtension( string extension )
         {
             return videoFileHashSet.Contains( extension );
-        }
-
-        /// <summary>
-        /// Checks if the <see cref="MediaPlayerBase"/> can play a given audio file extension using a hashset for speed.
-        /// </summary>
-        /// <param name="extension">The extension to check for.</param>
-        /// <returns>True if it can be played, false otherwise.</returns>
-        public bool CanPlayAudioExtension( string extension )
-        {
-            return audioFileHashSet.Contains( extension );
-        }
-
-        /// <summary>
-        /// Checks if the <see cref="MediaPlayerBase"/> can play the media file extension.
-        /// </summary>
-        /// <param name="extension">The file extension to check for.</param>
-        /// <returns>True if it can be played, false otherwise.</returns>
-        public bool CanPlayMediaExtension( string extension )
-        {
-            return CanPlayVideoExtension( extension ) || CanPlayAudioExtension( extension );
         }
 
         /// <summary>

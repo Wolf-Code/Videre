@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VidereLib.Data;
+using VidereLib.Data.MediaData;
 
 namespace Videre
 {
@@ -13,7 +15,8 @@ namespace Videre
     {
         private const string MediaDataFile = "MediaInfo.json";
 
-        private static readonly Dictionary<string, MovieInformation> movieInformation = new Dictionary<string, MovieInformation>( );
+        private static readonly Dictionary<string, VidereMovieInformation> movieInformation = new Dictionary<string, VidereMovieInformation>( );
+        private static readonly Dictionary<string, VidereEpisodeInformation> episodeInformation = new Dictionary<string, VidereEpisodeInformation>( );
 
         /// <summary>
         /// Loads all media information from file.
@@ -30,17 +33,16 @@ namespace Videre
                     dynamic mediaInfo = JObject.Parse( text );
                     foreach ( dynamic movie in mediaInfo.Movies )
                     {
-                        MovieInformation info = new MovieInformation
-                        {
-                            Name = movie.Name,
-                            IMDBID = movie.IMDB,
-                            Poster = movie.Poster,
-                            Rating = movie.Rating,
-                            Episode = movie.Episode ?? ( ushort ) 0,
-                            Season = movie.Season ?? ( ushort ) 0
-                        };
+                        VidereMovieInformation info = JsonConvert.DeserializeObject<VidereMovieInformation>( movie.ToString(  ) );
 
-                        movieInformation.Add( ( string ) movie.Hash, info );
+                        movieInformation.Add( info.Hash, info );
+                    }
+
+                    foreach ( dynamic episode in mediaInfo.Episodes )
+                    {
+                        VidereEpisodeInformation info = JsonConvert.DeserializeObject<VidereEpisodeInformation>( episode.ToString(  ) );
+
+                        episodeInformation.Add( info.Hash, info );
                     }
                 }
         }
@@ -55,72 +57,66 @@ namespace Videre
                 {
                     JsonWriter jsonWriter = new JsonTextWriter( writer );
                     jsonWriter.Formatting = Formatting.Indented;
-                    
+
                     jsonWriter.WriteStartObject( );
+
                     jsonWriter.WritePropertyName( "Movies" );
-                    jsonWriter.WriteStartArray( );
-
-                    foreach ( var pair in movieInformation )
                     {
-                        string hash = pair.Key;
-                        MovieInformation movie = pair.Value;
+                        jsonWriter.WriteStartArray( );
 
-                        jsonWriter.WriteStartObject( );
+                        foreach ( var pair in movieInformation )
+                            jsonWriter.WriteRawValue( JsonConvert.SerializeObject( pair.Value ) );
 
-                        jsonWriter.WritePropertyName( "Name" );
-                        jsonWriter.WriteValue( movie.Name );
-
-                        jsonWriter.WritePropertyName( "Year" );
-                        jsonWriter.WriteValue( movie.Year );
-
-                        jsonWriter.WritePropertyName( "Rating" );
-                        jsonWriter.WriteValue( movie.Rating );
-
-                        jsonWriter.WritePropertyName( "Poster" );
-                        jsonWriter.WriteValue( movie.Poster );
-
-                        jsonWriter.WritePropertyName( "IMDB" );
-                        jsonWriter.WriteValue( movie.IMDBID );
-
-                        if ( movie.Episode > 0 && movie.Season > 0 )
-                        {
-                            jsonWriter.WritePropertyName( "Episode" );
-                            jsonWriter.WriteValue( movie.Episode );
-
-                            jsonWriter.WritePropertyName( "Season" );
-                            jsonWriter.WriteValue( movie.Season );
-                        }
-
-                        jsonWriter.WritePropertyName( "Hash" );
-                        jsonWriter.WriteValue( hash );
-
-                        jsonWriter.WriteEndObject( );
+                        jsonWriter.WriteEndArray( );
                     }
 
-                    jsonWriter.WriteEndArray( );
+                    jsonWriter.WritePropertyName( "Episodes" );
+                    {
+                        jsonWriter.WriteStartArray( );
+
+                        foreach ( var pair in episodeInformation )
+                            jsonWriter.WriteRawValue( JsonConvert.SerializeObject( pair.Value ) );
+
+                        jsonWriter.WriteEndArray( );
+                    }
                     jsonWriter.WriteEndObject( );
 
                     jsonWriter.Close( );
                 }
         }
 
+        #region Set
+
         /// <summary>
-        /// Sets the movie information in the <see cref="MediaInformationManager"/> to a new <see cref="MovieInformation"/>.
+        /// Sets the movie information in the <see cref="MediaInformationManager"/> to a new <see cref="VidereMovieInformation"/>.
         /// </summary>
-        /// <param name="info">The <see cref="MovieInformation"/> to set.</param>
-        public static void SetMovieInformation( MovieInformation info )
+        /// <param name="info">The <see cref="VidereMovieInformation"/> to set.</param>
+        public static void SetMovieInformation( VidereMovieInformation info )
         {
             movieInformation[ info.Hash ] = info;
         }
 
         /// <summary>
-        /// Either gets the currently saved <see cref="MovieInformation"/> if it exists, otherwise it will first save <paramref name="info"/> and then return it as well. Use this to make changes to existing entries, or save the entry if it's not there yet.
+        /// Sets the episode information in the <see cref="MediaInformationManager"/> to a new <see cref="VidereEpisodeInformation"/>.
+        /// </summary>
+        /// <param name="info">The <see cref="VidereEpisodeInformation"/> to set.</param>
+        public static void SetEpisodeInformation( VidereEpisodeInformation info )
+        {
+            episodeInformation[ info.Hash ] = info;
+        }
+
+        #endregion
+
+        #region GetOrSave
+
+        /// <summary>
+        /// Either gets the currently saved <see cref="VidereMovieInformation"/> if it exists, otherwise it will first save <paramref name="info"/> and then return it as well. Use this to make changes to existing entries, or save the entry if it's not there yet.
         /// </summary>
         /// <param name="info">The movie information we want to get, by hash.</param>
-        /// <returns>The either retrieved or newly saved <see cref="MovieInformation"/>.</returns>
-        public static MovieInformation GetOrSaveMovieInformation( MovieInformation info )
+        /// <returns>The either retrieved or newly saved <see cref="VidereMovieInformation"/>.</returns>
+        public static VidereMovieInformation GetOrSaveMovieInformation( VidereMovieInformation info )
         {
-            MovieInformation loaded = GetMovieInformationByHash( info.Hash );
+            VidereMovieInformation loaded = GetMovieInformationByHash( info.Hash );
             if ( loaded != null ) return loaded;
 
             SetMovieInformation( info );
@@ -128,26 +124,87 @@ namespace Videre
         }
 
         /// <summary>
-        /// Gets a <see cref="MovieInformation"/> by hash.
+        /// Either gets the currently saved <see cref="VidereEpisodeInformation"/> if it exists, otherwise it will first save <paramref name="info"/> and then return it as well. Use this to make changes to existing entries, or save the entry if it's not there yet.
+        /// </summary>
+        /// <param name="info">The episode information we want to get, by hash.</param>
+        /// <returns>The either retrieved or newly saved <see cref="VidereEpisodeInformation"/>.</returns>
+        public static VidereEpisodeInformation GetOrSaveEpisodeInformation( VidereEpisodeInformation info )
+        {
+            VidereEpisodeInformation loaded = GetEpisodeInformationByHash( info.Hash );
+            if ( loaded != null ) return loaded;
+
+            SetEpisodeInformation( info );
+            return info;
+        }
+
+        #endregion
+
+        #region GetByHash
+
+        /// <summary>
+        /// Gets a <see cref="VidereMovieInformation"/> by hash.
         /// </summary>
         /// <param name="hash">The hash to look for.</param>
-        /// <returns>The <see cref="MovieInformation"/> for this hash.</returns>
-        public static MovieInformation GetMovieInformationByHash( string hash )
+        /// <returns>The <see cref="VidereMovieInformation"/> for this hash.</returns>
+        public static VidereMovieInformation GetMovieInformationByHash( string hash )
         {
             return !movieInformation.ContainsKey( hash ) ? null : movieInformation[ hash ];
+        }
+
+        /// <summary>
+        /// Gets a <see cref="VidereEpisodeInformation"/> by hash.
+        /// </summary>
+        /// <param name="hash">The hash to look for.</param>
+        /// <returns>The <see cref="VidereEpisodeInformation"/> for this hash.</returns>
+        public static VidereEpisodeInformation GetEpisodeInformationByHash( string hash )
+        {
+            return !episodeInformation.ContainsKey( hash ) ? null : episodeInformation[ hash ];
+        }
+
+        /// <summary>
+        /// Gets a <see cref="VidereMediaInformation"/> by hash, checking for both movies and episodes.
+        /// </summary>
+        /// <param name="hash">The hash to look for.</param>
+        /// <returns>The <see cref="VidereMediaInformation"/> for this hash.</returns>
+        public static VidereMediaInformation GetMediaInformationByHash( string hash )
+        {
+            VidereMovieInformation movieInfo;
+            if ( ContainsMovieInformationForHash( hash, out movieInfo ) )
+                return movieInfo;
+
+            VidereEpisodeInformation episodeInfo;
+            return ContainsEpisodeInformationForHash( hash, out episodeInfo ) ? episodeInfo : null;
+        }
+        #endregion
+
+        #region ContainsForHash
+
+        /// <summary>
+        /// Checks if there is an entry for <paramref name="hash"/>.
+        /// </summary>
+        /// <param name="hash">The hash to check for.</param>
+        /// <param name="info">The <see cref="VidereMovieInformation"/> if there is an entry, null otherwise.</param>
+        /// <returns>True if there is an entry, false otherwise.</returns>
+        public static bool ContainsMovieInformationForHash( string hash, out VidereMovieInformation info )
+        {
+            info = GetMovieInformationByHash( hash );
+
+            return info != null;
         }
 
         /// <summary>
         /// Checks if there is an entry for <paramref name="hash"/>.
         /// </summary>
         /// <param name="hash">The hash to check for.</param>
-        /// <param name="info">The <see cref="MovieInformation"/> if there is an entry, null otherwise.</param>
+        /// <param name="info">The <see cref="VidereEpisodeInformation"/> if there is an entry, null otherwise.</param>
         /// <returns>True if there is an entry, false otherwise.</returns>
-        public static bool ContainsMovieInformationForHash( string hash, out MovieInformation info )
+        public static bool ContainsEpisodeInformationForHash( string hash, out VidereEpisodeInformation info )
         {
-            info = GetMovieInformationByHash( hash );
+            info = GetEpisodeInformationByHash( hash );
 
             return info != null;
         }
+
+        #endregion
     }
 }

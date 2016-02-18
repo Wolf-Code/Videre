@@ -64,7 +64,6 @@ namespace Videre.Controls
                 { "-icon", '\"' + System.Windows.Forms.Application.StartupPath + "\\Videre.ico\"" },
                 { "-progID", Settings.Default.ProgID },
                 { "-videoExtensions", '\"' + string.Join( " ", ViderePlayer.MediaPlayer.VideoFileExtensions ) + '\"' },
-                { "-audioExtensions", '\"' + string.Join( " ", ViderePlayer.MediaPlayer.AudioFileExtensions ) + '\"' }
             };
             string arguments = procArgs.Aggregate( string.Empty, ( Current, pair ) => Current + pair.Key + " " + pair.Value + " " ).Trim( );
 
