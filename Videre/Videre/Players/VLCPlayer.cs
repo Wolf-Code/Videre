@@ -58,7 +58,6 @@ namespace Videre.Players
                 Name = lastMedia.GetMeta( MetaDataType.Title )
             };
 
-            
             xZune.Vlc.MediaTrack vid = lastMedia.GetTracks( ).FirstOrDefault( O => O.Type == TrackType.Video );
             if ( vid?.VideoTrack != null )
             {
@@ -70,7 +69,7 @@ namespace Videre.Players
             await ViderePlayer.MainDispatcher.InvokeAsync( ( ) => OnMediaLoaded( new OnMediaLoadedEventArgs( media ) ) );
         }
 
-        private DirectoryInfo GetLibDirectory( )
+        private static DirectoryInfo GetLibDirectory( )
         {
             var currentAssembly = Assembly.GetEntryAssembly( );
             var currentDirectory = new FileInfo( currentAssembly.Location ).DirectoryName;

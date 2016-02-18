@@ -20,6 +20,11 @@ namespace Videre.Controls
         protected readonly VidereMedia media;
 
         /// <summary>
+        /// The directory in the library to which this item belongs.
+        /// </summary>
+        public string LibraryDirectory { set; get; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public LibraryMediaControl( VidereMedia media )

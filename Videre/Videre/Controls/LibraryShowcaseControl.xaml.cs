@@ -17,6 +17,35 @@ namespace Videre.Controls
     public partial class LibraryShowcaseControl
     {
         /// <summary>
+        /// A container class for the misc items.
+        /// </summary>
+        private class MiscContainer
+        {
+            /// <summary>
+            /// The name of the misc item.
+            /// </summary>
+            public string Name => media.Name;
+
+            private readonly VidereMedia media;
+
+            /// <summary>
+            /// The directory in the library this misc item is associated with.
+            /// </summary>
+            public readonly string LibraryDirectory;
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="media">The media this item represents.</param>
+            /// <param name="libDir">The library directory this misc item is part of.</param>
+            public MiscContainer( VidereMedia media, string libDir )
+            {
+                this.media = media;
+                this.LibraryDirectory = libDir;
+            }
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public LibraryShowcaseControl( )
@@ -44,7 +73,7 @@ namespace Videre.Controls
                 switch ( item.MediaInformation?.MovieType )
                 {
                     case MovieData.MovieKind.Episode:
-                        SeriesList.Items.Add( new LibraryEpisodeControl( item ) );
+                        SeriesList.Items.Add( new LibraryEpisodeControl( item ) { LibraryDirectory = directory } );
 
                         if ( SeriesTab.Visibility != Visibility.Visible )
                             SeriesTab.Visibility = Visibility.Visible;
@@ -52,14 +81,14 @@ namespace Videre.Controls
                         break;
 
                     case MovieData.MovieKind.Movie:
-                        MoviesList.Items.Add( new LibraryMovieControl( item ) );
+                        MoviesList.Items.Add( new LibraryMovieControl( item ) { LibraryDirectory = directory } );
 
                         if ( MoviesTab.Visibility != Visibility.Visible )
                             MoviesTab.Visibility = Visibility.Visible;
                         break;
                         
                     default:
-                        MiscList.Items.Add( item );
+                        MiscList.Items.Add( new MiscContainer( item, directory ) );
 
                         if ( MiscTab.Visibility != Visibility.Visible )
                             MiscTab.Visibility = Visibility.Visible;
@@ -77,6 +106,34 @@ namespace Videre.Controls
             ViderePlayer.MediaPlayer.Stop( );
             ViderePlayer.MediaPlayer.LoadMedia( ( ( VidereMedia ) MiscList.SelectedItem ).File );
             ViderePlayer.MediaPlayer.Play( );
+        }
+
+        /// <summary>
+        /// Unloads media from a given directory.
+        /// </summary>
+        /// <param name="directory">The directory to unload media from.</param>
+        public void UnloadDirectory( string directory )
+        {
+            for ( int index = SeriesList.Items.Count - 1; index >= 0; index-- )
+            {
+                LibraryMediaControl child = ( LibraryMediaControl ) SeriesList.Items[ index ];
+                if ( child.LibraryDirectory == directory )
+                    SeriesList.Items.RemoveAt( index );
+            }
+
+            for ( int index = MoviesList.Items.Count - 1; index >= 0; index-- )
+            {
+                LibraryMediaControl child = ( LibraryMediaControl )MoviesList.Items[ index ];
+                if ( child.LibraryDirectory == directory )
+                    MoviesList.Items.RemoveAt( index );
+            }
+
+            for ( int index = MiscList.Items.Count - 1; index >= 0; index-- )
+            {
+                MiscContainer child = ( MiscContainer )MiscList.Items[ index ];
+                if ( child.LibraryDirectory == directory )
+                    MiscList.Items.RemoveAt( index );
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using VidereLib;
@@ -32,9 +34,18 @@ namespace Videre.Windows
                 await ViderePlayer.GetComponent<TheMovieDBComponent>( ).RetrieveConfiguration( );
 
                 await controller.CloseAsync( );
+
+                DirectorySelector.SetDirectories( Settings.Default.MediaFolders.ToArray( ) );
             };
 
-            Closing += ( Sender, Args ) => MediaInformationManager.SaveMediaData( );
+            Closing += ( Sender, Args ) =>
+            {
+                MediaInformationManager.SaveMediaData( );
+
+                List<string> directoryList = DirectorySelector.DirectoryList.Items.Cast<string>( ).ToList( );
+                Settings.Default.MediaFolders = directoryList;
+                Settings.Default.Save( );
+            };
         }
 
         /// <summary>
@@ -46,15 +57,15 @@ namespace Videre.Windows
             base.OnInitialized( e );
 
             DirectorySelector.DirectoryList.SelectionChanged += DirectoryListOnSelectionChanged;
-            DirectorySelector.SetDirectories( Settings.Default.MediaFolders.ToArray( ) );
         }
 
         private void DirectoryListOnSelectionChanged( object Sender, SelectionChangedEventArgs SelectionChangedEventArgs )
         {
-            if ( SelectionChangedEventArgs.AddedItems.Count <= 0 ) return;
+            foreach ( string dir in SelectionChangedEventArgs.AddedItems )
+                MediaShowcase.LoadDirectory( dir );
 
-            foreach ( object dir in SelectionChangedEventArgs.AddedItems )
-                MediaShowcase.LoadDirectory( dir as string );
+            foreach ( string dir in SelectionChangedEventArgs.RemovedItems )
+                MediaShowcase.UnloadDirectory( dir );
         }
     }
 }

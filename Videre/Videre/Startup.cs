@@ -2,7 +2,7 @@
 
 namespace Videre
 {
-    class Startup
+    internal class Startup
     {
         /// <summary>
         /// Application Entry Point.

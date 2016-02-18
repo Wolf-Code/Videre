@@ -9,14 +9,18 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <GroupBox Header="Directories" Grid.Row="0" Grid.Column="0">
-            <ListBox Name="DirectoryList" SelectionMode="Multiple"/>
+        <GroupBox Header="Directories" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <ListBox Name="DirectoryList" SelectionMode="Multiple" SelectionChanged="OnSelectionChange"/>
         </GroupBox>
+        <Button Grid.Column="0" Grid.Row="1" Margin="5" Click="OnAddNewDirectory">Add</Button>
+        <Button Name="RemoveButton" Grid.Column="1" Grid.Row="1" Margin="5" Click="OnRemoveExistingDirectory" IsEnabled="False">Remove</Button>
     </Grid>
 </local:VidereControl>
