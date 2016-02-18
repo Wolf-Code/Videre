@@ -63,10 +63,10 @@ namespace Videre.Windows
             DirectorySelector.DirectoryList.SelectionChanged += DirectoryListOnSelectionChanged;
         }
 
-        private void DirectoryListOnSelectionChanged( object Sender, SelectionChangedEventArgs SelectionChangedEventArgs )
+        private async void DirectoryListOnSelectionChanged( object Sender, SelectionChangedEventArgs SelectionChangedEventArgs )
         {
             foreach ( string dir in SelectionChangedEventArgs.AddedItems )
-                MediaShowcase.LoadDirectory( dir );
+                await MediaShowcase.LoadDirectory( dir );
 
             foreach ( string dir in SelectionChangedEventArgs.RemovedItems )
                 MediaShowcase.UnloadDirectory( dir );

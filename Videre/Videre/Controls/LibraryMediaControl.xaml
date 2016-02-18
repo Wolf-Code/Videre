@@ -21,16 +21,10 @@
         </Grid.ColumnDefinitions>
 
         <Image Grid.Row="0" Stretch="Uniform" Name="Image" Margin="5"/>
-        
+
         <Rectangle Grid.Row="0" Name="VideoPlaceholder" Visibility="Hidden">
             <Rectangle.Fill>
                 <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_video}" />
-            </Rectangle.Fill>
-        </Rectangle>
-
-        <Rectangle Grid.Row="0" Name="AudioPlaceholder" Visibility="Hidden">
-            <Rectangle.Fill>
-                <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_music}" />
             </Rectangle.Fill>
         </Rectangle>
 

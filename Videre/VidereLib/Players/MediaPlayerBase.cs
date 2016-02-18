@@ -63,6 +63,7 @@ namespace VidereLib.Players
         protected virtual void OnMediaLoaded( OnMediaLoadedEventArgs args )
         {
             Media = args.MediaFile;
+            this.Play( );
             MediaLoaded?.Invoke( this, args );
         }
 
@@ -134,6 +135,16 @@ namespace VidereLib.Players
         /// </summary>
         /// <param name="file">The media file.</param>
         public abstract void LoadMedia( FileInfo file );
+
+        /// <summary>
+        /// Loads and plays a media file.
+        /// </summary>
+        /// <param name="file">The media file.</param>
+        public void LoadAndPlay( FileInfo file )
+        {
+            this.Stop( );
+            this.LoadMedia( file );
+        }
 
         /// <summary>
         /// Unloads the currently loaded media.

@@ -67,7 +67,13 @@ namespace Videre.Controls
             BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( info.Poster ) ) );
             Image.Source = img;
 
-            Rating.Text = Math.Round( info.Rating, 1 ).ToString( CultureInfo.InvariantCulture );
+            if ( info.Rating > 0 )
+            {
+                Rating.Visibility = Visibility.Visible;
+                Rating.Text = Math.Round( info.Rating, 1 ).ToString( CultureInfo.InvariantCulture );
+            }
+            else
+                Rating.Visibility = Visibility.Collapsed;
 
             OnFinishLoadingVideo( );
         }
@@ -103,9 +109,7 @@ namespace Videre.Controls
 
         private void OnControlClick( object Sender, MouseButtonEventArgs E )
         {
-            ViderePlayer.MediaPlayer.Stop( );
-            ViderePlayer.MediaPlayer.LoadMedia( media.File );
-            ViderePlayer.MediaPlayer.Play( );
+            ViderePlayer.MediaPlayer.LoadAndPlay( media.File );
 
             Window.GetWindow( this ).Close( );
         }

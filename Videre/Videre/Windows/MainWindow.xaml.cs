@@ -53,12 +53,16 @@ namespace Videre.Windows
         {
             AppDomain.CurrentDomain.UnhandledException += ( Sender, Args ) =>
             {
+#if DEBUG
+                throw ( Exception ) Args.ExceptionObject;
+#else
                 using ( FileStream FS = File.Create( "exception.txt" ) )
                     using ( TextWriter Writer = new StreamWriter( FS ) )
                         WriteExceptionDetails( Args.ExceptionObject as Exception, Writer );
 
                 MessageBox.Show( "An exception has been encountered. The exact details have been saved in exception.txt. Please contact the developer and hand them this file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error );
                 Application.Current.Shutdown( );
+#endif
             };
 
             ViderePlayer.Initialize( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new VLCPlayer( MediaArea.MediaPlayer ), MediaArea = MediaArea } );

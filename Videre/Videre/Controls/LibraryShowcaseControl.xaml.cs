@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls;
@@ -26,7 +27,10 @@ namespace Videre.Controls
             /// </summary>
             public string Name => media.Name;
 
-            private readonly VidereMedia media;
+            /// <summary>
+            /// The media.
+            /// </summary>
+            public readonly VidereMedia media;
 
             /// <summary>
             /// The directory in the library this misc item is associated with.
@@ -45,19 +49,25 @@ namespace Videre.Controls
             }
         }
 
+        private readonly Dictionary<ItemsControl, TabItem> lists = new Dictionary<ItemsControl, TabItem>( );
+
         /// <summary>
         /// Constructor.
         /// </summary>
         public LibraryShowcaseControl( )
         {
             InitializeComponent( );
+
+            lists.Add( MiscList, MiscTab );
+            lists.Add( MoviesList, MoviesTab );
+            lists.Add( SeriesList, SeriesTab );
         }
 
         /// <summary>
         /// Adds all media inside a given directory to the library showcase.
         /// </summary>
         /// <param name="directory">The directory to add.</param>
-        public async void LoadDirectory( string directory )
+        public async Task LoadDirectory( string directory )
         {
             List<VidereMedia> media = ViderePlayer.GetComponent<MediaComponent>( ).FindMediaInDirectory( directory );
 
@@ -74,28 +84,23 @@ namespace Videre.Controls
                 {
                     case MovieData.MovieKind.Episode:
                         SeriesList.Items.Add( new LibraryEpisodeControl( item ) { LibraryDirectory = directory } );
-
-                        if ( SeriesTab.Visibility != Visibility.Visible )
-                            SeriesTab.Visibility = Visibility.Visible;
-
                         break;
 
                     case MovieData.MovieKind.Movie:
                         MoviesList.Items.Add( new LibraryMovieControl( item ) { LibraryDirectory = directory } );
-
-                        if ( MoviesTab.Visibility != Visibility.Visible )
-                            MoviesTab.Visibility = Visibility.Visible;
                         break;
-                        
+
                     default:
                         MiscList.Items.Add( new MiscContainer( item, directory ) );
-
-                        if ( MiscTab.Visibility != Visibility.Visible )
-                            MiscTab.Visibility = Visibility.Visible;
                         break;
                 }
             }
 
+            foreach ( var pair in lists )
+            {
+                if ( pair.Key.Items.Count > 0 )
+                    pair.Value.Visibility = Visibility.Visible;
+            }
             await controller.CloseAsync( );
         }
 
@@ -103,9 +108,7 @@ namespace Videre.Controls
         {
             Window.GetWindow( this ).Close( );
 
-            ViderePlayer.MediaPlayer.Stop( );
-            ViderePlayer.MediaPlayer.LoadMedia( ( ( VidereMedia ) MiscList.SelectedItem ).File );
-            ViderePlayer.MediaPlayer.Play( );
+            ViderePlayer.MediaPlayer.LoadAndPlay( ( ( MiscContainer )MiscList.SelectedItem ).media.File );
         }
 
         /// <summary>
@@ -123,16 +126,31 @@ namespace Videre.Controls
 
             for ( int index = MoviesList.Items.Count - 1; index >= 0; index-- )
             {
-                LibraryMediaControl child = ( LibraryMediaControl )MoviesList.Items[ index ];
+                LibraryMediaControl child = ( LibraryMediaControl ) MoviesList.Items[ index ];
                 if ( child.LibraryDirectory == directory )
                     MoviesList.Items.RemoveAt( index );
             }
 
             for ( int index = MiscList.Items.Count - 1; index >= 0; index-- )
             {
-                MiscContainer child = ( MiscContainer )MiscList.Items[ index ];
+                MiscContainer child = ( MiscContainer ) MiscList.Items[ index ];
                 if ( child.LibraryDirectory == directory )
                     MiscList.Items.RemoveAt( index );
+            }
+
+            foreach ( var pair in lists )
+            {
+                for ( int index = pair.Key.Items.Count - 1; index >= 0; index-- )
+                {
+                    object child = pair.Key.Items[ index ];
+                    string itemDir = ( child as MiscContainer )?.LibraryDirectory ?? ( child as LibraryMediaControl )?.LibraryDirectory;
+
+                    if ( itemDir == directory )
+                        MiscList.Items.RemoveAt( index );
+                }
+
+                if ( !pair.Key.HasItems )
+                    pair.Value.Visibility = Visibility.Collapsed;
             }
         }
     }
