@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using VidereLib;
 using VidereLib.Components;
-using VidereLib.Data;
 
 namespace Videre.Windows
 {
