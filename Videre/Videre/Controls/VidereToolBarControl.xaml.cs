@@ -85,6 +85,9 @@ namespace Videre.Controls
         private void OnOpenLocalSubsClick( object Sender, RoutedEventArgs E )
         {
             OpenFileDialog fileDialog = new OpenFileDialog { Filter = "SubRip (*.srt)|*.srt" };
+            if ( ViderePlayer.MediaPlayer.IsMediaLoaded )
+                fileDialog.InitialDirectory = ViderePlayer.MediaPlayer.Media.File.DirectoryName;
+
             bool? res = fileDialog.ShowDialog( Window.GetWindow( this ) );
 
             if ( !res.Value )
@@ -107,10 +110,7 @@ namespace Videre.Controls
 
         private void OnShowLibraryClick( object Sender, RoutedEventArgs E )
         {
-            LibraryWindow lib = new LibraryWindow( );
-            bool? result = lib.ShowDialog( );
-            if ( result.HasValue && result.Value )
-                ViderePlayer.GetComponent<MediaComponent>( ).LoadMedia( lib.Media.File.FullName );
+            new LibraryWindow( ).ShowDialog( );
         }
     }
 }
