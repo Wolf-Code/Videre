@@ -33,6 +33,12 @@ namespace Videre.Windows
                     await controller.CloseAsync( );
                 }
 
+                if ( Settings.Default.MediaFolders == null )
+                {
+                    Settings.Default.MediaFolders = new List<string>( );
+                    Settings.Default.Save( );
+                }
+
                 DirectorySelector.SetDirectories( Settings.Default.MediaFolders.ToArray( ) );
             };
 

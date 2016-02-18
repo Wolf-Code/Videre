@@ -36,6 +36,12 @@ namespace Videre.Windows
                 ProgressDialogController controller = await this.ShowProgressAsync( "Signing in.", "Signing in to opensubtitles.org." );
                 Interface.Client.LogIn( "", "", false );
                 await controller.CloseAsync( );
+
+                string[ ] cmdArgs = Environment.GetCommandLineArgs( );
+                if ( cmdArgs.Length > 1 )
+                    ViderePlayer.GetComponent<MediaComponent>( ).LoadMedia( cmdArgs[ 1 ] );
+                else
+                    new LibraryWindow( ).ShowDialog( );
             };
         }
 
@@ -45,19 +51,16 @@ namespace Videre.Windows
         /// <param name="e"></param>
         protected override void OnInitialized( EventArgs e )
         {
-            Application.Current.DispatcherUnhandledException += ( Sender, Args ) =>
+            AppDomain.CurrentDomain.UnhandledException += ( Sender, Args ) =>
             {
                 using ( FileStream FS = File.Create( "exception.txt" ) )
                     using ( TextWriter Writer = new StreamWriter( FS ) )
-                        WriteExceptionDetails( Args.Exception, Writer );
+                        WriteExceptionDetails( Args.ExceptionObject as Exception, Writer );
 
                 MessageBox.Show( "An exception has been encountered. The exact details have been saved in exception.txt. Please contact the developer and hand them this file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error );
-#if !DEBUG
-                Args.Handled = true;
-#endif
                 Application.Current.Shutdown( );
             };
-            
+
             ViderePlayer.Initialize( new WindowData { Window = this, MediaControlsContainer = MediaControlsContainer, MediaPlayer = new VLCPlayer( MediaArea.MediaPlayer ), MediaArea = MediaArea } );
 
             MediaComponent mediaComponent = ViderePlayer.GetComponent<MediaComponent>( );
@@ -96,10 +99,6 @@ namespace Videre.Windows
                         break;
                 }
             };
-
-            string[ ] cmdArgs = Environment.GetCommandLineArgs( );
-            if ( cmdArgs.Length > 1 )
-                ViderePlayer.GetComponent<MediaComponent>( ).LoadMedia( cmdArgs[ 1 ] );
 
             base.OnInitialized( e );
 

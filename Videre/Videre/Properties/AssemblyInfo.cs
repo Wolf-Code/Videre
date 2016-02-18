@@ -8,7 +8,7 @@ using System.Windows;
 [assembly: AssemblyTitle( "Videre" )]
 [assembly: AssemblyDescription( "A simple, yet effective video player." )]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "" )]
+[assembly: AssemblyCompany( "Kevin Deelen" )]
 [assembly: AssemblyProduct( "Videre" )]
 [assembly: AssemblyCopyright( "Copyright ©  2016" )]
 [assembly: AssemblyTrademark( "" )]
@@ -49,5 +49,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion( "1.0.0.0" )]
+[assembly: AssemblyVersion( "0.3.0.0" )]
 [assembly: AssemblyFileVersion( "1.0.0.0" )]
