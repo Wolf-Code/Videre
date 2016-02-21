@@ -118,9 +118,9 @@ namespace Videre {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Generic.List<System.String> MediaFolders {
+        public global::System.Collections.Generic.List<string> MediaFolders {
             get {
-                return ((global::System.Collections.Generic.List<System.String>)(this["MediaFolders"]));
+                return ((global::System.Collections.Generic.List<string>)(this["MediaFolders"]));
             }
             set {
                 this["MediaFolders"] = value;

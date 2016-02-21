@@ -110,6 +110,7 @@
     <Compile Include="EventArgs\OnFullscreenChangedEventArgs.cs" />
     <Compile Include="EventArgs\OnHideControlsEventArgs.cs" />
     <Compile Include="EventArgs\OnMediaFailedToLoadEventArgs.cs" />
+    <Compile Include="EventArgs\OnTvSeasonInformationReceivedEventArgs.cs" />
     <Compile Include="EventArgs\OnShowControlsEventArgs.cs" />
     <Compile Include="EventArgs\OnMediaUnloadedEventArgs.cs" />
     <Compile Include="EventArgs\OnMediaLoadedEventArgs.cs" />
@@ -120,13 +121,8 @@
     <Compile Include="EventArgs\OnSubtitlesFailedToLoadEventArgs.cs" />
     <Compile Include="EventArgs\OnSubtitlesChangedEventArgs.cs" />
     <Compile Include="Implementations\MediaElementPlayer.cs" />
-    <Compile Include="NetworkingRequests\RequestBaseJob.cs" />
-    <Compile Include="NetworkingRequests\RequestSeasonInfoJob.cs" />
-    <Compile Include="NetworkingRequests\RequestTvInfoJob.cs" />
-    <Compile Include="NetworkingRequests\RequestEpisodeInfoJob.cs" />
-    <Compile Include="NetworkingRequests\RequestMovieInfoJob.cs" />
     <Compile Include="NetworkingRequests\TheMovieDBRequest.cs" />
-    <Compile Include="Networking\NetworkingRequest.cs" />
+    <Compile Include="NetworkingRequests\TheMovieDBRequestBase.cs" />
     <Compile Include="Networking\Server.cs" />
     <Compile Include="Players\MediaPlayerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

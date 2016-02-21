@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Threading;
+using System.Globalization;
 using System.Windows;
 using TMDbLib.Objects.Search;
-using TMDbLib.Objects.TvShows;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.Data;
 using VidereLib.Data.MediaData;
+using VidereLib.EventArgs;
 using VidereLib.NetworkingRequests;
 
 namespace Videre.Controls
@@ -19,12 +19,14 @@ namespace Videre.Controls
         /// <summary>
         /// The episode request.
         /// </summary>
-        protected RequestEpisodeInfoJob episodeRequest;
+        protected TheMovieDBRequestBase episodeRequest;
+
+        private SearchTvEpisode episode;
 
         /// <summary>
         /// The season request.
         /// </summary>
-        protected RequestSeasonInfoJob seasonRequest;
+        protected TheMovieDBRequestBase seasonRequest;
 
         /// <summary>
         /// Constructor.
@@ -53,47 +55,80 @@ namespace Videre.Controls
             {
                 VidereEpisodeInformation episodeInformation;
                 if ( MediaInformationManager.ContainsEpisodeInformationForHash( media.MediaInformation.Hash, out episodeInformation ) )
+                {
                     FinishLoadingVideo( );
+                }
                 else
                 {
-                    ThreadPool.QueueUserWorkItem( async obj =>
-                    {
-                        episodeRequest = new RequestEpisodeInfoJob( media );
-                        SearchTvEpisode episode = await episodeRequest.Request( );
-                        if ( episode == null )
-                        {
-                            ViderePlayer.MainDispatcher.Invoke( ( ) => LoadingRing.IsActive = false );
-                            return;
-                        }
-
-                        seasonRequest = new RequestSeasonInfoJob( media, episode.ShowId, episode.SeasonNumber );
-                        TvSeason season = await seasonRequest.Request( );
-                        if ( season == null )
-                        {
-                            ViderePlayer.MainDispatcher.Invoke( ( ) =>
-                            {
-                                VidereEpisodeInformation epi = MediaInformationManager.GetOrSaveEpisodeInformation( media.MediaInformation as VidereEpisodeInformation );
-                                epi.Rating = ( decimal ) episode.VoteAverage;
-                                epi.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( episode.StillPath );
-                            } );
-                            return;
-                        }
-
-                        ViderePlayer.MainDispatcher.Invoke( ( ) =>
-                        {
-                            MediaInformationManager.SetEpisodeInformation( media.MediaInformation as VidereEpisodeInformation );
-
-                            VidereEpisodeInformation info = MediaInformationManager.GetEpisodeInformationByHash( media.MediaInformation.Hash );
-                            info.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( season.PosterPath );
-                            info.Rating = ( decimal ) episode.VoteAverage;
-
-                            FinishLoadingVideo( );
-                        } );
-                    } );
+                    TheMovieDBComponent movieDBComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
+                    movieDBComp.OnEpisodeInformationReceived += OnEpisodeInfoReceived;
+                    episodeRequest = ViderePlayer.GetComponent<TheMovieDBComponent>( ).RequestEpisodeInformation( media );
                 }
             }
             else
                 LoadingRing.IsActive = false;
+        }
+
+        private void OnEpisodeInfoReceived( object Sender, Tuple<VidereMedia, SearchTvEpisode> Tuple1 )
+        {
+            if ( Tuple1.Item1.OpenSubtitlesHash != media.OpenSubtitlesHash )
+                return;
+
+            TheMovieDBComponent comp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
+
+            comp.OnEpisodeInformationReceived -= OnEpisodeInfoReceived;
+            episodeRequest = null;
+
+            if ( Tuple1.Item2 == null )
+            {
+                this.FinishLoadingVideo( );
+                return;
+            }
+
+            episode = Tuple1.Item2;
+            ViderePlayer.MainDispatcher.Invoke( ( ) =>
+            {
+                VidereEpisodeInformation epi = MediaInformationManager.GetOrSaveEpisodeInformation( media.MediaInformation as VidereEpisodeInformation );
+                epi.Rating = ( decimal ) episode.Rating;
+                epi.Poster = comp.GetPosterURL( episode.StillPath );
+
+                this.Rating.Text = epi.Rating.ToString( CultureInfo.InvariantCulture );
+            } );
+
+            comp.OnSeasonInformationReceived += OnSeasonInfoReceived;
+            seasonRequest = comp.RequestSeasonInformation( episode.ShowId, episode.SeasonNumber );
+        }
+
+        private void OnSeasonInfoReceived( object Sender, OnTvSeasonInformationReceivedEventArgs OnTvSeasonInformationReceivedEventArgs )
+        {
+            if ( OnTvSeasonInformationReceivedEventArgs.SeasonNumber != episode?.SeasonNumber || OnTvSeasonInformationReceivedEventArgs.ShowID != episode.ShowId )
+                return;
+
+            TheMovieDBComponent movieDBComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
+
+            movieDBComp.OnSeasonInformationReceived -= OnSeasonInfoReceived;
+            seasonRequest = null;
+
+            if ( OnTvSeasonInformationReceivedEventArgs.Season == null )
+            {
+                ViderePlayer.MainDispatcher.Invoke( ( ) =>
+                {
+                    VidereEpisodeInformation epi = MediaInformationManager.GetEpisodeInformationByHash( media.OpenSubtitlesHash );
+                    epi.Poster = movieDBComp.GetPosterURL( epi.Poster );
+
+                    this.FinishLoadingVideo( );
+                } );
+
+                return;
+            }
+
+            ViderePlayer.MainDispatcher.Invoke( ( ) =>
+            {
+                VidereEpisodeInformation epi = MediaInformationManager.GetEpisodeInformationByHash( media.OpenSubtitlesHash );
+                epi.Poster = movieDBComp.GetPosterURL( OnTvSeasonInformationReceivedEventArgs.Season.PosterPath );
+
+                this.FinishLoadingVideo( );
+            } );
         }
 
         /// <summary>
@@ -102,6 +137,9 @@ namespace Videre.Controls
         protected override void OnFinishLoadingVideo( )
         {
             VidereEpisodeInformation info = MediaInformationManager.GetEpisodeInformationByHash( media.MediaInformation.Hash );
+            if ( info == null )
+                return;
+
             SubTitle.Visibility = Visibility.Visible;
             SubTitle.Text = $"Season {info.Season}, Episode {info.Episode}";
         }
@@ -111,8 +149,19 @@ namespace Videre.Controls
         /// </summary>
         protected override void OnControlUnload( )
         {
-            episodeRequest?.Cancel( );
-            seasonRequest?.Cancel( );
+            TheMovieDBComponent movieDBComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
+
+            if ( episodeRequest != null )
+            {
+                episodeRequest.Cancel( );
+                movieDBComp.OnEpisodeInformationReceived -= OnEpisodeInfoReceived;
+            }
+
+            if ( seasonRequest != null )
+            {
+                seasonRequest.Cancel( );
+                movieDBComp.OnSeasonInformationReceived -= OnSeasonInfoReceived;
+            }
         }
     }
 }

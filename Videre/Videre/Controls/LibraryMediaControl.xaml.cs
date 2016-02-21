@@ -64,8 +64,11 @@ namespace Videre.Controls
             VidereMediaInformation info = MediaInformationManager.GetMediaInformationByHash( media.MediaInformation.Hash );
             Title.Text = info.Name;
 
-            BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( info.Poster ) ) );
-            Image.Source = img;
+            if ( info.Poster != null )
+            {
+                BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( info.Poster ) ) );
+                Image.Source = img;
+            }
 
             if ( info.Rating > 0 )
             {

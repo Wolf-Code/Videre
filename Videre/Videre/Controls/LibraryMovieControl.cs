@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Windows;
 using TMDbLib.Objects.General;
 using VidereLib;
@@ -18,7 +17,7 @@ namespace Videre.Controls
         /// <summary>
         /// The movie request.
         /// </summary>
-        protected RequestMovieInfoJob movieRequest;
+        protected TheMovieDBRequestBase movieRequest;
 
         /// <summary>
         /// Constructor.
@@ -47,29 +46,39 @@ namespace Videre.Controls
                 {
                     MediaInformationManager.SetMovieInformation( media.MediaInformation as VidereMovieInformation );
 
-                    ThreadPool.QueueUserWorkItem( async obj =>
-                    {
-                        movieRequest = new RequestMovieInfoJob( media );
-                        MovieResult movie = await movieRequest.Request( );
-                        if ( movie == null )
-                        {
-                            ViderePlayer.MainDispatcher.Invoke( ( ) => LoadingRing.IsActive = false );
-                            return;
-                        }
-
-                        ViderePlayer.MainDispatcher.Invoke( ( ) =>
-                        {
-                            VidereMovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MediaInformation.Hash );
-                            info.Poster = ViderePlayer.GetComponent<TheMovieDBComponent>( ).GetPosterURL( movie.PosterPath );
-                            info.Rating = ( decimal ) movie.VoteAverage;
-
-                            FinishLoadingVideo( );
-                        } );
-                    } );
+                    TheMovieDBComponent movieDBComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
+                    movieDBComp.OnMovieInformationReceived += OnMovieInfoReceived;
+                    movieRequest = ViderePlayer.GetComponent<TheMovieDBComponent>( ).RequestMovieInformation( media );
                 }
             }
             else
                 LoadingRing.IsActive = false;
+        }
+
+        private void OnMovieInfoReceived( object Sender, Tuple<VidereMedia, MovieResult> Tuple1 )
+        {
+            if ( Tuple1.Item1.OpenSubtitlesHash != media.OpenSubtitlesHash )
+                return;
+
+            MovieResult movie = Tuple1.Item2;
+            if ( movie == null )
+            {
+                ViderePlayer.MainDispatcher.Invoke( this.FinishLoadingVideo );
+                return;
+            }
+
+            TheMovieDBComponent movieDBComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
+            ViderePlayer.MainDispatcher.Invoke( ( ) =>
+            {
+                VidereMovieInformation info = MediaInformationManager.GetMovieInformationByHash( media.MediaInformation.Hash );
+                info.Poster = movieDBComp.GetPosterURL( movie.PosterPath );
+                info.Rating = ( decimal ) movie.VoteAverage;
+
+                this.FinishLoadingVideo( );
+            } );
+
+            movieDBComp.OnMovieInformationReceived -= OnMovieInfoReceived;
+            movieRequest = null;
         }
 
         /// <summary>
@@ -77,7 +86,11 @@ namespace Videre.Controls
         /// </summary>
         protected override void OnControlUnload( )
         {
-            movieRequest?.Cancel( );
+            if ( movieRequest != null )
+            {
+                movieRequest.Cancel( );
+                ViderePlayer.GetComponent<TheMovieDBComponent>( ).OnMovieInformationReceived -= OnMovieInfoReceived;
+            }
         }
     }
 }

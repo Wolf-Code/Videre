@@ -71,9 +71,6 @@ namespace Videre.Controls
         {
             List<VidereMedia> media = ViderePlayer.GetComponent<MediaComponent>( ).FindMediaInDirectory( directory );
 
-            ProgressDialogController controller = await ( ( MetroWindow ) Window.GetWindow( this ) ).ShowProgressAsync( "Retrieving media information", "Retrieving media information from OpenSubtitles.org." );
-            controller.SetIndeterminate( );
-
             await ViderePlayer.GetComponent<MediaComponent>( ).RetrieveMediaInformation( media.ToArray( ) );
 
             media.Sort( ( A, B ) => string.Compare( A.Name, B.Name, StringComparison.Ordinal ) );
@@ -101,7 +98,6 @@ namespace Videre.Controls
                 if ( pair.Key.Items.Count > 0 )
                     pair.Value.Visibility = Visibility.Visible;
             }
-            await controller.CloseAsync( );
         }
 
         private void OnSelectionChange( object Sender, SelectionChangedEventArgs E )

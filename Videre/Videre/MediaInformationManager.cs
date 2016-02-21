@@ -23,10 +23,11 @@ namespace Videre
         /// </summary>
         public static async void LoadMediaData( )
         {
-            if ( !File.Exists( MediaDataFile ) )
+            string filePath = Path.Combine( ViderePlayer.ProgramDirectory.FullName, MediaDataFile );
+            if ( !File.Exists( filePath ) )
                 return;
 
-            using ( FileStream FS = File.OpenRead( Path.Combine( ViderePlayer.ProgramDirectory.FullName, MediaDataFile ) ) )
+            using ( FileStream FS = File.OpenRead( filePath ) )
                 using ( TextReader fileReader = new StreamReader( FS ) )
                 {
                     string text = await fileReader.ReadToEndAsync( );
