@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using VidereSubs.Attributes;
 
 namespace VidereSubs.SubtitleFormats
@@ -34,7 +35,7 @@ namespace VidereSubs.SubtitleFormats
             CultureInfo france = new CultureInfo( "fr-Fr" );
             string[ ] Data;
             using ( FileStream FS = File.OpenRead( FilePath ) )
-                using ( TextReader Reader = new StreamReader( FS ) )
+                using ( TextReader Reader = new StreamReader( FS, Encoding.UTF8 ) )
                     Data = Reader.ReadToEnd( ).Split( new[ ] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries );
 
             int X = 0;

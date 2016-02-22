@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -32,6 +31,12 @@ namespace Videre.Windows
                     await dbComp.RetrieveConfiguration( );
 
                     await controller.CloseAsync( );
+                }
+
+                if ( Settings.Default.MediaFolders == null )
+                {
+                    Settings.Default.MediaFolders = new List<string>( );
+                    Settings.Default.Save( );
                 }
 
                 DirectorySelector.SetDirectories( Settings.Default.MediaFolders.ToArray( ) );

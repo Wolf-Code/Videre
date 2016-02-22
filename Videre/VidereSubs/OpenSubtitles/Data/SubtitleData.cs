@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using CookComputing.XmlRpc;
 
 namespace VidereSubs.OpenSubtitles.Data
@@ -54,6 +55,11 @@ namespace VidereSubs.OpenSubtitles.Data
         public string SubDownloadLink { private set; get; }
 
         /// <summary>
+        /// The encoding of the subtitle file.
+        /// </summary>
+        public Encoding SubEncoding { private set; get; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="output">The output from the request.</param>
@@ -68,6 +74,8 @@ namespace VidereSubs.OpenSubtitles.Data
             LanguageName = output.GetString( "LanguageName" );
             SubFileHash = output.GetString( "SubHash" );
             ISO639 = output.GetString( "ISO639" );
+
+            SubEncoding = Encoding.GetEncoding( int.Parse( output.GetString( "SubEncoding" ).Substring( 2 ) ) );
         }
     }
 }

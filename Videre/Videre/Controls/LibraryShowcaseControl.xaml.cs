@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 using VidereLib;
 using VidereLib.Components;
 using VidereLib.Data;
@@ -95,7 +93,7 @@ namespace Videre.Controls
 
             foreach ( var pair in lists )
             {
-                if ( pair.Key.Items.Count > 0 )
+                if ( pair.Key.HasItems )
                     pair.Value.Visibility = Visibility.Visible;
             }
         }
@@ -145,7 +143,7 @@ namespace Videre.Controls
                         MiscList.Items.RemoveAt( index );
                 }
 
-                //if ( !pair.Key.HasItems )
+                if ( !pair.Key.HasItems )
                     pair.Value.Visibility = Visibility.Collapsed;
             }
         }

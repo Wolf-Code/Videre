@@ -32,6 +32,8 @@ namespace Videre.Controls
 
         private WebClient downloader;
 
+        private SubtitleData subData;
+
         private MainWindow window;
 
         private string downloadPath;
@@ -78,9 +80,17 @@ namespace Videre.Controls
         private async void DownloaderOnDownloadFileCompleted( object Sender, AsyncCompletedEventArgs E )
         {
             using ( FileStream originalFileStream = File.OpenRead( tempFile ) )
-                using ( FileStream decompressedFileStream = File.Create( downloadPath ) )
-                    using ( GZipStream decompressionStream = new GZipStream( originalFileStream, CompressionMode.Decompress ) )
-                        decompressionStream.CopyTo( decompressedFileStream );
+                using ( GZipStream decompressionStream = new GZipStream( originalFileStream, CompressionMode.Decompress ) )
+                {
+                    MemoryStream stream = new MemoryStream( );
+                    decompressionStream.CopyTo( stream );
+
+                    string toString = subData.SubEncoding.GetString( stream.ToArray( ) );
+
+                    using ( FileStream decompressedFileStream = File.Create( downloadPath ) )
+                        using ( StreamWriter writer = new StreamWriter( decompressedFileStream ) )
+                            await writer.WriteAsync( toString );
+                }
 
             File.Delete( tempFile );
 
@@ -124,12 +134,12 @@ namespace Videre.Controls
             await controller.CloseAsync( );
         }
 
-        private async Task<LogInOutput> SignInClient( )
+        private static async Task<LogInOutput> SignInClient( )
         {
             return await Task.Run( ( ) => Interface.Client.LogIn( string.Empty, string.Empty, false ) );
         }
 
-        private async Task<SubtitleLanguage[ ]> GetSubtitleLanguages( )
+        private static async Task<SubtitleLanguage[ ]> GetSubtitleLanguages( )
         {
             return await Task.Run( ( ) => Interface.Client.GetSubLanguages( ) );
         }
@@ -174,20 +184,20 @@ namespace Videre.Controls
 
         private async void DownloadSubFileButton_OnClick( object Sender, RoutedEventArgs E )
         {
-            SubtitleData data = SubtitlesList.SelectedValue as SubtitleData;
+            subData = SubtitlesList.SelectedValue as SubtitleData;
 
-            if ( data == null )
+            if ( subData == null )
                 await window.ShowMessageAsync( "No subtitles selected", "Please select a subtitles file to download." );
             else
             {
-                SaveFileDialog dialog = new SaveFileDialog { InitialDirectory = ViderePlayer.MediaPlayer.Media.File.Directory.FullName, FileName = data.SubFileName, Filter = "SubRip (*.srt)|*.srt" };
+                SaveFileDialog dialog = new SaveFileDialog { InitialDirectory = ViderePlayer.MediaPlayer.Media.File.Directory.FullName, FileName = subData.SubFileName, Filter = "SubRip (*.srt)|*.srt" };
                 if ( !dialog.ShowDialog( ).GetValueOrDefault( ) ) return;
 
-                controller = await window.ShowProgressAsync( "Downloading subtitles", $"Downloading {data.SubFileName} from opensubtitles.org." );
-                controller.Maximum = data.SubFileSize;
+                controller = await window.ShowProgressAsync( "Downloading subtitles", $"Downloading {subData.SubFileName} from opensubtitles.org." );
+                controller.Maximum = subData.SubFileSize;
                 downloadPath = dialog.FileName;
 
-                downloader.DownloadFileAsync( new Uri( data.SubDownloadLink ), tempFile );
+                downloader.DownloadFileAsync( new Uri( subData.SubDownloadLink ), tempFile );
             }
         }
     }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using TMDbLib.Objects.Exceptions;
 using VidereLib.Components;
 
@@ -16,8 +15,8 @@ namespace VidereLib.NetworkingRequests
         /// <summary>
         /// The event which is called whenever too many requests have been made in a small period, causing the server to deny new requests which means we will have to wait for a certain period.
         /// </summary>
-        public event EventHandler OnRequestLimitReached;
-        
+        public override event EventHandler OnRequestLimitReached;
+
         /// <summary>
         /// Called whenever the request completes.
         /// </summary>
@@ -53,13 +52,13 @@ namespace VidereLib.NetworkingRequests
                     if ( x is RequestLimitExceededException )
                     {
                         OnRequestLimitReached?.Invoke( this, null );
-                        Task.Delay( 10000 ).Wait( );
+                        Task.Delay( TimeSpan.FromSeconds( TheMovieDBComponent.TheMovieDBRequestLimitPeriod ) ).Wait( );
                         PerformRequest( obj );
 
                         return true;
                     }
-
-                    return false;
+                    
+                    throw x;
                 } );
             }
         }

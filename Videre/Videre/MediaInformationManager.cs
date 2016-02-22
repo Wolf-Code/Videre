@@ -15,6 +15,8 @@ namespace Videre
     {
         private const string MediaDataFile = "MediaInfo.json";
 
+        private static string MediaDataFilePath => Path.Combine( ViderePlayer.ProgramDirectory.FullName, MediaDataFile );
+
         private static readonly Dictionary<string, VidereMovieInformation> movieInformation = new Dictionary<string, VidereMovieInformation>( );
         private static readonly Dictionary<string, VidereEpisodeInformation> episodeInformation = new Dictionary<string, VidereEpisodeInformation>( );
 
@@ -23,7 +25,7 @@ namespace Videre
         /// </summary>
         public static async void LoadMediaData( )
         {
-            string filePath = Path.Combine( ViderePlayer.ProgramDirectory.FullName, MediaDataFile );
+            string filePath = MediaDataFilePath;
             if ( !File.Exists( filePath ) )
                 return;
 
@@ -53,7 +55,7 @@ namespace Videre
         /// </summary>
         public static void SaveMediaData( )
         {
-            using ( FileStream FS = File.Create( MediaDataFile ) )
+            using ( FileStream FS = File.Create( MediaDataFilePath ) )
                 using ( StreamWriter writer = new StreamWriter( FS ) )
                 {
                     JsonWriter jsonWriter = new JsonTextWriter( writer );

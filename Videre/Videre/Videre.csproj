@@ -206,6 +206,9 @@
     <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\VidereBoundsSelectorWindow.xaml.cs">
+      <DependentUpon>VidereBoundsSelectorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\VidereWindow.cs" />
     <Page Include="Controls\LibraryDirectorySelector.xaml">
       <SubType>Designer</SubType>
@@ -280,6 +283,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\VidereBoundsSelectorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
