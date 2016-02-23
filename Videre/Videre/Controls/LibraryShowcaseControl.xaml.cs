@@ -102,7 +102,7 @@ namespace Videre.Controls
         {
             Window.GetWindow( this ).Close( );
 
-            ViderePlayer.MediaPlayer.LoadAndPlay( ( ( MiscContainer )MiscList.SelectedItem ).media.File );
+            ViderePlayer.GetComponent<MediaComponent>( ).LoadAndPlay( ( ( MiscContainer ) MiscList.SelectedItem ).media.File );
         }
 
         /// <summary>

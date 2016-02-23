@@ -112,7 +112,7 @@ namespace Videre.Controls
 
         private void OnControlClick( object Sender, MouseButtonEventArgs E )
         {
-            ViderePlayer.MediaPlayer.LoadAndPlay( media.File );
+            ViderePlayer.GetComponent<MediaComponent>( ).LoadAndPlay( media.File );
 
             Window.GetWindow( this ).Close( );
         }

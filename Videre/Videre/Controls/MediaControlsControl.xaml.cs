@@ -207,7 +207,7 @@ namespace Videre.Controls
             if ( !ViderePlayer.IsInitialized )
                 return;
 
-            ViderePlayer.MediaPlayer.SetVolume( ( float ) E.NewValue );
+            ViderePlayer.GetComponent<AudioComponent>( ).SetVolume( ( float ) E.NewValue );
 
             OnVolumeChanged?.Invoke( this, E );
         }
@@ -242,7 +242,7 @@ namespace Videre.Controls
             else if ( OffsetFromBorder > MaxRight )
                 PointerOffset = OffsetFromBorder - MaxRight;
 
-            TimeSpan hoverTime = TimeSpan.FromTicks( ( long ) ( ViderePlayer.MediaPlayer.GetMediaLength( ).Ticks * Progress ) );
+            TimeSpan hoverTime = TimeSpan.FromTicks( ( long ) ( ViderePlayer.GetComponent<MediaComponent>( ).GetMediaLength( ).Ticks * Progress ) );
             TimeShower.TimeLabel.Content = hoverTime.ToString( TimeFormat );
 
             Canvas.SetLeft( TimeShower.Pointer, halfWidth + PointerOffset );

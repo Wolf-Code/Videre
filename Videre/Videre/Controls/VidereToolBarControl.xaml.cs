@@ -67,9 +67,11 @@ namespace Videre.Controls
         {
             OpenFileDialog fileDialog = new OpenFileDialog( );
 
+            MediaComponent mediaComp = ViderePlayer.GetComponent<MediaComponent>( );
+
             string VideoFilter = "Video Files ";
-            string VideoCombinedCommaSeparated = "*." + string.Join( ", *.", ViderePlayer.MediaPlayer.VideoFileExtensions );
-            string VideoCombinedSemiColonSeparated = "*." + string.Join( ";*.", ViderePlayer.MediaPlayer.VideoFileExtensions );
+            string VideoCombinedCommaSeparated = "*." + string.Join( ", *.", mediaComp.VideoFileExtensions );
+            string VideoCombinedSemiColonSeparated = "*." + string.Join( ";*.", mediaComp.VideoFileExtensions );
             VideoFilter += $"({VideoCombinedCommaSeparated})|{VideoCombinedSemiColonSeparated}";
 
             string Filter = $"{VideoFilter}|All Files (*.*)|*.*";
@@ -79,14 +81,16 @@ namespace Videre.Controls
                 return;
 
             ViderePlayer.GetComponent<StateComponent>( ).Stop( );
-            ViderePlayer.GetComponent<MediaComponent>( ).LoadMedia( fileDialog.FileName );
+            mediaComp.LoadMedia( fileDialog.FileName );
         }
 
         private void OnOpenLocalSubsClick( object Sender, RoutedEventArgs E )
         {
             OpenFileDialog fileDialog = new OpenFileDialog { Filter = "SubRip (*.srt)|*.srt" };
-            if ( ViderePlayer.MediaPlayer.IsMediaLoaded )
-                fileDialog.InitialDirectory = ViderePlayer.MediaPlayer.Media.File.DirectoryName;
+            MediaComponent mediaComp = ViderePlayer.GetComponent<MediaComponent>( );
+
+            if ( mediaComp.HasMediaBeenLoaded )
+                fileDialog.InitialDirectory = mediaComp.Media.File.DirectoryName;
 
             bool? res = fileDialog.ShowDialog( Window.GetWindow( this ) );
 

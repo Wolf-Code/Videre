@@ -67,6 +67,7 @@ namespace VidereLib.Components
 
             ViderePlayer.MediaPlayer.Stop( );
             ViderePlayer.GetComponent<MediaComponent>( ).UnloadMedia( );
+            ViderePlayer.GetComponent<SubtitlesComponent>( ).UnloadSubtitles( );
             CurrentState = PlayerState.Stopped;
         }
 

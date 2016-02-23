@@ -190,7 +190,7 @@ namespace Videre.Controls
                 await window.ShowMessageAsync( "No subtitles selected", "Please select a subtitles file to download." );
             else
             {
-                SaveFileDialog dialog = new SaveFileDialog { InitialDirectory = ViderePlayer.MediaPlayer.Media.File.Directory.FullName, FileName = subData.SubFileName, Filter = "SubRip (*.srt)|*.srt" };
+                SaveFileDialog dialog = new SaveFileDialog { InitialDirectory = ViderePlayer.GetComponent<MediaComponent>(  ).Media.File.Directory.FullName, FileName = subData.SubFileName, Filter = "SubRip (*.srt)|*.srt" };
                 if ( !dialog.ShowDialog( ).GetValueOrDefault( ) ) return;
 
                 controller = await window.ShowProgressAsync( "Downloading subtitles", $"Downloading {subData.SubFileName} from opensubtitles.org." );

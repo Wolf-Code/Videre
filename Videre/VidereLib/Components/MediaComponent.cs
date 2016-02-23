@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VidereLib.Data;
 using VidereLib.Data.MediaData;
 using VidereLib.EventArgs;
+using VidereLib.Players;
 using VidereSubs.OpenSubtitles;
 using VidereSubs.OpenSubtitles.Data;
 using VidereSubs.OpenSubtitles.Outputs;
@@ -26,6 +27,11 @@ namespace VidereLib.Components
         /// The currently loaded media.
         /// </summary>
         public VidereMedia Media => ViderePlayer.MediaPlayer.Media;
+
+        /// <summary>
+        /// The video file extensions that the <see cref="MediaPlayerBase"/> can play.
+        /// </summary>
+        public string[ ] VideoFileExtensions => ViderePlayer.MediaPlayer.VideoFileExtensions;
 
         /// <summary>
         /// Gets called whenever media has been loaded.
@@ -159,6 +165,15 @@ namespace VidereLib.Components
         public void UnloadMedia( )
         {
             ViderePlayer.MediaPlayer.UnloadMedia( );
+        }
+
+        /// <summary>
+        /// Loads and immediately plays a media file.
+        /// </summary>
+        /// <param name="file">The media file.</param>
+        public void LoadAndPlay( FileInfo file )
+        {
+            ViderePlayer.MediaPlayer.LoadAndPlay( file );
         }
     }
 }

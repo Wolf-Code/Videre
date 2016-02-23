@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro;
 using VidereLib;
+using VidereLib.Components;
 
 namespace Videre.Controls
 {
@@ -63,7 +64,7 @@ namespace Videre.Controls
                 { "-executable", '\"' + System.Windows.Forms.Application.ExecutablePath + '\"' },
                 { "-icon", '\"' + System.Windows.Forms.Application.StartupPath + "\\Videre.ico\"" },
                 { "-progID", Settings.Default.ProgID },
-                { "-videoExtensions", '\"' + string.Join( " ", ViderePlayer.MediaPlayer.VideoFileExtensions ) + '\"' },
+                { "-videoExtensions", '\"' + string.Join( " ", ViderePlayer.GetComponent<MediaComponent>(  ).VideoFileExtensions ) + '\"' },
             };
             string arguments = procArgs.Aggregate( string.Empty, ( Current, pair ) => Current + pair.Key + " " + pair.Value + " " ).Trim( );
 

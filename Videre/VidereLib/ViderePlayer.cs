@@ -32,7 +32,7 @@ namespace VidereLib
         /// <summary>
         /// The <see cref="MediaPlayerBase"/> used to play the media.
         /// </summary>
-        public static MediaPlayerBase MediaPlayer => windowData.MediaPlayer;
+        internal static MediaPlayerBase MediaPlayer => windowData.MediaPlayer;
 
         /// <summary>
         /// Whether or not the player has been initialized yet.
