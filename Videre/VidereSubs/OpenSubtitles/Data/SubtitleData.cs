@@ -74,8 +74,15 @@ namespace VidereSubs.OpenSubtitles.Data
             LanguageName = output.GetString( "LanguageName" );
             SubFileHash = output.GetString( "SubHash" );
             ISO639 = output.GetString( "ISO639" );
-
-            SubEncoding = Encoding.GetEncoding( int.Parse( output.GetString( "SubEncoding" ).Substring( 2 ) ) );
+            
+            try
+            {
+                SubEncoding = Encoding.GetEncoding( int.Parse( output.GetString( "SubEncoding" ).Substring( 2 ) ) );
+            }
+            catch
+            {
+                SubEncoding = Encoding.UTF8;
+            }
         }
     }
 }
