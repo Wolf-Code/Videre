@@ -71,7 +71,7 @@ namespace Videre.Controls
 
         private void OnEpisodeInfoReceived( object Sender, Tuple<VidereMedia, SearchTvEpisode> Tuple1 )
         {
-            if ( Tuple1.Item1.OpenSubtitlesHash != media.OpenSubtitlesHash )
+            if ( Tuple1.Item1?.OpenSubtitlesHash != media.OpenSubtitlesHash )
                 return;
 
             TheMovieDBComponent comp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
@@ -81,7 +81,11 @@ namespace Videre.Controls
 
             if ( Tuple1.Item2 == null )
             {
-                this.FinishLoadingVideo( );
+                ViderePlayer.MainDispatcher.Invoke( ( ) =>
+                {
+                    MediaInformationManager.GetOrSaveEpisodeInformation( media.MediaInformation as VidereEpisodeInformation );
+                    this.FinishLoadingVideo( );
+                } );
                 return;
             }
 

@@ -123,12 +123,15 @@ namespace VidereLib.Components
         public async Task RetrieveMediaInformation( params VidereMedia[ ] medias )
         {
             string[ ] hashes = new string[ medias.Length ];
-            Dictionary<string, VidereMedia> hashMedias = new Dictionary<string, VidereMedia>( );
+            Dictionary<string, List<VidereMedia>> hashMedias = new Dictionary<string, List<VidereMedia>>( );
             for ( int x = 0; x < medias.Length; x++ )
             {
                 string hash = medias[ x ].OpenSubtitlesHash;
                 hashes[ x ] = hash;
-                hashMedias.Add( hash, medias[ x ] );
+                if ( !hashMedias.ContainsKey( hash ) )
+                    hashMedias.Add( hash, new List<VidereMedia> { medias[ x ] } );
+
+                hashMedias[ hash ].Add( medias[ x ] );
             }
 
             CheckMovieHashOutput output = await Interface.CheckMovieHashBestGuessOnly( hashes );
@@ -139,20 +142,22 @@ namespace VidereLib.Components
                     continue;
 
                 MovieData data = pair.Value[ 0 ];
-                VidereMedia media = hashMedias[ pair.Key ];
-                VidereMediaInformation movieInfo = null;
-                switch ( data.MovieType )
+                foreach ( VidereMedia media in hashMedias[ pair.Key ] )
                 {
-                    case MovieData.MovieKind.Episode:
-                        movieInfo = new VidereEpisodeInformation( data );
-                        break;
+                    VidereMediaInformation movieInfo = null;
+                    switch ( data.MovieType )
+                    {
+                        case MovieData.MovieKind.Episode:
+                            movieInfo = new VidereEpisodeInformation( data );
+                            break;
 
-                    case MovieData.MovieKind.Movie:
-                        movieInfo = new VidereMovieInformation( data );
-                        break;
+                        case MovieData.MovieKind.Movie:
+                            movieInfo = new VidereMovieInformation( data );
+                            break;
+                    }
+
+                    media.MediaInformation = movieInfo;
                 }
-
-                media.MediaInformation = movieInfo;
             }
 
             if ( output.NotProcessed.Length > 0 )

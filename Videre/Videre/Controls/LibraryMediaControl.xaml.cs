@@ -52,32 +52,38 @@ namespace Videre.Controls
         /// </summary>
         protected void FinishLoadingVideo( )
         {
-            LoadingRing.IsActive = false;
-
-            if ( !media.HasImdbID )
-                return;
-
-            VideoPlaceholder.Visibility = Visibility.Hidden;
-
-            TheMovieDBComponent movieComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
-
-            VidereMediaInformation info = MediaInformationManager.GetMediaInformationByHash( media.MediaInformation.Hash );
-            Title.Text = info.Name;
-
-            if ( info.Poster != null )
+            try
             {
-                BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( info.Poster ) ) );
-                Image.Source = img;
-            }
+                LoadingRing.IsActive = false;
 
-            if ( info.Rating > 0 )
+                if ( !media.HasImdbID )
+                    return;
+
+                VideoPlaceholder.Visibility = Visibility.Hidden;
+
+                TheMovieDBComponent movieComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
+
+                VidereMediaInformation info = MediaInformationManager.GetMediaInformationByHash( media.MediaInformation.Hash );
+                Title.Text = info.Name;
+
+                if ( info.Poster != null )
+                {
+                    BitmapImage img = new BitmapImage( new Uri( movieComp.GetPosterURL( info.Poster ) ) );
+                    Image.Source = img;
+                }
+
+                if ( info.Rating > 0 )
+                {
+                    Rating.Visibility = Visibility.Visible;
+                    Rating.Text = Math.Round( info.Rating, 1 ).ToString( CultureInfo.InvariantCulture );
+                }
+                else
+                    Rating.Visibility = Visibility.Collapsed;
+            }
+            catch ( Exception e )
             {
-                Rating.Visibility = Visibility.Visible;
-                Rating.Text = Math.Round( info.Rating, 1 ).ToString( CultureInfo.InvariantCulture );
+                MessageBox.Show( e.ToString( ) );
             }
-            else
-                Rating.Visibility = Visibility.Collapsed;
-
             OnFinishLoadingVideo( );
         }
 
