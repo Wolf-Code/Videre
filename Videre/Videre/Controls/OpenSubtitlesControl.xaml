@@ -48,7 +48,7 @@
                             <GridView>
                                 <GridViewColumn Header="Name" DisplayMemberBinding="{Binding SubFileName}"/>
                                 <GridViewColumn Header="Downloads" DisplayMemberBinding="{Binding DownloadsCount}"/>
-                                <GridViewColumn Header="Language" DisplayMemberBinding="{Binding LanguageName}" />
+                                <GridViewColumn Header="Hearing Impaired" DisplayMemberBinding="{Binding HearingImpaired}" />
                                 <GridViewColumn Header="Date" DisplayMemberBinding="{Binding AddDate}" />
                             </GridView>
                         </ListView.View>

@@ -60,6 +60,11 @@ namespace VidereSubs.OpenSubtitles.Data
         public Encoding SubEncoding { private set; get; }
 
         /// <summary>
+        /// Indicates whether these subtitles are suitable for people who are hearing impaired.
+        /// </summary>
+        public bool HearingImpaired { private set; get; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="output">The output from the request.</param>
@@ -74,7 +79,8 @@ namespace VidereSubs.OpenSubtitles.Data
             LanguageName = output.GetString( "LanguageName" );
             SubFileHash = output.GetString( "SubHash" );
             ISO639 = output.GetString( "ISO639" );
-            
+            HearingImpaired = output.GetString( "SubHearingImpaired" ).Equals( "1" );
+
             try
             {
                 SubEncoding = Encoding.GetEncoding( int.Parse( output.GetString( "SubEncoding" ).Substring( 2 ) ) );

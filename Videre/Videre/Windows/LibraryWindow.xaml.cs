@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using VidereLib;
@@ -65,11 +66,20 @@ namespace Videre.Windows
 
         private async void DirectoryListOnSelectionChanged( object Sender, SelectionChangedEventArgs SelectionChangedEventArgs )
         {
+            ProgressDialogController controller = await this.ShowProgressAsync( "Loading directories", "Loading new media directories" );
+            controller.SetIndeterminate( );
+
+            List<Task> loadTasks = new List<Task>( SelectionChangedEventArgs.AddedItems.Count );
             foreach ( string dir in SelectionChangedEventArgs.AddedItems )
-                await MediaShowcase.LoadDirectory( dir );
+                loadTasks.Add( MediaShowcase.LoadDirectory( dir ) );
+
+            foreach ( Task task in loadTasks )
+                await task;
 
             foreach ( string dir in SelectionChangedEventArgs.RemovedItems )
                 MediaShowcase.UnloadDirectory( dir );
+
+            await controller.CloseAsync( );
         }
     }
 }
