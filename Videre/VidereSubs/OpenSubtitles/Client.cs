@@ -138,17 +138,18 @@ namespace VidereSubs.OpenSubtitles
             {
                 FileInfo info = movieFiles[ Index ];
                 string hash = Hasher.ComputeMovieHash( info.FullName );
-                requests[ Index ] = new XmlRpcStruct { { "moviehash", hash }, { "moviesize", info.Length }, { "sublanguageid", requestLanguages } };
+                requests[ Index ] = new XmlRpcStruct { { "moviehash", hash }, { "moviebytesize", info.Length }, { "sublanguageid", requestLanguages } };
             }
 
-            XmlRpcStruct parameters = new XmlRpcStruct { };
+            XmlRpcStruct parameters = new XmlRpcStruct( );
 
             XmlRpcStruct ret = clientProxy.SearchSubtitles( login.Token, requests, parameters );
             XmlRpcStruct[ ] data = ret[ "data" ] as XmlRpcStruct[ ];
-            if ( data == null )
-                return new SubtitleData[ 0 ];
 
             ResetTimer( );
+
+            if ( data == null )
+                return new SubtitleData[ 0 ];
 
             return data.Select( sub => new SubtitleData( sub ) ).ToArray( );
         }

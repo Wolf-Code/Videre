@@ -25,14 +25,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <ListBox x:Name="LanguageList" MaxHeight="250" SelectionMode="Multiple" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding LanguageName}"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <Button IsEnabled="False" Click="DownloadSubsLanguagesButton_OnClick" x:Name="DownloadSubsLanguagesButton" Grid.Column="1" Grid.Row="1">Download Subtitles</Button>
+                    <ComboBox x:Name="LanguageList" Grid.Column="0" Grid.Row="0" DisplayMemberPath="LanguageName" SelectionChanged="OnLanguageSelectionChanged"/>
+                    <Button IsEnabled="False" Click="DownloadSubsLanguagesButton_OnClick" x:Name="DownloadSubsLanguagesButton" Grid.Column="1" Grid.Row="0">Download Subtitles</Button>
                 </Grid>
             </GroupBox>
 

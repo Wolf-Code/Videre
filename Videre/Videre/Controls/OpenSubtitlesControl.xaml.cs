@@ -61,13 +61,6 @@ namespace Videre.Controls
             downloader.DownloadProgressChanged += ( Sender, Args ) => controller.SetProgress( Args.BytesReceived );;
             downloader.DownloadFileCompleted += DownloaderOnDownloadFileCompleted;
 
-            LanguageList.SelectionChanged += ( Sender, Args ) =>
-            {
-                bool HasSelection = LanguageList.SelectedItems.Count > 0;
-
-                DownloadSubsLanguagesButton.IsEnabled = HasSelection;
-            };
-
             window.SizeChanged += ( Sender, Args ) =>
             {
                 if ( !Args.WidthChanged )
@@ -146,17 +139,14 @@ namespace Videre.Controls
 
         private async void DownloadSelectedLanguageSubtitles( )
         {
-            if ( LanguageList.SelectedItems.Count <= 0 )
+            if ( LanguageList.SelectedItem == null )
                 return;
 
             controller = await window.ShowProgressAsync( "Downloading subtitles", "Downloading subtitles for the selected languages from opensubtitles.org." );
             controller.SetIndeterminate( );
 
-            string[ ] languages = new string[ LanguageList.SelectedItems.Count ];
-            for ( int x = 0; x < languages.Length; ++x )
-                languages[ x ] = ( ( SubtitleLanguage ) LanguageList.SelectedItems[ x ] ).ISO639_3;
-
-            SubtitleData[ ] data = await Task.Run( ( ) => Interface.Client.SearchSubtitles( languages, ViderePlayer.GetComponent<MediaComponent>( ).Media.File ) );
+            string[ ] langs = new[ ] { ( ( SubtitleLanguage )LanguageList.SelectedItem ).ISO639_3 };
+            SubtitleData[ ] data = await Task.Run( ( ) => Interface.Client.SearchSubtitles( langs, ViderePlayer.GetComponent<MediaComponent>( ).Media.File ) );
 
             SubsGroupBox.Visibility = Visibility.Visible;
 
@@ -199,6 +189,13 @@ namespace Videre.Controls
 
                 downloader.DownloadFileAsync( new Uri( subData.SubDownloadLink ), tempFile );
             }
+        }
+
+        private void OnLanguageSelectionChanged( object Sender, SelectionChangedEventArgs E )
+        {
+            bool HasSelection = LanguageList.SelectedItem != null;
+
+            DownloadSubsLanguagesButton.IsEnabled = HasSelection;
         }
     }
 }
