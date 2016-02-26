@@ -49,7 +49,7 @@ namespace VidereSubs.OpenSubtitles
 
         private void KeepAliveTimerOnElapsed( object Sender, ElapsedEventArgs Args )
         {
-            clientProxy.NoOperation( login.Token );
+            PerformRequest( ( ) => clientProxy.NoOperation( login.Token ) );
         }
 
         private void ResetTimer( )
@@ -95,7 +95,6 @@ namespace VidereSubs.OpenSubtitles
             XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.LogOut( login.Token ) );
 
             LogOutOutput output = new LogOutOutput( ret );
-            keepAliveTimer.Stop( );
 
             return output;
         }
@@ -109,7 +108,6 @@ namespace VidereSubs.OpenSubtitles
             XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.CheckMovieHash2( login.Token, movieHashes ) );
 
             CheckMovieHashOutput output = new CheckMovieHashOutput( ret );
-            ResetTimer( );
 
             return output;
         }
@@ -124,7 +122,6 @@ namespace VidereSubs.OpenSubtitles
             XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.CheckMovieHash( login.Token, movieHashes ) );
 
             CheckMovieHashOutput output = new CheckMovieHashOutput( ret );
-            ResetTimer( );
 
             return output;
         }
@@ -152,8 +149,6 @@ namespace VidereSubs.OpenSubtitles
             XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.SearchSubtitles( login.Token, requests, parameters ) );
             XmlRpcStruct[ ] data = ret[ "data" ] as XmlRpcStruct[ ];
 
-            ResetTimer( );
-
             return data?.Select( sub => new SubtitleData( sub ) ).ToArray( ) ?? new SubtitleData[ 0 ];
         }
 
@@ -167,18 +162,20 @@ namespace VidereSubs.OpenSubtitles
             XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.GetSubLanguages( language ) );
 
             GetSubLanguagesOutput outp = new GetSubLanguagesOutput( ret );
-            ResetTimer( );
 
             return outp.Languages;
         }
 
-        private static XmlRpcStruct PerformRequest( Func<XmlRpcStruct> func )
+        private XmlRpcStruct PerformRequest( Func<XmlRpcStruct> func )
         {
             for ( int x = 0; x < MaxServiceUnavailableRetries; x++ )
             {
                 try
                 {
-                    return func( );
+                    XmlRpcStruct output = func( );
+                    ResetTimer( );
+
+                    return output;
                 }
                 catch
                 {
