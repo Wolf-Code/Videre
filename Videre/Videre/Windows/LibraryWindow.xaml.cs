@@ -35,7 +35,7 @@ namespace Videre.Windows
                     await controller.CloseAsync( );
                 }
 
-                controller = await this.ShowProgressAsync( "Loading directories", "Loading new media directories" );
+                controller = await this.ShowProgressAsync( "Loading directories", "Loading media directories." );
                 controller.SetIndeterminate( );
                 if ( Settings.Default.MediaFolders == null )
                 {
