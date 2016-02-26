@@ -121,6 +121,7 @@
     <Compile Include="EventArgs\OnSubtitlesLoadedEventArgs.cs" />
     <Compile Include="EventArgs\OnSubtitlesFailedToLoadEventArgs.cs" />
     <Compile Include="EventArgs\OnSubtitlesChangedEventArgs.cs" />
+    <Compile Include="Exceptions\ServiceUnavailableException.cs" />
     <Compile Include="Implementations\MediaElementPlayer.cs" />
     <Compile Include="NetworkingRequests\TheMovieDBRequest.cs" />
     <Compile Include="NetworkingRequests\TheMovieDBRequestBase.cs" />

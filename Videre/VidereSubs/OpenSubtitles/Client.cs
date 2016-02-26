@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Timers;
 using CookComputing.XmlRpc;
+using VidereSubs.Exceptions;
 using VidereSubs.OpenSubtitles.Data;
 using VidereSubs.OpenSubtitles.Interfaces;
 using VidereSubs.OpenSubtitles.Outputs;
@@ -19,6 +20,11 @@ namespace VidereSubs.OpenSubtitles
         private readonly IClient clientProxy;
         private LogInOutput login;
         private readonly Timer keepAliveTimer;
+
+        /// <summary>
+        /// The amount of times we will attempt to retry the service if it is unavailable.
+        /// </summary>
+        public const int MaxServiceUnavailableRetries = 3;
 
         /// <summary>
         /// The user agent to use on opensubtitles.org.
@@ -69,7 +75,7 @@ namespace VidereSubs.OpenSubtitles
 
                 password = Hasher.ToHexadecimal( hash );
             }
-            XmlRpcStruct ret = clientProxy.LogIn( username, password, "eng", UserAgent );
+            XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.LogIn( username, password, "eng", UserAgent ) );
 
             login = new LogInOutput( ret );
             keepAliveTimer.Start( );
@@ -86,7 +92,7 @@ namespace VidereSubs.OpenSubtitles
             if ( !login.LogInSuccesful )
                 return null;
 
-            XmlRpcStruct ret = clientProxy.LogOut( login.Token );
+            XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.LogOut( login.Token ) );
 
             LogOutOutput output = new LogOutOutput( ret );
             keepAliveTimer.Stop( );
@@ -100,7 +106,7 @@ namespace VidereSubs.OpenSubtitles
         /// <param name="movieHashes">The hashes to check the information for.</param>
         public CheckMovieHashOutput CheckMovieHashAllGuesses( params string[ ] movieHashes )
         {
-            XmlRpcStruct ret = clientProxy.CheckMovieHash2( login.Token, movieHashes );
+            XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.CheckMovieHash2( login.Token, movieHashes ) );
 
             CheckMovieHashOutput output = new CheckMovieHashOutput( ret );
             ResetTimer( );
@@ -115,7 +121,7 @@ namespace VidereSubs.OpenSubtitles
         /// <param name="movieHashes">The hashes to check the information for.</param>
         public CheckMovieHashOutput CheckMovieHashBestGuessOnly( params string[ ] movieHashes )
         {
-            XmlRpcStruct ret = clientProxy.CheckMovieHash( login.Token, movieHashes );
+            XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.CheckMovieHash( login.Token, movieHashes ) );
 
             CheckMovieHashOutput output = new CheckMovieHashOutput( ret );
             ResetTimer( );
@@ -143,7 +149,7 @@ namespace VidereSubs.OpenSubtitles
 
             XmlRpcStruct parameters = new XmlRpcStruct( );
 
-            XmlRpcStruct ret = clientProxy.SearchSubtitles( login.Token, requests, parameters );
+            XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.SearchSubtitles( login.Token, requests, parameters ) );
             XmlRpcStruct[ ] data = ret[ "data" ] as XmlRpcStruct[ ];
 
             ResetTimer( );
@@ -161,12 +167,29 @@ namespace VidereSubs.OpenSubtitles
         /// <returns>An array of allowed subtitle languages.</returns>
         public SubtitleLanguage[ ] GetSubLanguages( string language = "en" )
         {
-            XmlRpcStruct ret = clientProxy.GetSubLanguages( language );
+            XmlRpcStruct ret = PerformRequest( ( ) => clientProxy.GetSubLanguages( language ) );
 
             GetSubLanguagesOutput outp = new GetSubLanguagesOutput( ret );
             ResetTimer( );
 
             return outp.Languages;
+        }
+
+        private static XmlRpcStruct PerformRequest( Func<XmlRpcStruct> func )
+        {
+            for ( int x = 0; x < MaxServiceUnavailableRetries; x++ )
+            {
+                try
+                {
+                    return func( );
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
+            throw new OpenSubtitlesServiceUnavailable( );
         }
 
         [Conditional( "DEBUG" )]
