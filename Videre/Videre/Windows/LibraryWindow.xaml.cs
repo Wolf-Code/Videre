@@ -23,10 +23,11 @@ namespace Videre.Windows
 
             Loaded += async ( Sender, Args ) =>
             {
+                ProgressDialogController controller;
                 TheMovieDBComponent dbComp = ViderePlayer.GetComponent<TheMovieDBComponent>( );
                 if ( !dbComp.HasConfig )
                 {
-                    ProgressDialogController controller = await this.ShowProgressAsync( "Retrieving TheMovieDB.org configuration", "Retrieving server configuration from TheMovieDB.org." );
+                    controller = await this.ShowProgressAsync( "Retrieving TheMovieDB.org configuration", "Retrieving server configuration from TheMovieDB.org." );
                     controller.SetIndeterminate( );
 
                     await dbComp.RetrieveConfiguration( );
@@ -34,6 +35,8 @@ namespace Videre.Windows
                     await controller.CloseAsync( );
                 }
 
+                controller = await this.ShowProgressAsync( "Loading directories", "Loading new media directories" );
+                controller.SetIndeterminate( );
                 if ( Settings.Default.MediaFolders == null )
                 {
                     Settings.Default.MediaFolders = new List<string>( );
@@ -41,6 +44,8 @@ namespace Videre.Windows
                 }
 
                 DirectorySelector.SetDirectories( Settings.Default.MediaFolders.ToArray( ) );
+
+                await controller.CloseAsync( );
             };
 
             Closed += ( Sender, Args ) =>
@@ -66,9 +71,6 @@ namespace Videre.Windows
 
         private async void DirectoryListOnSelectionChanged( object Sender, SelectionChangedEventArgs SelectionChangedEventArgs )
         {
-            ProgressDialogController controller = await this.ShowProgressAsync( "Loading directories", "Loading new media directories" );
-            controller.SetIndeterminate( );
-
             List<Task> loadTasks = new List<Task>( SelectionChangedEventArgs.AddedItems.Count );
             foreach ( string dir in SelectionChangedEventArgs.AddedItems )
                 loadTasks.Add( MediaShowcase.LoadDirectory( dir ) );
@@ -78,8 +80,6 @@ namespace Videre.Windows
 
             foreach ( string dir in SelectionChangedEventArgs.RemovedItems )
                 MediaShowcase.UnloadDirectory( dir );
-
-            await controller.CloseAsync( );
         }
     }
 }

@@ -58,13 +58,9 @@ namespace Videre.Players
                 Name = lastMedia.GetMeta( MetaDataType.Title )
             };
 
-            xZune.Vlc.MediaTrack vid = lastMedia.GetTracks( ).FirstOrDefault( O => O.Type == TrackType.Video );
-            if ( vid?.VideoTrack != null )
-            {
-                VideoTrack vidTrack = vid.VideoTrack.Value;
-                media.FileInformation.Width = vidTrack.Width;
-                media.FileInformation.Height = vidTrack.Height;
-            }
+            MediaTrackInfo videoInfo = lastMedia.GetTrackInfo( ).FirstOrDefault( O => O.Type == TrackType.Video );
+            media.FileInformation.Width = videoInfo.RateOrWidth;
+            media.FileInformation.Height = videoInfo.ChannelsOrHeight;
 
             await ViderePlayer.MainDispatcher.InvokeAsync( ( ) => OnMediaLoaded( new OnMediaLoadedEventArgs( media ) ) );
         }
