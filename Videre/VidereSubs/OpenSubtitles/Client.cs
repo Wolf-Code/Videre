@@ -154,10 +154,7 @@ namespace VidereSubs.OpenSubtitles
 
             ResetTimer( );
 
-            if ( data == null )
-                return new SubtitleData[ 0 ];
-
-            return data.Select( sub => new SubtitleData( sub ) ).ToArray( );
+            return data?.Select( sub => new SubtitleData( sub ) ).ToArray( ) ?? new SubtitleData[ 0 ];
         }
 
         /// <summary>
