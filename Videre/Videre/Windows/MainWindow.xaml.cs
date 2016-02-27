@@ -23,7 +23,7 @@ namespace Videre.Windows
         /// <summary>
         /// The videre user agent.
         /// </summary>
-        public const string UserAgent = "Videre v0.1";
+        public const string UserAgent = "Videre v0.2";
 
         /// <summary>
         /// Constructor.
@@ -84,9 +84,7 @@ namespace Videre.Windows
                 Settings.Default.SubtitleTimeOffset = 0;
                 Settings.Default.Save( );
             };
-
-            KeyDown += OnKeyDown;
-
+            
             StateComponent stateComponent = ViderePlayer.GetComponent<StateComponent>( );
             ScreenComponent screenComponent = ViderePlayer.GetComponent<ScreenComponent>( );
 
@@ -109,26 +107,6 @@ namespace Videre.Windows
 
             ( ( OpenSubtitlesControl ) OSFlyout.Content ).InitWindow( this );
             MediaInformationManager.LoadMediaData( );
-        }
-
-        private static void OnKeyDown( object Sender, KeyEventArgs KeyEventArgs )
-        {
-            if ( KeyEventArgs.IsRepeat )
-                return;
-
-            switch ( KeyEventArgs.Key )
-            {
-                case Key.Escape:
-                    ScreenComponent screenComp = ViderePlayer.GetComponent<ScreenComponent>( );
-                    if ( screenComp.IsFullScreen )
-                        screenComp.SetFullScreen( false );
-                    break;
-
-                case Key.Space:
-                    if ( ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded )
-                        ViderePlayer.GetComponent<StateComponent>( ).ResumeOrPause( );
-                    break;
-            }
         }
 
         private async void MediaComponentOnOnMediaFailedToLoad( object Sender, OnMediaFailedToLoadEventArgs MediaFailedToLoadEventArgs )
@@ -176,6 +154,26 @@ namespace Videre.Windows
         private void Cmd_Library( object Sender, ExecutedRoutedEventArgs E )
         {
             CommandsHandler.ShowLibraryCommand( );
+        }
+
+        private void CanCmd_CloseFullscreen( object Sender, CanExecuteRoutedEventArgs E )
+        {
+            E.CanExecute = ViderePlayer.GetComponent<ScreenComponent>( ).IsFullScreen;
+        }
+
+        private void Cmd_CloseFullscreen( object Sender, ExecutedRoutedEventArgs E )
+        {
+            ViderePlayer.GetComponent<ScreenComponent>( ).SetFullScreen( false );
+        }
+
+        private void Cmd_LocalSubtitles( object Sender, ExecutedRoutedEventArgs E )
+        {
+            CommandsHandler.ShowLocalSubtitlesDialog( this );
+        }
+
+        private void Cmd_OpenSubtitles( object Sender, ExecutedRoutedEventArgs E )
+        {
+            CommandsHandler.ShowOpenSubtitlesDialog( this );
         }
     }
 }

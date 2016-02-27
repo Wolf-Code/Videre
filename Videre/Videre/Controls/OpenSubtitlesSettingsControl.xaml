@@ -74,5 +74,20 @@
                 </Grid>
             </Grid>
         </GroupBox>
+        
+        <GroupBox Grid.Row="1" Header="Language">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <Label Content="Default language"/>
+                <ComboBox Grid.Column="1" Name="DefaultLanguage"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </local:VidereControl>

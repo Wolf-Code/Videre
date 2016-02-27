@@ -64,28 +64,6 @@ namespace Videre.Controls
             await ( ( MainWindow ) Window.GetWindow( this ) ).ShowMessageAsync( "Failed to load subtitles", $"Subtitles file {OnSubtitlesFailedToLoadEventArgs.Subtitles.Name} could not be loaded." );
         }
 
-        private void OnOpenLocalSubsClick( object Sender, RoutedEventArgs E )
-        {
-            OpenFileDialog fileDialog = new OpenFileDialog { Filter = "SubRip (*.srt)|*.srt" };
-            MediaComponent mediaComp = ViderePlayer.GetComponent<MediaComponent>( );
-
-            if ( mediaComp.HasMediaBeenLoaded )
-                fileDialog.InitialDirectory = mediaComp.Media.File.DirectoryName;
-
-            bool? res = fileDialog.ShowDialog( Window.GetWindow( this ) );
-
-            if ( !res.Value )
-                return;
-
-            ViderePlayer.GetComponent<SubtitlesComponent>( ).LoadSubtitles( fileDialog.FileName );
-        }
-
-        private void OnOSClick( object Sender, RoutedEventArgs E )
-        {
-            MainWindow window = ( MainWindow ) Window.GetWindow( this );
-            window.OSFlyout.IsOpen = true;
-        }
-
         private void OnEnableSubtitlesChecked( object Sender, RoutedEventArgs E ) => ViderePlayer.GetComponent<SubtitlesComponent>( ).Enable( );
 
         private void OnEnableSubtitlesUnchecked( object Sender, RoutedEventArgs E ) => ViderePlayer.GetComponent<SubtitlesComponent>( ).Disable( );

@@ -14,8 +14,8 @@
         </MenuItem>
         <MenuItem Header="Subtitles">
             <MenuItem Header="Enable Subtitles" IsEnabled="False" x:Name="EnableSubs" IsCheckable="True" Unchecked="OnEnableSubtitlesUnchecked" Checked="OnEnableSubtitlesChecked"/>
-            <MenuItem Header="Open Local Subtitles" Click="OnOpenLocalSubsClick" x:Name="OpenLocalSubs" IsEnabled="False"/>
-            <MenuItem Header="Open From OpenSubtitles.org" Click="OnOSClick" x:Name="OpenOSSubs" IsEnabled="False"/>
+            <MenuItem Header="Open Local Subtitles" Command="commands:CommandsHandler.OpenLocalSubtitles" InputGestureText="S" x:Name="OpenLocalSubs" IsEnabled="False"/>
+            <MenuItem Header="Open From OpenSubtitles.org" Command="commands:CommandsHandler.OpenSubtitles" InputGestureText="O" x:Name="OpenOSSubs" IsEnabled="False"/>
         </MenuItem>
         <MenuItem Header="Settings" Click="OnSettingsClick"/>
     </Menu>

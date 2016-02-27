@@ -17,15 +17,21 @@
     xmlns:commands="clr-namespace:Videre.Commands">
 
     <Window.CommandBindings>
+        <CommandBinding Command="{x:Static commands:CommandsHandler.CloseFullscreen}" Executed="Cmd_CloseFullscreen" CanExecute="CanCmd_CloseFullscreen"/>
         <CommandBinding Command="TogglePlayPause" Executed="Cmd_TogglePlayPause" CanExecute="CanCmd_TogglePlayPause" />
         <CommandBinding Command="Open" Executed="Cmd_OpenFile"/>
         <CommandBinding Command="{x:Static commands:CommandsHandler.ShowLibrary}" Executed="Cmd_Library"/>
+        <CommandBinding Command="{x:Static commands:CommandsHandler.OpenLocalSubtitles}" Executed="Cmd_LocalSubtitles"/>
+        <CommandBinding Command="{x:Static commands:CommandsHandler.OpenSubtitles}" Executed="Cmd_OpenSubtitles"/>
     </Window.CommandBindings>
 
     <Window.InputBindings>
+        <KeyBinding Key="O" Command="commands:CommandsHandler.OpenSubtitles"/>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
+        <KeyBinding Key="S" Command="commands:CommandsHandler.OpenLocalSubtitles"/>
         <KeyBinding Key="S" Modifiers="Control" Command="commands:CommandsHandler.ShowLibrary"/>
         <KeyBinding Key="Space" Command="TogglePlayPause"/>
+        <KeyBinding Key="Escape" Command="commands:CommandsHandler.CloseFullscreen"/>
     </Window.InputBindings>
 
     <windows:VidereWindow.Flyouts>

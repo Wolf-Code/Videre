@@ -55,7 +55,7 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             
-            <Button Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="0" Click="m_OnBackButtonClick">
+            <Button Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="0" Click="m_OnBackButtonClick" Focusable="False">
                 <Rectangle Width="20" Height="20" Fill="{DynamicResource AccentColorBrush}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_rewind}" />
@@ -86,7 +86,7 @@
                     </Rectangle.Style>
                 </Rectangle>
             </Button>
-            <Button Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="2" Click="m_OnForwardButtonClick">
+            <Button Width="55" Height="55" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="2" Click="m_OnForwardButtonClick" Focusable="False">
                 <Rectangle Width="20" Height="20" Fill="{DynamicResource AccentColorBrush}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_fastforward}" />
