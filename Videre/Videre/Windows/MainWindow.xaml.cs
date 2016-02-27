@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Videre.Commands;
 using Videre.Controls;
 using Videre.Players;
 using VidereLib;
@@ -165,6 +166,16 @@ namespace Videre.Windows
         private void CanCmd_TogglePlayPause( object Sender, CanExecuteRoutedEventArgs E )
         {
             E.CanExecute = ViderePlayer.GetComponent<MediaComponent>( ).HasMediaBeenLoaded;
+        }
+
+        private void Cmd_OpenFile( object Sender, ExecutedRoutedEventArgs E )
+        {
+            CommandsHandler.OpenFileCommand( this );
+        }
+
+        private void Cmd_Library( object Sender, ExecutedRoutedEventArgs E )
+        {
+            CommandsHandler.ShowLibraryCommand( );
         }
     }
 }

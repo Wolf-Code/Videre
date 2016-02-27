@@ -13,11 +13,20 @@
     IgnoreTaskbarOnMaximize="True" 
     Height="600" MinHeight="350" Width="800" MinWidth="525" 
     x:Name="VideoWindow" videre:FocusVisualTreeChanger.IsChanged="True"
-    GlowBrush="{DynamicResource AccentColorBrush}">
+    GlowBrush="{DynamicResource AccentColorBrush}"
+    xmlns:commands="clr-namespace:Videre.Commands">
 
     <Window.CommandBindings>
         <CommandBinding Command="TogglePlayPause" Executed="Cmd_TogglePlayPause" CanExecute="CanCmd_TogglePlayPause" />
+        <CommandBinding Command="Open" Executed="Cmd_OpenFile"/>
+        <CommandBinding Command="{x:Static commands:CommandsHandler.ShowLibrary}" Executed="Cmd_Library"/>
     </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
+        <KeyBinding Key="S" Modifiers="Control" Command="commands:CommandsHandler.ShowLibrary"/>
+        <KeyBinding Key="Space" Command="TogglePlayPause"/>
+    </Window.InputBindings>
 
     <windows:VidereWindow.Flyouts>
         <controls1:FlyoutsControl>

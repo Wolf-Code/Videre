@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
+using Videre.Commands;
 using Videre.Windows;
 using VidereLib;
 using VidereLib.Components;
@@ -63,27 +64,6 @@ namespace Videre.Controls
             await ( ( MainWindow ) Window.GetWindow( this ) ).ShowMessageAsync( "Failed to load subtitles", $"Subtitles file {OnSubtitlesFailedToLoadEventArgs.Subtitles.Name} could not be loaded." );
         }
 
-        private void OnOpenMediaClick( object Sender, RoutedEventArgs E )
-        {
-            OpenFileDialog fileDialog = new OpenFileDialog( );
-
-            MediaComponent mediaComp = ViderePlayer.GetComponent<MediaComponent>( );
-
-            string VideoFilter = "Video Files ";
-            string VideoCombinedCommaSeparated = "*." + string.Join( ", *.", mediaComp.VideoFileExtensions );
-            string VideoCombinedSemiColonSeparated = "*." + string.Join( ";*.", mediaComp.VideoFileExtensions );
-            VideoFilter += $"({VideoCombinedCommaSeparated})|{VideoCombinedSemiColonSeparated}";
-
-            string Filter = $"{VideoFilter}|All Files (*.*)|*.*";
-            fileDialog.Filter = Filter;
-
-            if ( !fileDialog.ShowDialog( Window.GetWindow( this ) ).GetValueOrDefault( ) )
-                return;
-
-            ViderePlayer.GetComponent<StateComponent>( ).Stop( );
-            mediaComp.LoadMedia( fileDialog.FileName );
-        }
-
         private void OnOpenLocalSubsClick( object Sender, RoutedEventArgs E )
         {
             OpenFileDialog fileDialog = new OpenFileDialog { Filter = "SubRip (*.srt)|*.srt" };
@@ -111,10 +91,5 @@ namespace Videre.Controls
         private void OnEnableSubtitlesUnchecked( object Sender, RoutedEventArgs E ) => ViderePlayer.GetComponent<SubtitlesComponent>( ).Disable( );
 
         private void OnSettingsClick( object Sender, RoutedEventArgs E ) => new SettingsWindow( ).ShowDialog( );
-
-        private void OnShowLibraryClick( object Sender, RoutedEventArgs E )
-        {
-            new LibraryWindow( ).ShowDialog( );
-        }
     }
 }

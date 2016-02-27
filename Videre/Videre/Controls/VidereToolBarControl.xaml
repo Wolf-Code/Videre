@@ -4,12 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Videre.Controls"
+             xmlns:commands="clr-namespace:Videre.Commands"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Menu>
         <MenuItem Header="File">
-            <MenuItem Header="Open File" Click="OnOpenMediaClick"/>
-            <MenuItem Header="Show Library" Click="OnShowLibraryClick"/>
+            <MenuItem Header="Open File" Command="Open" InputGestureText="Ctrl+O"/>
+            <MenuItem Header="Show Library" Command="commands:CommandsHandler.ShowLibrary"  InputGestureText="Ctrl+S"/>
         </MenuItem>
         <MenuItem Header="Subtitles">
             <MenuItem Header="Enable Subtitles" IsEnabled="False" x:Name="EnableSubs" IsCheckable="True" Unchecked="OnEnableSubtitlesUnchecked" Checked="OnEnableSubtitlesChecked"/>
