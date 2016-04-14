@@ -17,3 +17,6 @@ OpenSubtitles.org, perfectly matches your specific media file.
 
 ## Themes
 As Videre uses [MahApps.Metro](https://github.com/MahApps/MahApps.Metro), colour themes are built-in.
+
+## Media Library
+Videre uses [TheMovieDB](https://www.themoviedb.org/) to retrieve extra information about media files, such as movie posters, in order to provide a media library where you can add and remove folders to look for media in.
